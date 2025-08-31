@@ -8,9 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class StartViewModel(
-    private val authenticateUseCase: AuthenticateUseCase
-) : BaseViewModel() {
+class StartViewModel(private val authenticateUseCase: AuthenticateUseCase) : BaseViewModel() {
     private val _startUIState = MutableStateFlow(StartUIState())
     val startUIState: StateFlow<StartUIState> = _startUIState.asStateFlow()
 
@@ -32,6 +30,4 @@ class StartViewModel(
     }
 }
 
-data class StartUIState(
-    val authenticated: Boolean? = null,
-)
+data class StartUIState(val authenticated: Boolean? = null)

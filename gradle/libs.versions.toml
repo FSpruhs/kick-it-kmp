@@ -21,7 +21,7 @@ serializationJson = "1.9.0"
 room = "2.7.2"
 ksp = "2.1.21-2.0.1"
 sqlite = "2.5.2"
-kotlinxCoroutinesCore = "1.7.3"
+kotlinxCoroutinesCore = "1.10.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

@@ -4,7 +4,6 @@ import platform.Foundation.NSLog
 
 actual object AppLogger {
     actual fun e(tag: String, message: String, throwable: Throwable?) {
-
         if (throwable != null) {
             NSLog("ERROR: [$tag] $message. Throwable: $throwable CAUSE ${throwable.cause}")
         } else {

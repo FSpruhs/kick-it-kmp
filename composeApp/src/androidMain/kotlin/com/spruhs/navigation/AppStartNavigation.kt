@@ -11,12 +11,12 @@ import com.spruhs.screens.auth.StartScreen
 fun AppStartNavigation(navHostController: NavHostController) {
     NavHost(
         navController = navHostController,
-        startDestination = StartScreens.StartScreen.route,
+        startDestination = StartScreens.StartScreen.route
     ) {
         composable(StartScreens.StartScreen.route) {
             StartScreen(
                 onLoggedIn = { Log.i("StartScreen", "onLoggedIn") },
-                onLoginFailed = { Log.i("StartScreen", "onLoginFailed") },
+                onLoginFailed = { Log.i("StartScreen", "onLoginFailed") }
             )
         }
     }

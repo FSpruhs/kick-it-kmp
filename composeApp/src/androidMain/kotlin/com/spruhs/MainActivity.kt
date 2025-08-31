@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             AppStartNavigation(
-                navHostController = navController,
+                navHostController = navController
             )
         }
     }

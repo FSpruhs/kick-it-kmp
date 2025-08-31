@@ -20,7 +20,7 @@ import org.koin.androidx.compose.koinViewModel
 fun StartScreen(
     onLoggedIn: () -> Unit,
     onLoginFailed: () -> Unit,
-    startViewModel: StartViewModel = koinViewModel(),
+    startViewModel: StartViewModel = koinViewModel()
 ) {
     val startUIState by startViewModel.startUIState.collectAsStateWithLifecycle()
 
@@ -43,7 +43,7 @@ fun StartScreen(
 
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
     }

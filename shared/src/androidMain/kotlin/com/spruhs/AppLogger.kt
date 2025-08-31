@@ -3,7 +3,6 @@ package com.spruhs
 import android.util.Log
 
 actual object AppLogger {
-
     actual fun e(tag: String, message: String, throwable: Throwable?) {
         if (throwable != null) {
             Log.e(tag, message, throwable)

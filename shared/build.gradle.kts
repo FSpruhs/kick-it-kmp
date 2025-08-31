@@ -19,7 +19,7 @@ kotlin {
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64(),
+        iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "Shared"
@@ -35,13 +35,11 @@ kotlin {
             implementation(libs.sqlite.bundled)
         }
 
-
         androidMain.dependencies {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
         }
 
         iosMain.dependencies {
-
         }
 
         commonTest.dependencies {
@@ -69,5 +67,5 @@ android {
 }
 
 room {
-    schemaDirectory("${projectDir}/schemas")
+    schemaDirectory("$projectDir/schemas")
 }
