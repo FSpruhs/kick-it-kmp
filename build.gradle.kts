@@ -8,6 +8,9 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.serialization) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.room) apply false
 }
 
 subprojects {

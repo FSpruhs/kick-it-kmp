@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -27,12 +29,15 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
 
 
         androidMain.dependencies {
-
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
         }
 
         iosMain.dependencies {
@@ -61,4 +66,8 @@ android {
                 .get()
                 .toInt()
     }
+}
+
+room {
+    schemaDirectory("${projectDir}/schemas")
 }
