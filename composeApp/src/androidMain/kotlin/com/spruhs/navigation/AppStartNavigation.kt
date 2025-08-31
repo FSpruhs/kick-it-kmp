@@ -1,5 +1,6 @@
 package com.spruhs.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,7 +14,10 @@ fun AppStartNavigation(navHostController: NavHostController) {
         startDestination = StartScreens.StartScreen.route,
     ) {
         composable(StartScreens.StartScreen.route) {
-            StartScreen()
+            StartScreen(
+                onLoggedIn = { Log.i("StartScreen", "onLoggedIn") },
+                onLoginFailed = { Log.i("StartScreen", "onLoginFailed") },
+            )
         }
     }
 }
