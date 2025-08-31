@@ -27,8 +27,18 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // put your Multiplatform dependencies here
+            implementation(libs.koin.core)
         }
+
+
+        androidMain.dependencies {
+
+        }
+
+        iosMain.dependencies {
+
+        }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
