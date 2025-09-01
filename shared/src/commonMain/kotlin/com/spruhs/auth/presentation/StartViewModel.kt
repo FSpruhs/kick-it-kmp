@@ -38,6 +38,4 @@ sealed class StartSideEffect {
     object NotAuthenticated : StartSideEffect()
 }
 
-data class StartUiState(
-    val isLoading: Boolean = false
-)
+data class StartUiState(val isLoading: Boolean = false)

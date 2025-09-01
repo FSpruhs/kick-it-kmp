@@ -1,13 +1,8 @@
 package com.spruhs.auth.presentation
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
 import com.spruhs.BaseViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -20,7 +15,9 @@ class RegisterViewModel : BaseViewModel<RegisterEffect, RegisterUIState>(Registe
     fun processIntent(intent: RegisterIntent) {
         when (intent) {
             is RegisterIntent.Register -> register()
-            is RegisterIntent.Back -> viewModelScope.launch { effectsMutable.emit(RegisterEffect.Back) }
+            is RegisterIntent.Back -> viewModelScope.launch {
+                effectsMutable.emit(RegisterEffect.Back)
+            }
             is RegisterIntent.EmailChanged -> updateRegisterState(email = intent.email)
             is RegisterIntent.NickNameChanged -> updateRegisterState(nickName = intent.nickName)
             is RegisterIntent.PasswordChanged -> updateRegisterState(password = intent.password)
@@ -51,8 +48,7 @@ class RegisterViewModel : BaseViewModel<RegisterEffect, RegisterUIState>(Registe
         nickName: String,
         password: String,
         repeatedPassword: String
-    ): Boolean =
-        email.contains("@") &&
+    ): Boolean = email.contains("@") &&
         email.contains(".") &&
         email.length > 5 &&
         nickName.length >= 2 &&
@@ -78,9 +74,13 @@ class RegisterViewModel : BaseViewModel<RegisterEffect, RegisterUIState>(Registe
         }
         performAction(
             setLoading = { isLoading -> uiStateMutable.update { it.copy(isLoading = isLoading) } },
-            onSuccess = { viewModelScope.launch { effectsMutable.emit(RegisterEffect.RegisterSuccess) } },
+            onSuccess = {
+                viewModelScope.launch { effectsMutable.emit(RegisterEffect.RegisterSuccess) }
+            },
             onError = { uiStateMutable.update { it.copy(isPasswordValid = false) } },
-            action = { uiStateMutable.update { it.copy(isPasswordValid = validatePassword(it.password)) } }
+            action = {
+                uiStateMutable.update { it.copy(isPasswordValid = validatePassword(it.password)) }
+            }
         )
     }
 }

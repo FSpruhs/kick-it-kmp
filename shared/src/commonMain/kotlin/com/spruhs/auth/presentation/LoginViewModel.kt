@@ -15,7 +15,9 @@ class LoginViewModel(
     fun processIntent(intent: LoginIntent) {
         when (intent) {
             is LoginIntent.Login -> login()
-            is LoginIntent.Register -> viewModelScope.launch { effectsMutable.emit(LoginSideEffect.Register) }
+            is LoginIntent.Register -> viewModelScope.launch {
+                effectsMutable.emit(LoginSideEffect.Register)
+            }
             is LoginIntent.EmailChanged -> updateLoginState(email = intent.email)
             is LoginIntent.PasswordChanged -> updateLoginState(password = intent.password)
         }
