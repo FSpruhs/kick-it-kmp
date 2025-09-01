@@ -32,7 +32,7 @@ fun LoginScreen(
     onRegisterClick: () -> Unit,
     loginViewModel: LoginViewModel = koinViewModel()
 ) {
-    val loginUIState by loginViewModel.loginUIState.collectAsStateWithLifecycle()
+    val loginUIState by loginViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         loginViewModel.effects.collect { effect ->

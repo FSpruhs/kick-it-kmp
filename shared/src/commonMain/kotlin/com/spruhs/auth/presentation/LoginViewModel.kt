@@ -1,39 +1,31 @@
 package com.spruhs.auth.presentation
 
+import androidx.lifecycle.viewModelScope
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.LoginUseCase
 import com.spruhs.user.application.LoadUserUseCase
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
     private val loadUserUseCase: LoadUserUseCase
-) : BaseViewModel() {
-    private val _loginUIState = MutableStateFlow(LoginUIState())
-    val loginUIState = _loginUIState.asStateFlow()
-
-    private val _effects = MutableSharedFlow<LoginSideEffect>()
-    val effects = _effects.asSharedFlow()
+) : BaseViewModel<LoginSideEffect, LoginUIState>(LoginUIState()) {
 
     fun processIntent(intent: LoginIntent) {
         when (intent) {
             is LoginIntent.Login -> login()
-            is LoginIntent.Register -> scope.launch { _effects.emit(LoginSideEffect.Register) }
+            is LoginIntent.Register -> viewModelScope.launch { effectsMutable.emit(LoginSideEffect.Register) }
             is LoginIntent.EmailChanged -> updateLoginState(email = intent.email)
             is LoginIntent.PasswordChanged -> updateLoginState(password = intent.password)
         }
     }
 
     private fun updateLoginState(
-        email: String = _loginUIState.value.email,
-        password: String = _loginUIState.value.password
+        email: String = uiStateMutable.value.email,
+        password: String = uiStateMutable.value.password
     ) {
-        _loginUIState.value = _loginUIState.value.copy(
+        uiStateMutable.value = uiStateMutable.value.copy(
             email = email,
             password = password,
             isInputValid = validateInput(email, password)
@@ -48,12 +40,12 @@ class LoginViewModel(
 
     private fun login() {
         performAction(
-            setLoading = { isLoading -> _loginUIState.update { it.copy(isLoading = isLoading) } },
+            setLoading = { isLoading -> uiStateMutable.update { it.copy(isLoading = isLoading) } },
             onSuccess = { onLoginSuccess(it) },
-            onError = { _loginUIState.update { it.copy(loginError = true) } },
+            onError = { uiStateMutable.update { it.copy(loginError = true) } },
             action = {
-                require(loginUIState.value.isInputValid)
-                loginUseCase.login(_loginUIState.value.email, _loginUIState.value.password)
+                require(uiStateMutable.value.isInputValid)
+                loginUseCase.login(uiStateMutable.value.email, uiStateMutable.value.password)
             }
         )
     }
@@ -61,9 +53,9 @@ class LoginViewModel(
     private suspend fun onLoginSuccess(userId: String?) {
         if (userId != null) {
             loadUserUseCase.loadUser(userId)
-            _effects.emit(LoginSideEffect.LoginSuccess)
+            effectsMutable.emit(LoginSideEffect.LoginSuccess)
         } else {
-            _loginUIState.update { it.copy(loginError = true) }
+            uiStateMutable.update { it.copy(loginError = true) }
         }
     }
 }

@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.spruhs.screens.start.LoginScreen
+import com.spruhs.screens.start.RegisterScreen
 import com.spruhs.screens.start.StartScreen
 
 @Composable
@@ -26,7 +27,14 @@ fun AppStartNavigation(navHostController: NavHostController) {
         composable(StartScreens.LoginScreen.route) {
             LoginScreen(
                 onLoggedIn = { Log.i("LoginScreen", "onLoggedIn") },
-                onRegisterClick = { Log.i("LoginScreen", "onRegisterClick") }
+                onRegisterClick = { navHostController.navigate(StartScreens.RegisterScreen.route) }
+            )
+        }
+
+        composable(StartScreens.RegisterScreen.route) {
+            RegisterScreen(
+                onBackClick = { navHostController.popBackStack() },
+                onRegisterSuccess = { Log.i("RegisterScreen", "onRegisterSuccess") }
             )
         }
     }

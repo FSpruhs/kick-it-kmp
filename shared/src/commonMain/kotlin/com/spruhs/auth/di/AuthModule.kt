@@ -10,17 +10,21 @@ import com.spruhs.auth.data.AuthTokenDao
 import com.spruhs.auth.data.AuthTokenDatabase
 import com.spruhs.auth.data.AuthTokenRepositoryImpl
 import com.spruhs.auth.presentation.LoginViewModel
+import com.spruhs.auth.presentation.RegisterViewModel
 import com.spruhs.auth.presentation.StartViewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val authModule =
     module {
-        single<AuthenticateUseCase> { AuthenticateUseCase(get(), get()) }
-        single<StartViewModel> { StartViewModel(get(), get()) }
-        single<LoginViewModel> { LoginViewModel(get(), get()) }
-        single<TokenHelper> { TokenHelper() }
+        single { AuthenticateUseCase(get(), get()) }
+        single { LoginUseCase(get(), get(), get()) }
+        single { TokenHelper() }
         single<AuthTokenRepository> { AuthTokenRepositoryImpl(get(), get()) }
         single<AuthTokenDao> { get<AuthTokenDatabase>().authTokenDao() }
-        single<LoginUseCase> { LoginUseCase(get(), get(), get()) }
         single<AuthApi> { AuthApiImpl() }
+
+        viewModelOf(::StartViewModel)
+        viewModelOf(::RegisterViewModel)
+        viewModelOf(::LoginViewModel)
     }

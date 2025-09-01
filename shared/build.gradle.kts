@@ -30,7 +30,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.koin.core)
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.composeVM)
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
             implementation(libs.kotlinx.datetime)
@@ -40,6 +42,8 @@ kotlin {
             implementation(libs.jjwt.api)
             runtimeOnly(libs.jjwt.impl)
             runtimeOnly(libs.jjwt.jackson)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
         }
 

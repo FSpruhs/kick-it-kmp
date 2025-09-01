@@ -8,7 +8,7 @@ import com.spruhs.user.data.UserRepositoryImpl
 import org.koin.dsl.module
 
 val userModule = module {
-    single<LoadUserUseCase> { LoadUserUseCase(get()) }
+    single { LoadUserUseCase(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<UserApi> { UserApiImpl() }
 }
