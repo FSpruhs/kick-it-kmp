@@ -4,17 +4,20 @@ import com.spruhs.AppLogger
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.AuthenticateUseCase
 import com.spruhs.user.application.LoadUserUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class StartViewModel(
     private val authenticateUseCase: AuthenticateUseCase,
     private val loadUserUseCase: LoadUserUseCase
 ) : BaseViewModel() {
-    private val _startUIState = MutableStateFlow(StartUIState())
-    val startUIState: StateFlow<StartUIState> = _startUIState.asStateFlow()
+    private val _effects = MutableSharedFlow<StartSideEffect>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
+    val effects = _effects.asSharedFlow()
 
     init {
         authenticate()
@@ -22,21 +25,25 @@ class StartViewModel(
 
     private fun authenticate() {
         scope.launch {
+            delay(2000)
             try {
                 AppLogger.i("StartViewModel", "Authenticating")
                 val userId = authenticateUseCase.authenticate()
                 if (userId == null) {
-                    _startUIState.value = _startUIState.value.copy(authenticated = false)
+                    _effects.emit(StartSideEffect.NotAuthenticated)
                 } else {
                     loadUserUseCase.loadUser(userId)
-                    _startUIState.value = _startUIState.value.copy(authenticated = true)
+                    _effects.emit(StartSideEffect.Authenticated)
                 }
             } catch (e: RuntimeException) {
                 AppLogger.e("StartViewModel", "Authentication failed: ${e.message}", e)
-                _startUIState.value = _startUIState.value.copy(authenticated = false)
+                _effects.emit(StartSideEffect.NotAuthenticated)
             }
         }
     }
 }
 
-data class StartUIState(val authenticated: Boolean? = null)
+sealed class StartSideEffect {
+    object Authenticated : StartSideEffect()
+    object NotAuthenticated : StartSideEffect()
+}

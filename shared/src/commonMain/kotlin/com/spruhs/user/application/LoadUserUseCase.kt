@@ -1,6 +1,7 @@
 package com.spruhs.user.application
 
-class LoadUserUseCase {
-    fun loadUser(userId: String) {
+class LoadUserUseCase(private val userRepository: UserRepository) {
+    suspend fun loadUser(userId: String) {
+        userRepository.loadUser(userId)
     }
 }
