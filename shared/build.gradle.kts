@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.runtimeOnly
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -36,6 +38,9 @@ kotlin {
         }
 
         androidMain.dependencies {
+            implementation(libs.jjwt.api)
+            runtimeOnly(libs.jjwt.impl)
+            runtimeOnly(libs.jjwt.jackson)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
         }
 
