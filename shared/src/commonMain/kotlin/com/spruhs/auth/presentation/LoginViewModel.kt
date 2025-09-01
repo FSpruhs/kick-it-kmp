@@ -48,7 +48,7 @@ class LoginViewModel(
 
     private fun login() {
         performAction(
-            setLoading = { isLoading ->_loginUIState.update { it.copy(isLoading = isLoading) }},
+            setLoading = { isLoading -> _loginUIState.update { it.copy(isLoading = isLoading) } },
             onSuccess = { onLoginSuccess(it) },
             onError = { _loginUIState.update { it.copy(loginError = true) } },
             action = {

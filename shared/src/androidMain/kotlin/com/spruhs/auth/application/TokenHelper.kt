@@ -14,8 +14,7 @@ actual class TokenHelper {
             .verifyWith(Keys.hmacShaKeyFor(secretKey.toByteArray()))
             .build()
 
-    actual fun getUserId(token: String): String =
-        parser.parseSignedClaims(token).payload.subject
+    actual fun getUserId(token: String): String = parser.parseSignedClaims(token).payload.subject
 
     actual fun isTokenValid(token: String): Boolean {
         try {

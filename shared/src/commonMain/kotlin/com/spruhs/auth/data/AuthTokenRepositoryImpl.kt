@@ -1,8 +1,8 @@
 package com.spruhs.auth.data
 
 import com.spruhs.auth.application.AuthApi
-import com.spruhs.auth.application.AuthTokens
 import com.spruhs.auth.application.AuthTokenRepository
+import com.spruhs.auth.application.AuthTokens
 import kotlin.concurrent.Volatile
 
 class AuthTokenRepositoryImpl(
@@ -23,10 +23,10 @@ class AuthTokenRepositoryImpl(
     }
 
     override suspend fun getToken(): AuthTokens? = cachedToken
-            ?: authTokenDao
-                .getToken()
-                ?.toToken()
-                ?.also { cachedToken = it }
+        ?: authTokenDao
+            .getToken()
+            ?.toToken()
+            ?.also { cachedToken = it }
 
     override suspend fun refreshToken(refreshToken: String): AuthTokens =
         authApi.refreshToken(refreshToken)
@@ -35,5 +35,6 @@ class AuthTokenRepositoryImpl(
 
     private fun AuthTokenEntity.toToken() = AuthTokens(accessToken, refreshToken)
 
-    private fun AuthTokens.toEntity() = AuthTokenEntity(accessToken = accessToken, refreshToken = refreshToken)
+    private fun AuthTokens.toEntity() =
+        AuthTokenEntity(accessToken = accessToken, refreshToken = refreshToken)
 }

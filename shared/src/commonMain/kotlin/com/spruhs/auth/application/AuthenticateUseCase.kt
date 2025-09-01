@@ -6,8 +6,7 @@ class AuthenticateUseCase(
     private val authTokenRepository: AuthTokenRepository,
     private val tokenHelper: TokenHelper
 ) {
-    suspend fun authenticate(): String? =
-        getValidToken()?.getUserId()
+    suspend fun authenticate(): String? = getValidToken()?.getUserId()
 
     private fun AuthTokens.getUserId(): String = tokenHelper.getUserId(accessToken)
 
