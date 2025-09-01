@@ -20,6 +20,6 @@ fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AuthTokenDatabase
 
     return Room.databaseBuilder<AuthTokenDatabase>(
         context = appContext,
-        name = dbFile.absolutePath,
+        name = dbFile.absolutePath
     )
 }

@@ -20,7 +20,7 @@ actual val platformModule = module {
 fun getDatabaseBuilder(): RoomDatabase.Builder<AuthTokenDatabase> {
     val dbFilePath = documentDirectory() + "/auth_token_database.db"
     return Room.databaseBuilder<AuthTokenDatabase>(
-        name = dbFilePath,
+        name = dbFilePath
     )
 }
 
@@ -31,7 +31,7 @@ private fun documentDirectory(): String {
         inDomain = NSUserDomainMask,
         appropriateForURL = null,
         create = false,
-        error = null,
+        error = null
     )
 
     return requireNotNull(documentDirectory?.path)

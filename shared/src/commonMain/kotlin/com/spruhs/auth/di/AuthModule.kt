@@ -1,8 +1,8 @@
 package com.spruhs.auth.di
 
+import com.spruhs.auth.application.AuthTokenRepository
 import com.spruhs.auth.application.AuthenticateUseCase
 import com.spruhs.auth.application.TokenHelper
-import com.spruhs.auth.application.AuthTokenRepository
 import com.spruhs.auth.data.AuthTokenDao
 import com.spruhs.auth.data.AuthTokenDatabase
 import com.spruhs.auth.data.AuthTokenRepositoryImpl

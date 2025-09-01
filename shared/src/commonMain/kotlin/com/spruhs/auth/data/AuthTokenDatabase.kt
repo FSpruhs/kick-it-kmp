@@ -11,9 +11,8 @@ abstract class AuthTokenDatabase : RoomDatabase() {
     abstract fun authTokenDao(): AuthTokenDao
 }
 
-fun getAuthTokenDatabase(builder: RoomDatabase.Builder<AuthTokenDatabase>): AuthTokenDatabase {
-    return builder
+fun getAuthTokenDatabase(builder: RoomDatabase.Builder<AuthTokenDatabase>): AuthTokenDatabase =
+    builder
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
-}

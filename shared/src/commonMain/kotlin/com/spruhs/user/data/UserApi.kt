@@ -14,5 +14,4 @@ class UserApi {
     suspend fun changeNickName(userId: String, nickname: String) {
         TODO("Not yet implemented")
     }
-
 }
