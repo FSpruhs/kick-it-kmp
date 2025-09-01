@@ -17,9 +17,9 @@ fun SubmitButton(
 ) {
     Button(
         colors =
-            ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            ),
+        ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
         modifier = modifier,
         enabled = enabled,
         onClick = { onSubmitClick() }

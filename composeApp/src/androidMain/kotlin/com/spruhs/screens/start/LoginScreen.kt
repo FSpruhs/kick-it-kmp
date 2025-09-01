@@ -1,30 +1,21 @@
 package com.spruhs.screens.start
 
-import android.util.Patterns
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spruhs.auth.presentation.LoginIntent
@@ -40,7 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 fun LoginScreen(
     onLoggedIn: () -> Unit,
     onRegisterClick: () -> Unit,
-    loginViewModel: LoginViewModel = koinViewModel(),
+    loginViewModel: LoginViewModel = koinViewModel()
 ) {
     val loginUIState by loginViewModel.loginUIState.collectAsStateWithLifecycle()
 
@@ -69,7 +60,7 @@ fun LoginScreen(
 fun LoginContent(
     modifier: Modifier = Modifier,
     loginUIState: LoginUIState,
-    onIntent: (LoginIntent) -> Unit,
+    onIntent: (LoginIntent) -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -77,9 +68,9 @@ fun LoginContent(
     ) {
         Column(
             modifier =
-                modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -99,9 +90,9 @@ fun LoginContent(
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier =
-                            Modifier
-                                .fillMaxWidth(0.8f)
-                                .padding(bottom = 8.dp)
+                        Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(bottom = 8.dp)
                     )
                 }
 
@@ -122,9 +113,9 @@ fun LoginContent(
             ) {
                 SubmitButton(
                     modifier =
-                        Modifier
-                            .padding(bottom = 42.dp)
-                            .fillMaxWidth(0.5f),
+                    Modifier
+                        .padding(bottom = 42.dp)
+                        .fillMaxWidth(0.5f),
                     enabled = !loginUIState.isLoading && loginUIState.isInputValid,
                     isLoading = loginUIState.isLoading
                 ) {

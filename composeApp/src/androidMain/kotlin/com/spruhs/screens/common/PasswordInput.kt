@@ -33,11 +33,11 @@ fun PasswordInput(password: String, onPasswordChange: (String) -> Unit) {
             label = { Text("Password") },
             singleLine = true,
             visualTransformation =
-                if (passwordVisible) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
+            if (passwordVisible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
             trailingIcon = {
                 val image =
                     if (passwordVisible) {

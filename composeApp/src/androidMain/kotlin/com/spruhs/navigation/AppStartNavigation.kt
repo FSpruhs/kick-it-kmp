@@ -26,7 +26,7 @@ fun AppStartNavigation(navHostController: NavHostController) {
         composable(StartScreens.LoginScreen.route) {
             LoginScreen(
                 onLoggedIn = { Log.i("LoginScreen", "onLoggedIn") },
-                onRegisterClick = { Log.i("LoginScreen", "onRegisterClick") },
+                onRegisterClick = { Log.i("LoginScreen", "onRegisterClick") }
             )
         }
     }
