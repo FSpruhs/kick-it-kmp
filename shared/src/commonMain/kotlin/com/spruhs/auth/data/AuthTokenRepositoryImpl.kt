@@ -26,6 +26,10 @@ class AuthTokenRepositoryImpl(private val authTokenDao: AuthTokenDao) : AuthToke
         return cachedToken
     }
 
+    override suspend fun refreshToken(refreshToken: String): Pair<String, String> {
+        TODO("Not yet implemented")
+    }
+
     fun getTokenSync(): AuthToken? = cachedToken
 
     private fun AuthTokenEntity.toToken() = AuthToken(accessToken, refreshToken)

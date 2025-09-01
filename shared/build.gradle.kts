@@ -33,6 +33,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.kotlinx.datetime)
+
         }
 
         androidMain.dependencies {

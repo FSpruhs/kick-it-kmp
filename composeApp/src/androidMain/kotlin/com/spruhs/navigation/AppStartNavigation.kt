@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.spruhs.screens.auth.StartScreen
+import com.spruhs.screens.start.StartScreen
 
 @Composable
 fun AppStartNavigation(navHostController: NavHostController) {

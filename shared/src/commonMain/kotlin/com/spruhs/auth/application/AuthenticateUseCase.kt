@@ -4,8 +4,6 @@ import com.spruhs.AppLogger
 
 class AuthenticateUseCase(
     private val authTokenRepository: AuthTokenRepository,
-    private val authRepository: AuthenticationRepository,
-    private val userRepository: UserRepository,
     private val tokenHelper: TokenHelper
 ) {
     private suspend fun getValidToken(): AuthToken? {
@@ -31,20 +29,17 @@ class AuthenticateUseCase(
         return null
     }
 
-    suspend fun authenticate(): Boolean {
+    suspend fun authenticate(): String? {
         val validToken = getValidToken()
         if (validToken == null) {
-            return false
+            return null
         }
 
-        val userId = tokenHelper.getUserId(validToken.accessToken)
-        userRepository.loadUser(userId)
-
-        return true
+        return tokenHelper.getUserId(validToken.accessToken)
     }
 
     private suspend fun refreshToken(refresherToken: String): AuthToken {
-        val (accessToken, refreshToken) = authRepository.refreshToken(refresherToken)
+        val (accessToken, refreshToken) = authTokenRepository.refreshToken(refresherToken)
         authTokenRepository.saveToken(accessToken, refreshToken)
         return AuthToken(accessToken, refreshToken)
     }
