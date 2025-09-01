@@ -3,13 +3,17 @@ package com.spruhs.auth.presentation
 import com.spruhs.AppLogger
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.LoginUseCase
+import com.spruhs.user.application.LoadUserUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
+class LoginViewModel(
+    private val loginUseCase: LoginUseCase,
+    private val loadUserUseCase: LoadUserUseCase
+) : BaseViewModel() {
     private val _loginUIState = MutableStateFlow(LoginUIState())
     val loginUIState = _loginUIState.asStateFlow()
 
@@ -51,11 +55,12 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
         scope.launch {
             _loginUIState.value = _loginUIState.value.copy(isLoading = true)
             try {
-                val success = loginUseCase.login(
+                val userId = loginUseCase.login(
                     _loginUIState.value.email,
                     _loginUIState.value.password
                 )
-                if (success) {
+                if (userId != null) {
+                    loadUserUseCase.loadUser(userId)
                     _effects.emit(LoginSideEffect.LoginSuccess)
                 } else {
                     _loginUIState.value = _loginUIState.value.copy(loginError = true)

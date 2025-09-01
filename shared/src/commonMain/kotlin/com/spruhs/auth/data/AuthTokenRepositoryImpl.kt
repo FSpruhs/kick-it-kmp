@@ -1,10 +1,14 @@
 package com.spruhs.auth.data
 
+import com.spruhs.auth.application.AuthApi
 import com.spruhs.auth.application.AuthToken
 import com.spruhs.auth.application.AuthTokenRepository
 import kotlin.concurrent.Volatile
 
-class AuthTokenRepositoryImpl(private val authTokenDao: AuthTokenDao) : AuthTokenRepository {
+class AuthTokenRepositoryImpl(
+    private val authTokenDao: AuthTokenDao,
+    private val authApi: AuthApi
+) : AuthTokenRepository {
     @Volatile
     private var cachedToken: AuthToken? = null
 
@@ -26,9 +30,8 @@ class AuthTokenRepositoryImpl(private val authTokenDao: AuthTokenDao) : AuthToke
         return cachedToken
     }
 
-    override suspend fun refreshToken(refreshToken: String): Pair<String, String> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun refreshToken(refreshToken: String): Pair<String, String> =
+        authApi.refreshToken(refreshToken)
 
     fun getTokenSync(): AuthToken? = cachedToken
 

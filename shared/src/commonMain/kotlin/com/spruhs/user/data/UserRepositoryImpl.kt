@@ -2,6 +2,7 @@ package com.spruhs.user.data
 
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.User
+import com.spruhs.user.application.UserApi
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
