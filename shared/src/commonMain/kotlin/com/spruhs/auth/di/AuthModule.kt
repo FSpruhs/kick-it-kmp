@@ -19,7 +19,7 @@ val authModule =
         single<StartViewModel> { StartViewModel(get(), get()) }
         single<LoginViewModel> { LoginViewModel(get(), get()) }
         single<TokenHelper> { TokenHelper() }
-        single<AuthTokenRepository> { AuthTokenRepositoryImpl(get()) }
+        single<AuthTokenRepository> { AuthTokenRepositoryImpl(get(), get()) }
         single<AuthTokenDao> { get<AuthTokenDatabase>().authTokenDao() }
         single<LoginUseCase> { LoginUseCase(get(), get(), get()) }
         single<AuthApi> { AuthApiImpl() }

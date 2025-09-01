@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spruhs.auth.presentation.LoginIntent
@@ -80,53 +81,77 @@ fun LoginContent(
                 color = MaterialTheme.colorScheme.primary
             )
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                if (loginUIState.loginError && !loginUIState.isLoading) {
-                    Text(
-                        text = "E-Mail or Password incorrect.",
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier =
-                        Modifier
-                            .fillMaxWidth(0.8f)
-                            .padding(bottom = 8.dp)
-                    )
-                }
+            LoginFields(
+                loginUIState = loginUIState,
+                onIntent = onIntent
+            )
 
-                EmailInput(
-                    email = loginUIState.email,
-                    onEmailChange = { onIntent(LoginIntent.EmailChanged(it)) }
-                )
-
-                PasswordInput(
-                    password = loginUIState.password,
-                    onPasswordChange = { onIntent(LoginIntent.PasswordChanged(it)) }
-                )
-            }
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                SubmitButton(
-                    modifier =
-                    Modifier
-                        .padding(bottom = 42.dp)
-                        .fillMaxWidth(0.5f),
-                    enabled = !loginUIState.isLoading && loginUIState.isInputValid,
-                    isLoading = loginUIState.isLoading
-                ) {
-                    onIntent(LoginIntent.Login)
-                }
-
-                Button(
-                    onClick = { onIntent(LoginIntent.Register) }
-                ) {
-                    Text(text = "Register")
-                }
-            }
+            LoginButtons(
+                loginUIState = loginUIState,
+                onIntent = onIntent
+            )
         }
+    }
+}
+
+@Composable
+fun LoginButtons(
+    loginUIState: LoginUIState,
+    onIntent: (LoginIntent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SubmitButton(
+            modifier =
+                modifier
+                    .padding(bottom = 42.dp)
+                    .fillMaxWidth(0.5f),
+            enabled = !loginUIState.isLoading && loginUIState.isInputValid,
+            isLoading = loginUIState.isLoading
+        ) {
+            onIntent(LoginIntent.Login)
+        }
+
+        Button(
+            onClick = { onIntent(LoginIntent.Register) }
+        ) {
+            Text(text = "Register")
+        }
+    }
+}
+
+@Composable
+fun LoginFields(
+    loginUIState: LoginUIState,
+    onIntent: (LoginIntent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        if (loginUIState.loginError && !loginUIState.isLoading) {
+            Text(
+                text = "E-Mail or Password incorrect.",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(bottom = 8.dp)
+            )
+        }
+
+        EmailInput(
+            email = loginUIState.email,
+            onEmailChange = { onIntent(LoginIntent.EmailChanged(it)) }
+        )
+
+        PasswordInput(
+            password = loginUIState.password,
+            onPasswordChange = { onIntent(LoginIntent.PasswordChanged(it)) }
+        )
     }
 }

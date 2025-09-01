@@ -1,7 +1,7 @@
 package com.spruhs.auth.data
 
 import com.spruhs.auth.application.AuthApi
-import com.spruhs.auth.application.AuthToken
+import com.spruhs.auth.application.AuthTokens
 import com.spruhs.auth.application.AuthTokenRepository
 import kotlin.concurrent.Volatile
 
@@ -10,12 +10,11 @@ class AuthTokenRepositoryImpl(
     private val authApi: AuthApi
 ) : AuthTokenRepository {
     @Volatile
-    private var cachedToken: AuthToken? = null
+    private var cachedToken: AuthTokens? = null
 
-    override suspend fun saveToken(accessToken: String, refreshToken: String) {
-        val entity = AuthTokenEntity(accessToken = accessToken, refreshToken = refreshToken)
-        authTokenDao.saveToken(entity)
-        cachedToken = entity.toToken()
+    override suspend fun saveToken(authTokens: AuthTokens) {
+        authTokenDao.saveToken(authTokens.toEntity())
+        cachedToken = authTokens
     }
 
     override suspend fun deleteToken() {
@@ -23,17 +22,18 @@ class AuthTokenRepositoryImpl(
         cachedToken = null
     }
 
-    override suspend fun getToken(): AuthToken? {
-        if (cachedToken == null) {
-            cachedToken = authTokenDao.getToken()?.toToken()
-        }
-        return cachedToken
-    }
+    override suspend fun getToken(): AuthTokens? = cachedToken
+            ?: authTokenDao
+                .getToken()
+                ?.toToken()
+                ?.also { cachedToken = it }
 
-    override suspend fun refreshToken(refreshToken: String): Pair<String, String> =
+    override suspend fun refreshToken(refreshToken: String): AuthTokens =
         authApi.refreshToken(refreshToken)
 
-    fun getTokenSync(): AuthToken? = cachedToken
+    fun getTokenSync(): AuthTokens? = cachedToken
 
-    private fun AuthTokenEntity.toToken() = AuthToken(accessToken, refreshToken)
+    private fun AuthTokenEntity.toToken() = AuthTokens(accessToken, refreshToken)
+
+    private fun AuthTokens.toEntity() = AuthTokenEntity(accessToken = accessToken, refreshToken = refreshToken)
 }

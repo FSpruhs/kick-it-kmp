@@ -6,41 +6,38 @@ class AuthenticateUseCase(
     private val authTokenRepository: AuthTokenRepository,
     private val tokenHelper: TokenHelper
 ) {
-    private suspend fun getValidToken(): AuthToken? {
-        val tokens = authTokenRepository.getToken()
-        if (tokens == null) {
+    suspend fun authenticate(): String? =
+        getValidToken()?.getUserId()
+
+    private fun AuthTokens.getUserId(): String = tokenHelper.getUserId(accessToken)
+
+    private suspend fun getValidToken(): AuthTokens? {
+        val tokens = authTokenRepository.getToken()?.also {
+            AppLogger.i("AuthViewModel", "Token found")
+        } ?: run {
             AppLogger.i("AuthViewModel", "No token found")
             return null
         }
 
-        val isAccessValid = tokenHelper.isTokenValid(tokens.accessToken)
-        if (isAccessValid) {
-            AppLogger.i("AuthViewModel", "Access token is valid")
-            return tokens
+        return when {
+            tokenHelper.isTokenValid(tokens.accessToken) -> {
+                AppLogger.i("AuthViewModel", "Access token is valid")
+                tokens
+            }
+            tokenHelper.isTokenValid(tokens.refreshToken) -> {
+                AppLogger.i("AuthViewModel", "Refresh token is valid")
+                tokens.refreshTokens()
+            }
+            else -> {
+                AppLogger.d("AuthViewModel", "No valid token found")
+                null
+            }
         }
-
-        val isRefreshValid = tokenHelper.isTokenValid(tokens.refreshToken)
-        if (isRefreshValid) {
-            AppLogger.i("AuthViewModel", "Refresh token is valid")
-            return refreshToken(tokens.refreshToken)
-        }
-
-        AppLogger.d("AuthViewModel", "No valid token found")
-        return null
     }
 
-    suspend fun authenticate(): String? {
-        val validToken = getValidToken()
-        if (validToken == null) {
-            return null
-        }
-
-        return tokenHelper.getUserId(validToken.accessToken)
-    }
-
-    private suspend fun refreshToken(refresherToken: String): AuthToken {
-        val (accessToken, refreshToken) = authTokenRepository.refreshToken(refresherToken)
-        authTokenRepository.saveToken(accessToken, refreshToken)
-        return AuthToken(accessToken, refreshToken)
+    private suspend fun AuthTokens.refreshTokens(): AuthTokens {
+        val tokens = authTokenRepository.refreshToken(refreshToken)
+        authTokenRepository.saveToken(tokens)
+        return AuthTokens(accessToken, refreshToken)
     }
 }

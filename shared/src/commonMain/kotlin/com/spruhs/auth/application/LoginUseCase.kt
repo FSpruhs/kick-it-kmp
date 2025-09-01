@@ -5,12 +5,10 @@ class LoginUseCase(
     private val tokenHelper: TokenHelper,
     private val authTokenRepository: AuthTokenRepository
 ) {
-    suspend fun login(email: String, password: String): String? {
-        val (accessToken, refreshToken) = authApi.login(email, password)
-        if (accessToken != null && refreshToken != null) {
-            authTokenRepository.saveToken(accessToken, refreshToken)
-            return tokenHelper.getUserId(accessToken)
-        }
-        return null
-    }
+    suspend fun login(email: String, password: String): String? =
+        authApi.login(email, password)
+            ?.also { authTokenRepository.saveToken(it) }
+            ?.getUserId()
+
+    private fun AuthTokens.getUserId(): String = tokenHelper.getUserId(accessToken)
 }

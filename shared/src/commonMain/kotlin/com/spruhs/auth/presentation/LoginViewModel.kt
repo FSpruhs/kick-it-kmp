@@ -1,6 +1,5 @@
 package com.spruhs.auth.presentation
 
-import com.spruhs.AppLogger
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.LoginUseCase
 import com.spruhs.user.application.LoadUserUseCase
@@ -8,6 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -24,25 +24,20 @@ class LoginViewModel(
         when (intent) {
             is LoginIntent.Login -> login()
             is LoginIntent.Register -> scope.launch { _effects.emit(LoginSideEffect.Register) }
-            is LoginIntent.EmailChanged -> handleEmailChanged(intent.email)
-            is LoginIntent.PasswordChanged -> handlePasswordChanged(intent.password)
+            is LoginIntent.EmailChanged -> updateLoginState(email = intent.email)
+            is LoginIntent.PasswordChanged -> updateLoginState(password = intent.password)
         }
     }
 
-    private fun handleEmailChanged(email: String) {
-        _loginUIState.value =
-            _loginUIState.value.copy(
-                email = email,
-                isInputValid = validateInput(email, _loginUIState.value.password)
-            )
-    }
-
-    private fun handlePasswordChanged(password: String) {
-        _loginUIState.value =
-            _loginUIState.value.copy(
-                password = password,
-                isInputValid = validateInput(_loginUIState.value.email, password)
-            )
+    private fun updateLoginState(
+        email: String = _loginUIState.value.email,
+        password: String = _loginUIState.value.password
+    ) {
+        _loginUIState.value = _loginUIState.value.copy(
+            email = email,
+            password = password,
+            isInputValid = validateInput(email, password)
+        )
     }
 
     private fun validateInput(email: String, password: String): Boolean {
@@ -52,23 +47,23 @@ class LoginViewModel(
     }
 
     private fun login() {
-        scope.launch {
-            _loginUIState.value = _loginUIState.value.copy(isLoading = true)
-            try {
-                val userId = loginUseCase.login(
-                    _loginUIState.value.email,
-                    _loginUIState.value.password
-                )
-                if (userId != null) {
-                    loadUserUseCase.loadUser(userId)
-                    _effects.emit(LoginSideEffect.LoginSuccess)
-                } else {
-                    _loginUIState.value = _loginUIState.value.copy(loginError = true)
-                }
-            } catch (e: RuntimeException) {
-                AppLogger.e("LoginViewModel", "Login failed: ${e.message}", e)
-                _loginUIState.value = _loginUIState.value.copy(loginError = true)
+        performAction(
+            setLoading = { isLoading ->_loginUIState.update { it.copy(isLoading = isLoading) }},
+            onSuccess = { onLoginSuccess(it) },
+            onError = { _loginUIState.update { it.copy(loginError = true) } },
+            action = {
+                require(loginUIState.value.isInputValid)
+                loginUseCase.login(_loginUIState.value.email, _loginUIState.value.password)
             }
+        )
+    }
+
+    private suspend fun onLoginSuccess(userId: String?) {
+        if (userId != null) {
+            loadUserUseCase.loadUser(userId)
+            _effects.emit(LoginSideEffect.LoginSuccess)
+        } else {
+            _loginUIState.update { it.copy(loginError = true) }
         }
     }
 }
@@ -89,7 +84,6 @@ data class LoginUIState(
     val email: String = "",
     val password: String = "",
     val isInputValid: Boolean = false,
-    val loadingUserError: String? = null,
     val loginError: Boolean = false,
     val isLoading: Boolean = false
 )

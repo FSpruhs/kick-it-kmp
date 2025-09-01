@@ -1,13 +1,10 @@
 package com.spruhs.auth.presentation
 
-import com.spruhs.AppLogger
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.AuthenticateUseCase
 import com.spruhs.user.application.LoadUserUseCase
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 
 class StartViewModel(
     private val authenticateUseCase: AuthenticateUseCase,
@@ -24,21 +21,19 @@ class StartViewModel(
     }
 
     private fun authenticate() {
-        scope.launch {
-            delay(2000)
-            try {
-                AppLogger.i("StartViewModel", "Authenticating")
-                val userId = authenticateUseCase.authenticate()
-                if (userId == null) {
-                    _effects.emit(StartSideEffect.NotAuthenticated)
-                } else {
-                    loadUserUseCase.loadUser(userId)
-                    _effects.emit(StartSideEffect.Authenticated)
-                }
-            } catch (e: RuntimeException) {
-                AppLogger.e("StartViewModel", "Authentication failed: ${e.message}", e)
-                _effects.emit(StartSideEffect.NotAuthenticated)
-            }
+        performAction(
+            onSuccess = { onAuthenticated(it) },
+            onError = { _effects.emit(StartSideEffect.NotAuthenticated) },
+            action = { authenticateUseCase.authenticate() }
+        )
+    }
+
+    private suspend fun onAuthenticated(userId: String?) {
+        if (userId == null) {
+            _effects.emit(StartSideEffect.NotAuthenticated)
+        } else {
+            loadUserUseCase.loadUser(userId)
+            _effects.emit(StartSideEffect.Authenticated)
         }
     }
 }

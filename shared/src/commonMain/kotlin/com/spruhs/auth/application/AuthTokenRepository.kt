@@ -1,8 +1,8 @@
 package com.spruhs.auth.application
 
 interface AuthTokenRepository {
-    suspend fun getToken(): AuthToken?
-    suspend fun saveToken(accessToken: String, refreshToken: String)
+    suspend fun getToken(): AuthTokens?
+    suspend fun saveToken(authTokens: AuthTokens)
     suspend fun deleteToken()
-    suspend fun refreshToken(refreshToken: String): Pair<String, String>
+    suspend fun refreshToken(refreshToken: String): AuthTokens
 }

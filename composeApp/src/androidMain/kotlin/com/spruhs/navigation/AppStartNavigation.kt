@@ -31,8 +31,3 @@ fun AppStartNavigation(navHostController: NavHostController) {
         }
     }
 }
-
-sealed class StartScreens(val route: String) {
-    data object StartScreen : StartScreens("Start")
-    data object LoginScreen : StartScreens("Login")
-}

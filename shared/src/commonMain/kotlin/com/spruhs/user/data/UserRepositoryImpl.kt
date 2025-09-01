@@ -36,7 +36,7 @@ class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
     }
 
     override fun setSelectedGroup(group: UserGroupInfo) {
-        _selectedGroup.value = SelectedGroup(group.id, group.name, group.userRole)
+        _selectedGroup.update { SelectedGroup(group.id, group.name, group.userRole) }
     }
 
     override fun addGroup(group: UserGroupInfo) {

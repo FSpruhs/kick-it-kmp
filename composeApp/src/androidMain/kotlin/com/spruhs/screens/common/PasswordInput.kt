@@ -26,6 +26,7 @@ fun PasswordInput(password: String, onPasswordChange: (String) -> Unit) {
         var passwordVisible by remember { mutableStateOf(false) }
 
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = password,
             onValueChange = {
                 onPasswordChange(it)
