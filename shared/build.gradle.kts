@@ -36,6 +36,10 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.ktorfit)
+            implementation(libs.serialization.json)
+            implementation(libs.content.negotiation)
+            implementation(libs.kotlinx.json)
         }
 
         androidMain.dependencies {
@@ -75,6 +79,7 @@ android {
 }
 
 dependencies {
+    add("kspCommonMainMetadata", libs.ktorfit.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)
