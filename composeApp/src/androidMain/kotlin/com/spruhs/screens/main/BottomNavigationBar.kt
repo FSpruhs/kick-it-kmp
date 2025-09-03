@@ -24,8 +24,8 @@ fun BottomNavigationBar(
 ) {
     NavigationBar(
         modifier =
-            Modifier
-                .fillMaxWidth(),
+        Modifier
+            .fillMaxWidth(),
         containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) {
         KickItNavigationItem(
@@ -72,18 +72,18 @@ fun RowScope.KickItNavigationItem(
                 imageVector = imageVector,
                 contentDescription = contentDescription,
                 tint =
-                    if (selectedItem == itemName) {
-                        MaterialTheme.colorScheme.onSecondary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
+                if (selectedItem == itemName) {
+                    MaterialTheme.colorScheme.onSecondary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
             )
         },
         colors =
-            NavigationBarItemDefaults.colors(
-                selectedIconColor = MaterialTheme.colorScheme.secondary,
-                indicatorColor = MaterialTheme.colorScheme.secondary
-            )
+        NavigationBarItemDefaults.colors(
+            selectedIconColor = MaterialTheme.colorScheme.secondary,
+            indicatorColor = MaterialTheme.colorScheme.secondary
+        )
     )
 }
 

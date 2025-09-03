@@ -18,19 +18,19 @@ import com.spruhs.R
 fun UserImage(imageUrl: String?, size: Int) {
     AsyncImage(
         model =
-            ImageRequest
-                .Builder(LocalContext.current)
-                .data(imageUrl)
-                .placeholder(R.drawable.profile_placeholder)
-                .error(R.drawable.profile_placeholder)
-                .fallback(R.drawable.profile_placeholder)
-                .build(),
+        ImageRequest
+            .Builder(LocalContext.current)
+            .data(imageUrl)
+            .placeholder(R.drawable.profile_placeholder)
+            .error(R.drawable.profile_placeholder)
+            .fallback(R.drawable.profile_placeholder)
+            .build(),
         contentDescription = "profile picture",
         modifier =
-            Modifier
-                .size(size.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Gray, CircleShape),
+        Modifier
+            .size(size.dp)
+            .clip(CircleShape)
+            .border(2.dp, Color.Gray, CircleShape),
         contentScale = ContentScale.Crop
     )
 }

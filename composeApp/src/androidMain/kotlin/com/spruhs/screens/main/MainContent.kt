@@ -28,14 +28,14 @@ fun MainContent(onLogout: () -> Unit) {
                 onBackClick = { navHostController.popBackStack() },
                 onMessageClick = { navHostController.navigate(MainScreens.MessageScreen.route) },
                 onProfileClick = { navHostController.navigate(MainScreens.ProfileScreen.route) }
-                )
+            )
         },
         content = { paddingValues ->
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
                 AppMainNavigation(
                     navHostController = navHostController,

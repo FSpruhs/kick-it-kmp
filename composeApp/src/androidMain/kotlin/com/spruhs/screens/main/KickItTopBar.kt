@@ -43,7 +43,7 @@ fun KickItTopBar(
     onBackClick: () -> Unit,
     onMessageClick: () -> Unit,
     onProfileClick: () -> Unit,
-    topBarViewModel: TopBarViewModel = koinViewModel(),
+    topBarViewModel: TopBarViewModel = koinViewModel()
 ) {
     val uiState by topBarViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,8 +69,8 @@ fun KickItTopBar(
 fun KickItTopBarContent(
     backIcon: Boolean,
     uiState: TopBarUIState,
-    onIntent: (TopBarIntent) -> Unit,
-    ) {
+    onIntent: (TopBarIntent) -> Unit
+) {
     TopAppBar(
         title = {
             Row(
@@ -88,11 +88,11 @@ fun KickItTopBarContent(
                     Text(
                         text = uiState.selectedGroupName ?: "Select Group",
                         style =
-                            MaterialTheme.typography.titleLarge.copy(
-                                color = MaterialTheme.colorScheme.onTertiary,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.5.sp
-                            ),
+                        MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.5.sp
+                        ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
@@ -111,9 +111,9 @@ fun KickItTopBarContent(
 
                     Box(
                         modifier =
-                            Modifier
-                                .clickable { onIntent(TopBarIntent.Profile) }
-                                .padding(8.dp)
+                        Modifier
+                            .clickable { onIntent(TopBarIntent.Profile) }
+                            .padding(8.dp)
                     ) {
                         UserImage(uiState.imageUrl, 48)
                     }
@@ -121,9 +121,9 @@ fun KickItTopBarContent(
             }
         },
         colors =
-            TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.tertiary
-            )
+        TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.tertiary
+        )
     )
 }
 

@@ -15,7 +15,6 @@ import com.spruhs.auth.presentation.LoginViewModel
 import com.spruhs.auth.presentation.RegisterViewModel
 import com.spruhs.auth.presentation.StartViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
-import io.ktor.client.HttpClient
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

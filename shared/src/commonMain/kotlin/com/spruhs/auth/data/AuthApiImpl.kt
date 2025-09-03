@@ -6,20 +6,10 @@ import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.contentType
-
 import kotlinx.serialization.Serializable
 
 class AuthApiImpl(private val service: AuthService, private val client: HttpClient) : AuthApi {
     override suspend fun login(email: String, password: String): AuthTokens? {
-        //val response = client.post("http://10.0.2.2:8085/api/v1/auth/login") {
-        //    contentType(io.ktor.http.ContentType.Application.Json)
-        //    setBody(LoginRequest("fabian@spruhs.com", "Password123"))
-        //    }
-        //val authResponse: AuthResponse = response.body()
         val response = service.login(LoginRequest(email, password))
         return AuthTokens(response.accessToken, response.refreshToken)
     }

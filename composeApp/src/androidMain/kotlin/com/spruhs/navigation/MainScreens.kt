@@ -6,5 +6,4 @@ sealed class MainScreens(val route: String) {
     data object MatchScreen : MainScreens("Match")
     data object MessageScreen : MainScreens("Message")
     data object ProfileScreen : MainScreens("Profile")
-
 }

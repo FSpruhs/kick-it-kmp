@@ -9,11 +9,14 @@ class TopBarViewModel : BaseViewModel<TopBarEffect, TopBarUIState>(TopBarUIState
     fun processIntent(intent: TopBarIntent) {
         when (intent) {
             TopBarIntent.Back -> viewModelScope.launch { effectsMutable.emit(TopBarEffect.Back) }
-            TopBarIntent.Messages -> viewModelScope.launch { effectsMutable.emit(TopBarEffect.Messages) }
-            TopBarIntent.Profile -> viewModelScope.launch { effectsMutable.emit(TopBarEffect.Profile) }
+            TopBarIntent.Messages -> viewModelScope.launch {
+                effectsMutable.emit(TopBarEffect.Messages)
+            }
+            TopBarIntent.Profile -> viewModelScope.launch {
+                effectsMutable.emit(TopBarEffect.Profile)
+            }
         }
     }
-
 }
 
 sealed class TopBarIntent {
@@ -32,4 +35,4 @@ data class TopBarUIState(
     val selectedGroupName: String? = null,
     val unreadMessage: Int = 0,
     val imageUrl: String? = null
-    )
+)

@@ -92,3 +92,11 @@ dependencies {
 room {
     schemaDirectory("$projectDir/schemas")
 }
+
+tasks.named("runKtlintFormatOverCommonMainSourceSet") {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
+
+tasks.named("runKtlintCheckOverCommonMainSourceSet") {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
