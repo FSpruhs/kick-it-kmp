@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,16 +30,47 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import com.spruhs.navigation.MainScreens
+import com.spruhs.main.TopBarEffect
+import com.spruhs.main.TopBarIntent
+import com.spruhs.main.TopBarUIState
+import com.spruhs.main.TopBarViewModel
 import com.spruhs.screens.common.UserImage
 import org.koin.androidx.compose.koinViewModel
 
+@Composable
+fun KickItTopBar(
+    backIcon: Boolean,
+    onBackClick: () -> Unit,
+    onMessageClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    topBarViewModel: TopBarViewModel = koinViewModel(),
+) {
+    val uiState by topBarViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        topBarViewModel.effects.collect { effect ->
+            when (effect) {
+                TopBarEffect.Back -> onBackClick()
+                TopBarEffect.Messages -> onMessageClick()
+                TopBarEffect.Profile -> onProfileClick()
+            }
+        }
+    }
+
+    KickItTopBarContent(
+        backIcon,
+        uiState,
+        topBarViewModel::processIntent
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KickItTopBar(backIcon: Boolean, navController: NavController) {
-
-
+fun KickItTopBarContent(
+    backIcon: Boolean,
+    uiState: TopBarUIState,
+    onIntent: (TopBarIntent) -> Unit,
+    ) {
     TopAppBar(
         title = {
             Row(
@@ -50,18 +82,11 @@ fun KickItTopBar(backIcon: Boolean, navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (backIcon) {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back",
-                                tint = MaterialTheme.colorScheme.onTertiary
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
+                        BackIcon(onIntent)
                     }
 
                     Text(
-                        text = selectedGroupState?.name ?: "Select Group",
+                        text = uiState.selectedGroupName ?: "Select Group",
                         style =
                             MaterialTheme.typography.titleLarge.copy(
                                 color = MaterialTheme.colorScheme.onTertiary,
@@ -78,8 +103,8 @@ fun KickItTopBar(backIcon: Boolean, navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
                 ) {
-                    MessageIcon(unreadMessages) {
-                        navController.navigate(MainScreens.MessageScreen.route)
+                    MessageIcon(uiState.unreadMessage) {
+                        onIntent(TopBarIntent.Messages)
                     }
 
                     Spacer(modifier = Modifier.width(12.dp))
@@ -87,10 +112,10 @@ fun KickItTopBar(backIcon: Boolean, navController: NavController) {
                     Box(
                         modifier =
                             Modifier
-                                .clickable { navController.navigate(MainScreens.ProfileScreen.route) }
+                                .clickable { onIntent(TopBarIntent.Profile) }
                                 .padding(8.dp)
                     ) {
-                        UserImage(userState.data?.imageUrl, 48)
+                        UserImage(uiState.imageUrl, 48)
                     }
                 }
             }
@@ -100,6 +125,18 @@ fun KickItTopBar(backIcon: Boolean, navController: NavController) {
                 containerColor = MaterialTheme.colorScheme.tertiary
             )
     )
+}
+
+@Composable
+fun BackIcon(onIntent: (TopBarIntent) -> Unit) {
+    IconButton(onClick = { onIntent(TopBarIntent.Back) }) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Back",
+            tint = MaterialTheme.colorScheme.onTertiary
+        )
+    }
+    Spacer(modifier = Modifier.width(8.dp))
 }
 
 @Composable

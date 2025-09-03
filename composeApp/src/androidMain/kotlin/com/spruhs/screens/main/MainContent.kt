@@ -23,7 +23,12 @@ fun MainContent(onLogout: () -> Unit) {
 
     Scaffold(
         topBar = {
-            KickItTopBar(backIcon, navHostController)
+            KickItTopBar(
+                backIcon,
+                onBackClick = { navHostController.popBackStack() },
+                onMessageClick = { navHostController.navigate(MainScreens.MessageScreen.route) },
+                onProfileClick = { navHostController.navigate(MainScreens.ProfileScreen.route) }
+                )
         },
         content = { paddingValues ->
             Column(
