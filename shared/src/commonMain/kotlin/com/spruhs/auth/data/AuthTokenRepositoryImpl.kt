@@ -31,7 +31,7 @@ class AuthTokenRepositoryImpl(
     override suspend fun refreshToken(refreshToken: String): AuthTokens =
         authApi.refreshToken(refreshToken)
 
-    fun getTokenSync(): AuthTokens? = cachedToken
+    override fun getTokenSync(): AuthTokens? = cachedToken
 
     private fun AuthTokenEntity.toToken() = AuthTokens(accessToken, refreshToken)
 

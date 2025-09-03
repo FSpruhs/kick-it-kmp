@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.ktorfit)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
