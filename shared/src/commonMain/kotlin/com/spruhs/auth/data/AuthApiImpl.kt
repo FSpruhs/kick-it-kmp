@@ -5,10 +5,9 @@ import com.spruhs.auth.application.AuthTokens
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
-import io.ktor.client.HttpClient
 import kotlinx.serialization.Serializable
 
-class AuthApiImpl(private val service: AuthService, private val client: HttpClient) : AuthApi {
+class AuthApiImpl(private val service: AuthService) : AuthApi {
     override suspend fun login(email: String, password: String): AuthTokens? {
         val response = service.login(LoginRequest(email, password))
         return AuthTokens(response.accessToken, response.refreshToken)

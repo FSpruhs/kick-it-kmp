@@ -26,7 +26,7 @@ val authModule =
         single { TokenHelper() }
         single<AuthTokenRepository> { AuthTokenRepositoryImpl(get(), get()) }
         single<AuthTokenDao> { get<AuthTokenDatabase>().authTokenDao() }
-        single<AuthApi> { AuthApiImpl(get(), get(named("NoAuthClient"))) }
+        single<AuthApi> { AuthApiImpl(get()) }
 
         viewModelOf(::StartViewModel)
         viewModelOf(::RegisterViewModel)
