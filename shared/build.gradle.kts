@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.ktorfit)
 }
 
 kotlin {
@@ -40,6 +41,7 @@ kotlin {
             implementation(libs.serialization.json)
             implementation(libs.content.negotiation)
             implementation(libs.kotlinx.json)
+            implementation(libs.ktor.client.logging)
         }
 
         androidMain.dependencies {

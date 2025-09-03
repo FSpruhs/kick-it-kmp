@@ -6,13 +6,16 @@ import com.spruhs.auth.application.AuthenticateUseCase
 import com.spruhs.auth.application.LoginUseCase
 import com.spruhs.auth.application.TokenHelper
 import com.spruhs.auth.data.AuthApiImpl
+import com.spruhs.auth.data.AuthService
 import com.spruhs.auth.data.AuthTokenDao
 import com.spruhs.auth.data.AuthTokenDatabase
 import com.spruhs.auth.data.AuthTokenRepositoryImpl
 import com.spruhs.auth.presentation.LoginViewModel
 import com.spruhs.auth.presentation.RegisterViewModel
 import com.spruhs.auth.presentation.StartViewModel
+import de.jensklingenberg.ktorfit.Ktorfit
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val authModule =
@@ -22,9 +25,13 @@ val authModule =
         single { TokenHelper() }
         single<AuthTokenRepository> { AuthTokenRepositoryImpl(get(), get()) }
         single<AuthTokenDao> { get<AuthTokenDatabase>().authTokenDao() }
-        single<AuthApi> { AuthApiImpl() }
+        single<AuthApi> { AuthApiImpl(get()) }
 
         viewModelOf(::StartViewModel)
         viewModelOf(::RegisterViewModel)
         viewModelOf(::LoginViewModel)
+
+        single<AuthService> {
+            get<Ktorfit>(named("NoAuthKtorfit")).create()
+        }
     }
