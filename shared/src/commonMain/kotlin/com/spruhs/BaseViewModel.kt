@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel<E, S>(initialState: S) : ViewModel() {
 
     protected val uiStateMutable = MutableStateFlow(initialState)
-    val uiState: StateFlow<S> = uiStateMutable.asStateFlow()
+    open val uiState: StateFlow<S> = uiStateMutable.asStateFlow()
 
     protected val effectsMutable = MutableSharedFlow<E>(
         replay = 0,

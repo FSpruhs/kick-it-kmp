@@ -19,6 +19,7 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.kotlinx.datetime)
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
