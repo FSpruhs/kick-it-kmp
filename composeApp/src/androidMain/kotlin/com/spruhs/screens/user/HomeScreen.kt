@@ -1,8 +1,5 @@
 package com.spruhs.screens.user
 
-import android.icu.text.SimpleDateFormat
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,19 +43,13 @@ import com.spruhs.user.presentation.HomeEffect
 import com.spruhs.user.presentation.HomeIntent
 import com.spruhs.user.presentation.HomeUIState
 import com.spruhs.user.presentation.HomeViewModel
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeFormat
-import kotlinx.datetime.toJavaLocalDateTime
 import org.koin.androidx.compose.koinViewModel
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 fun HomeScreen(
     onMatchClick: (String) -> Unit,
     setBackIcon: (Boolean) -> Unit,
-    homeViewModel: HomeViewModel = koinViewModel(),
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -76,10 +67,10 @@ fun HomeScreen(
         content = { paddingValues ->
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(horizontal = 6.dp)
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 6.dp)
             ) {
                 UpcomingMatchesContent(
                     modifier = Modifier.weight(1f),
@@ -95,7 +86,7 @@ fun HomeScreen(
 fun UpcomingMatchesContent(
     modifier: Modifier = Modifier,
     onIntent: (HomeIntent) -> Unit,
-    homeUiState: HomeUIState,
+    homeUiState: HomeUIState
 ) {
     Column(
         modifier = modifier,
@@ -124,17 +115,16 @@ fun UpcomingMatchesContent(
                 Text(text = "No upcoming matches")
             }
             else -> {
-                    LazyColumn {
-                        items(homeUiState.upcomingMatches) { match ->
-                            UpcomingMatchesItem(
-                                upcomingMatchPreview = match,
-                                groups = homeUiState.groups,
-                                userId = homeUiState.userId ?: "",
-                                onIntent = onIntent,
-                            )
-                        }
+                LazyColumn {
+                    items(homeUiState.upcomingMatches) { match ->
+                        UpcomingMatchesItem(
+                            upcomingMatchPreview = match,
+                            groups = homeUiState.groups,
+                            userId = homeUiState.userId ?: "",
+                            onIntent = onIntent
+                        )
                     }
-
+                }
             }
         }
     }
@@ -149,35 +139,35 @@ fun UpcomingMatchesItem(
 ) {
     Card(
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = LocalIndication.current
-                ) {
-                    onIntent(HomeIntent.SelectMatch(upcomingMatchPreview.id))
-                }
+        Modifier
+            .fillMaxWidth()
+            .padding(6.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current
+            ) {
+                onIntent(HomeIntent.SelectMatch(upcomingMatchPreview.id))
+            }
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .padding(6.dp),
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .padding(6.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
                 modifier =
-                    Modifier
-                        .weight(0.5f)
-                        .padding(end = 8.dp)
-                        .fillMaxHeight(),
+                Modifier
+                    .weight(0.5f)
+                    .padding(end = 8.dp)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -187,8 +177,6 @@ fun UpcomingMatchesItem(
                     from = upcomingMatchPreview.maxPlayers
                 )
             }
-
-
 
             Column(modifier = Modifier.weight(2f)) {
                 Text(
@@ -200,9 +188,9 @@ fun UpcomingMatchesItem(
 
             Column(
                 modifier =
-                    Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
@@ -225,12 +213,12 @@ fun RegistrationDisplay(size: Int, actual: Int, from: Int) {
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-            Modifier
-                .size(size.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.background,
-                    shape = CircleShape
-                ).border(1.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
+        Modifier
+            .size(size.dp)
+            .background(
+                color = MaterialTheme.colorScheme.background,
+                shape = CircleShape
+            ).border(1.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
     ) {
         Text(
             text = "$actual/$from",
@@ -244,11 +232,11 @@ fun RegistrationDisplay(size: Int, actual: Int, from: Int) {
 fun PlayerStatusIcon(status: PlayerStatus?) {
     Box(
         modifier =
-            Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.background)
-                .padding(8.dp),
+        Modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.background)
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
         PlayerMatchStatusIcon(

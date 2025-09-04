@@ -9,11 +9,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TopBarViewModel(userRepository: UserRepository) : BaseViewModel<TopBarEffect, TopBarUIState>(TopBarUIState()) {
+class TopBarViewModel(userRepository: UserRepository) :
+    BaseViewModel<TopBarEffect, TopBarUIState>(TopBarUIState()) {
 
     override val uiState: StateFlow<TopBarUIState> = combine(
         userRepository.userState,
-        userRepository.selectedGroup,
+        userRepository.selectedGroup
     ) { user, group ->
         TopBarUIState(
             selectedGroupName = group?.name,

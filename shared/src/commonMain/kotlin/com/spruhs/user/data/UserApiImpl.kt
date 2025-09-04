@@ -17,8 +17,7 @@ class UserApiImpl(
     private val userAuthService: UserAuthService,
     private val userNoAuthService: UserNoAuthService
 ) : UserApi {
-    override suspend fun getUser(id: String): User =
-        userAuthService.getUser(id).toUser()
+    override suspend fun getUser(id: String): User = userAuthService.getUser(id).toUser()
 
     override suspend fun registerUser(nickName: String, email: String, password: String): String =
         userNoAuthService.registerUser(RegisterUserRequest(nickName, email, password))
@@ -33,10 +32,7 @@ interface UserAuthService {
     suspend fun getUser(@Path("userId") userId: String): UserMessage
 
     @PUT("/api/v1/user/{userId}/nickName")
-    suspend fun changeNickName(
-        @Path("userId") userId: String,
-        @Query("nickName") nickName: String
-    )
+    suspend fun changeNickName(@Path("userId") userId: String, @Query("nickName") nickName: String)
 }
 
 interface UserNoAuthService {

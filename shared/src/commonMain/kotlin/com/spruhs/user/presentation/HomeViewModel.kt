@@ -10,10 +10,11 @@ class HomeViewModel : BaseViewModel<HomeEffect, HomeUIState>(HomeUIState()) {
 
     fun processIntent(intent: HomeIntent) {
         when (intent) {
-            is HomeIntent.SelectMatch -> viewModelScope.launch { effectsMutable.emit(HomeEffect.MatchSelected(intent.matchId)) }
+            is HomeIntent.SelectMatch -> viewModelScope.launch {
+                effectsMutable.emit(HomeEffect.MatchSelected(intent.matchId))
+            }
         }
     }
-
 }
 
 data class HomeUIState(
