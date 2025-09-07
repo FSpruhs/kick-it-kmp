@@ -33,8 +33,7 @@ class HomeViewModel(
                 }
             } else {
                 AppLogger.e("HomeViewModel", "User not found in state")
-                uiStateMutable.update { it
-                    .copy(error = "User not found")}
+                uiStateMutable.update { it.copy(error = "User not found") }
             }
         }
     }
@@ -45,7 +44,6 @@ class HomeViewModel(
         AppLogger.e("HomeViewModel", "Error fetching upcoming matches", it)
         emptyList()
     }.toList()
-
 
     fun processIntent(intent: HomeIntent) {
         when (intent) {
