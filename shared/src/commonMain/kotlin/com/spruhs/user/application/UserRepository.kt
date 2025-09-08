@@ -8,8 +8,9 @@ interface UserRepository {
 
     suspend fun loadUser(id: String): User
     suspend fun register(email: String, nickName: String, password: String): String
-    suspend fun changeNickname(userId: String, nickname: String)
+    suspend fun changeNickname(newNickname: String)
     fun setSelectedGroup(group: UserGroupInfo)
     fun addGroup(group: UserGroupInfo)
     fun removeGroup(groupId: String)
+    fun logout()
 }

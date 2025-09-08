@@ -30,9 +30,9 @@ class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
     override suspend fun register(email: String, nickName: String, password: String) =
         userApi.registerUser(nickName, email, password)
 
-    override suspend fun changeNickname(userId: String, nickname: String) {
-        userApi.changeNickName(userId, nickname)
-        _userState.update { it?.copy(nickName = nickname) }
+    override suspend fun changeNickname(newNickname: String) {
+        userApi.changeNickName(userState.value?.userId ?: "", newNickname)
+        _userState.update { it?.copy(nickName = newNickname) }
     }
 
     override fun setSelectedGroup(group: UserGroupInfo) {
@@ -62,5 +62,9 @@ class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
                 groups = updatedGroups
             )
         }
+    }
+
+    override fun logout() {
+        TODO("Not yet implemented")
     }
 }
