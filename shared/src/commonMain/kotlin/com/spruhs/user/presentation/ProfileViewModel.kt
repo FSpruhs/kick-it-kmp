@@ -6,9 +6,8 @@ import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(
-    private val userRepository: UserRepository
-) : BaseViewModel<ProfileEffect, ProfileUIState>(ProfileUIState()) {
+class ProfileViewModel(private val userRepository: UserRepository) :
+    BaseViewModel<ProfileEffect, ProfileUIState>(ProfileUIState()) {
 
     fun processIntent(intent: ProfileIntent) {
         viewModelScope.launch {
@@ -18,7 +17,9 @@ class ProfileViewModel(
                     effectsMutable.emit(ProfileEffect.Logout)
                 }
 
-                is ProfileIntent.ChangeNewNickname -> uiStateMutable.update { it.copy(newNickName = intent.newNickname) }
+                is ProfileIntent.ChangeNewNickname -> uiStateMutable.update {
+                    it.copy(newNickName = intent.newNickname)
+                }
                 is ProfileIntent.ChangeNickname -> {
                     if (uiState.value.newNickName != uiState.value.nickName) {
                         userRepository.changeNickname(uiState.value.newNickName)

@@ -37,10 +37,7 @@ import com.spruhs.user.presentation.ProfileViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProfileScreen(
-    onLogout: () -> Unit,
-    profileViewModel: ProfileViewModel = koinViewModel(),
-) {
+fun ProfileScreen(onLogout: () -> Unit, profileViewModel: ProfileViewModel = koinViewModel()) {
     val profileUIState by profileViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -84,8 +81,8 @@ fun ProfileContent(
         ) {
             Box(
                 modifier =
-                    Modifier
-                        .size(256.dp)
+                Modifier
+                    .size(256.dp)
             ) {
                 UserImage(
                     imageUrl = profileUIState.imageUrl,
@@ -95,10 +92,10 @@ fun ProfileContent(
                 Button(
                     onClick = { launcher.launch("image/*") },
                     modifier =
-                        Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(8.dp)
-                            .size(48.dp),
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp)
+                        .size(48.dp),
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Icon(

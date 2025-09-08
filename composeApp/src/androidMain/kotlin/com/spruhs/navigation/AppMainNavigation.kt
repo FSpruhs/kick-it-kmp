@@ -21,8 +21,10 @@ fun AppMainNavigation(
     ) {
         composable(MainScreens.HomeScreen.route) {
             HomeScreen(
-                onMatchClick = { matchId -> navHostController.navigate("${MainScreens.MatchDetailScreen.route}/$matchId") },
-                setBackIcon = setBackIcon,
+                onMatchClick = { matchId ->
+                    navHostController.navigate("${MainScreens.MatchDetailScreen.route}/$matchId")
+                },
+                setBackIcon = setBackIcon
             )
         }
 
