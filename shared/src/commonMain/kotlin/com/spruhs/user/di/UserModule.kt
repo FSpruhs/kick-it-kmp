@@ -9,7 +9,10 @@ import com.spruhs.user.data.UserNoAuthService
 import com.spruhs.user.data.UserRepositoryImpl
 import com.spruhs.user.data.createUserAuthService
 import com.spruhs.user.data.createUserNoAuthService
+import com.spruhs.user.presentation.HomeViewModel
+import com.spruhs.user.presentation.ProfileViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -25,4 +28,7 @@ val userModule = module {
     single<UserNoAuthService> {
         get<Ktorfit>(named("NoAuthKtorfit")).createUserNoAuthService()
     }
+
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::ProfileViewModel)
 }
