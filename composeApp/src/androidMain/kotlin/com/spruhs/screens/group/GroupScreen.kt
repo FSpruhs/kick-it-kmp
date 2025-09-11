@@ -37,7 +37,6 @@ import com.spruhs.group.GroupIntent
 import com.spruhs.group.GroupUiState
 import com.spruhs.group.GroupViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun GroupScreen(
@@ -45,9 +44,8 @@ fun GroupScreen(
     onInvitePlayerClick: () -> Unit,
     onPlayerClick: (String) -> Unit,
     onLeaveGroup: () -> Unit,
-    groupViewModel: GroupViewModel = koinViewModel(),
+    groupViewModel: GroupViewModel = koinViewModel()
 ) {
-
     val groupUIState by groupViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -66,10 +64,10 @@ fun GroupScreen(
         content = { paddingValues ->
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(paddingValues)
-                        .padding(6.dp)
+                Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues)
+                    .padding(6.dp)
             ) {
                 GroupPlayersContent(
                     groupUIState = groupUIState,
@@ -98,10 +96,7 @@ fun GroupScreen(
 }
 
 @Composable
-fun GroupPlayersContent(
-    groupUIState: GroupUiState,
-    onIntent: (GroupIntent) -> Unit,
-) {
+fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> Unit) {
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
@@ -153,27 +148,27 @@ fun PlayerItem(
 ) {
     Card(
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .graphicsLayer(alpha = if (player.status != UserStatus.ACTIVE) 0.5f else 1f)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = LocalIndication.current
-                ) {
-                    onClick(player.id)
-                }
+        Modifier
+            .fillMaxWidth()
+            .padding(6.dp)
+            .graphicsLayer(alpha = if (player.status != UserStatus.ACTIVE) 0.5f else 1f)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current
+            ) {
+                onClick(player.id)
+            }
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {

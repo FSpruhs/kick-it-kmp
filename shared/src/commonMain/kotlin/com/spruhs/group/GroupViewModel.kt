@@ -10,9 +10,7 @@ class GroupViewModel : BaseViewModel<GroupEffect, GroupUiState>(GroupUiState()) 
     }
 }
 
-data class GroupUiState(
-    val isLoading: Boolean = false,
-)
+data class GroupUiState(val isLoading: Boolean = false)
 
 sealed class GroupEffect {
     object LeavedGroup : GroupEffect()
