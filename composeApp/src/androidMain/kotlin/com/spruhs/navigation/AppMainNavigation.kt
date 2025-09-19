@@ -2,11 +2,14 @@ package com.spruhs.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.spruhs.screens.group.CreateGroupScreen
 import com.spruhs.screens.group.GroupScreen
 import com.spruhs.screens.group.InvitePlayerScreen
+import com.spruhs.screens.group.PlayerDetailsScreen
 import com.spruhs.screens.main.BottomNavigationItem
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
@@ -58,6 +61,22 @@ fun AppMainNavigation(
         composable(MainScreens.InvitePlayerScreen.route) {
             InvitePlayerScreen(
                 onPlayerInvitedSuccess = { navHostController.navigate(MainScreens.GroupScreen.route) }
+            )
+        }
+
+        composable(
+            route = "${MainScreens.PlayerDetailsScreen.route}/{playerId}",
+            arguments =
+                listOf(
+                    navArgument("playerId") {
+                        type = NavType.StringType
+                    }
+                )
+        ) {
+            PlayerDetailsScreen(
+                playerId = it.arguments?.getString("playerId") ?: "",
+                onLastMatchClick = TODO(),
+                onPlayerRemoved = TODO(),
             )
         }
     }
