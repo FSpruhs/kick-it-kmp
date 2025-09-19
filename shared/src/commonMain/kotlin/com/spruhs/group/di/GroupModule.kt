@@ -1,6 +1,6 @@
 package com.spruhs.group.di
 
-import com.spruhs.group.GroupViewModel
+import com.spruhs.group.presentation.GroupViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

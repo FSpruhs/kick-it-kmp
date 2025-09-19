@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,10 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.spruhs.group.GroupEffect
-import com.spruhs.group.GroupIntent
-import com.spruhs.group.GroupUiState
-import com.spruhs.group.GroupViewModel
+import com.spruhs.group.presentation.GroupEffect
+import com.spruhs.group.presentation.GroupIntent
+import com.spruhs.group.presentation.GroupUiState
+import com.spruhs.group.presentation.GroupViewModel
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.screens.common.CancelButton
 import com.spruhs.screens.common.ConfirmAlertDialog
@@ -106,10 +107,18 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
-        val players = groupUIState.players
-        if (players.isNotEmpty()) {
+    when {
+        groupUIState.isLoading -> {
+            CircularProgressIndicator()
+        }
+
+        groupUIState.players.isEmpty() -> {
+            Text(text = "No players found")
+        }
+
+        else -> {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(players) { player ->
+                items(groupUIState.players) { player ->
                     PlayerItem(
                         player,
                         groupUIState.groupNames,
@@ -126,9 +135,8 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
                     )
                 }
             }
-        } else {
-            Text(text = "No players found")
         }
+    }
 
 
     if (showDialog) {

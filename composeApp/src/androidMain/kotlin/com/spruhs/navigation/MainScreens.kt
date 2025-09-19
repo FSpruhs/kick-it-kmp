@@ -9,4 +9,6 @@ sealed class MainScreens(val route: String) {
     data object ProfileScreen : MainScreens("Profile")
     data object InvitePlayerScreen : MainScreens("InviteScreen")
     data object PlayerDetailsScreen : MainScreens("PlayerDetails")
+    data object CreateGroupScreen : MainScreens("CreateGroup")
+
 }

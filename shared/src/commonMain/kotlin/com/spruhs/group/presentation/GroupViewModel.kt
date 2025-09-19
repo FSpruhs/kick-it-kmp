@@ -1,4 +1,4 @@
-package com.spruhs.group
+package com.spruhs.group.presentation
 
 import com.spruhs.BaseViewModel
 import com.spruhs.group.application.PlayerDetails
@@ -8,7 +8,7 @@ class GroupViewModel : BaseViewModel<GroupEffect, GroupUiState>(GroupUiState()) 
     fun processIntent(intent: GroupIntent) {
         when (intent) {
             is GroupIntent.LeaveGroup -> {}
-            is GroupIntent.SelectPlayer -> TODO()
+            is GroupIntent.SelectPlayer -> {}
         }
     }
 }

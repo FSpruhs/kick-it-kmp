@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.spruhs.screens.group.CreateGroupScreen
 import com.spruhs.screens.group.GroupScreen
 import com.spruhs.screens.main.BottomNavigationItem
 import com.spruhs.screens.user.HomeScreen
@@ -45,6 +46,11 @@ fun AppMainNavigation(
                     navHostController.navigate(MainScreens.HomeScreen.route)
                     updateBottomNavigation(BottomNavigationItem.Home)
                 }
+            )
+        }
+        composable(MainScreens.CreateGroupScreen.route) {
+            CreateGroupScreen(
+                onCreateGroupSuccess = TODO()
             )
         }
     }
