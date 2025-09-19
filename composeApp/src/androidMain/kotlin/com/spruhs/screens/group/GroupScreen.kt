@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -36,9 +37,12 @@ import com.spruhs.group.GroupEffect
 import com.spruhs.group.GroupIntent
 import com.spruhs.group.GroupUiState
 import com.spruhs.group.GroupViewModel
+import com.spruhs.group.application.PlayerDetails
 import com.spruhs.screens.common.CancelButton
+import com.spruhs.screens.common.ConfirmAlertDialog
 import com.spruhs.screens.common.RoleBasedVisibility
 import com.spruhs.screens.common.UserImage
+import com.spruhs.user.application.UserStatus
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -55,9 +59,8 @@ fun GroupScreen(
         setBackIcon(false)
         groupViewModel.effects.collect { effect ->
             when (effect) {
-                is GroupEffect.LeavedGroup -> {
-                    onLeaveGroup()
-                }
+                is GroupEffect.LeavedGroup -> onLeaveGroup()
+                is GroupEffect.PlayerSelected -> onPlayerClick(effect.playerId)
             }
         }
     }
@@ -80,7 +83,7 @@ fun GroupScreen(
         },
         floatingActionButton = {
             RoleBasedVisibility(
-                selectedGroup?.role,
+                groupUIState.selectedGroup?.role,
                 "groupScreen:addPlayerButton"
             ) {
                 FloatingActionButton(
@@ -103,17 +106,14 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
-    DataContent(
-        dataUIState = groupUIState
-    ) {
-        val players = groupUIState.data?.players ?: emptyList()
+        val players = groupUIState.players
         if (players.isNotEmpty()) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(players) { player ->
                     PlayerItem(
                         player,
-                        groupNames,
-                        onPlayerClick
+                        groupUIState.groupNames,
+                        onIntent
                     )
                 }
 
@@ -129,7 +129,7 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
         } else {
             Text(text = "No players found")
         }
-    }
+
 
     if (showDialog) {
         ConfirmAlertDialog(
@@ -137,7 +137,7 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
             onDismiss = { showDialog = false },
             onConfirm = {
                 showDialog = false
-                onLeaveGroup()
+                onIntent(GroupIntent.LeaveGroup)
             }
         )
     }
@@ -146,8 +146,8 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
 @Composable
 fun PlayerItem(
     player: PlayerDetails,
-    groupNamesUIState: Map<String, String>,
-    onClick: (String) -> Unit
+    groupNames: Map<String, String>,
+    onIntent: (GroupIntent) -> Unit,
 ) {
     Card(
         colors =
@@ -164,7 +164,7 @@ fun PlayerItem(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = LocalIndication.current
             ) {
-                onClick(player.id)
+                onIntent(GroupIntent.SelectPlayer(player.id))
             }
     ) {
         Row(
@@ -187,7 +187,7 @@ fun PlayerItem(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = groupNamesUIState[player.id] ?: "Unknown Name",
+                    text = groupNames[player.id] ?: "Unknown Name",
                     style = MaterialTheme.typography.titleSmall
                 )
             }

@@ -1,21 +1,31 @@
 package com.spruhs.group
 
 import com.spruhs.BaseViewModel
+import com.spruhs.group.application.PlayerDetails
+import com.spruhs.user.application.SelectedGroup
 
 class GroupViewModel : BaseViewModel<GroupEffect, GroupUiState>(GroupUiState()) {
     fun processIntent(intent: GroupIntent) {
         when (intent) {
             is GroupIntent.LeaveGroup -> {}
+            is GroupIntent.SelectPlayer -> TODO()
         }
     }
 }
 
-data class GroupUiState(val isLoading: Boolean = false)
+data class GroupUiState(
+    val isLoading: Boolean = false,
+    val selectedGroup: SelectedGroup? = null,
+    val players: List<PlayerDetails> = emptyList(),
+    val groupNames: Map<String, String> = emptyMap()
+)
 
 sealed class GroupEffect {
     object LeavedGroup : GroupEffect()
+    data class PlayerSelected(val playerId: String) : GroupEffect()
 }
 
 sealed class GroupIntent {
     object LeaveGroup : GroupIntent()
+    data class SelectPlayer(val playerId: String) : GroupIntent()
 }
