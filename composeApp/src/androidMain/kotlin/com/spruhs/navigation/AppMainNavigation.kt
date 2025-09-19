@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.spruhs.screens.group.CreateGroupScreen
 import com.spruhs.screens.group.GroupScreen
+import com.spruhs.screens.group.InvitePlayerScreen
 import com.spruhs.screens.main.BottomNavigationItem
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
@@ -50,7 +51,13 @@ fun AppMainNavigation(
         }
         composable(MainScreens.CreateGroupScreen.route) {
             CreateGroupScreen(
-                onCreateGroupSuccess = TODO()
+                onCreateGroupSuccess = { navHostController.navigate(MainScreens.HomeScreen.route) }
+            )
+        }
+
+        composable(MainScreens.InvitePlayerScreen.route) {
+            InvitePlayerScreen(
+                onPlayerInvitedSuccess = { navHostController.navigate(MainScreens.GroupScreen.route) }
             )
         }
     }
