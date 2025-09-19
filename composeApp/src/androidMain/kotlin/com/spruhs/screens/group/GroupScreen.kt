@@ -34,11 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.spruhs.group.application.PlayerDetails
 import com.spruhs.group.presentation.GroupEffect
 import com.spruhs.group.presentation.GroupIntent
 import com.spruhs.group.presentation.GroupUiState
 import com.spruhs.group.presentation.GroupViewModel
-import com.spruhs.group.application.PlayerDetails
 import com.spruhs.screens.common.CancelButton
 import com.spruhs.screens.common.ConfirmAlertDialog
 import com.spruhs.screens.common.RoleBasedVisibility
@@ -138,7 +138,6 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
         }
     }
 
-
     if (showDialog) {
         ConfirmAlertDialog(
             text = "Are you sure you want to leave the group?",
@@ -155,7 +154,7 @@ fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> U
 fun PlayerItem(
     player: PlayerDetails,
     groupNames: Map<String, String>,
-    onIntent: (GroupIntent) -> Unit,
+    onIntent: (GroupIntent) -> Unit
 ) {
     Card(
         colors =

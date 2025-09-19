@@ -8,7 +8,8 @@ import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 
-class PlayerDetailsViewModel : BaseViewModel<PlayerDetailsEffect, PlayerDetailsUIState>(PlayerDetailsUIState()) {
+class PlayerDetailsViewModel :
+    BaseViewModel<PlayerDetailsEffect, PlayerDetailsUIState>(PlayerDetailsUIState()) {
     fun processIntent(intent: PlayerDetailsIntent) {
         when (intent) {
             is PlayerDetailsIntent.RemovePlayer -> {}
@@ -29,7 +30,7 @@ data class PlayerDetailsUIState(
     val lastMatches: List<Match> = emptyList(),
     val selectedGroup: SelectedGroup? = null,
     val selectedStatus: UserStatus? = null,
-    val selectedRole: UserRole? = null,
+    val selectedRole: UserRole? = null
 )
 
 sealed class PlayerDetailsEffect {

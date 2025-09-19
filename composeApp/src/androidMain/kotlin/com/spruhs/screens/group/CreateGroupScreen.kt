@@ -28,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CreateGroupScreen(
     onCreateGroupSuccess: () -> Unit,
-    createGroupViewModel: CreateGroupViewModel = koinViewModel(),
+    createGroupViewModel: CreateGroupViewModel = koinViewModel()
 ) {
     val createGroupUIState by createGroupViewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -74,13 +74,13 @@ fun CreateGroupScreen(
 fun CreateGroupContent(
     modifier: Modifier = Modifier,
     createGroupUIState: CreateGroupUIState,
-    onIntent: (CreateGroupIntent) -> Unit,
+    onIntent: (CreateGroupIntent) -> Unit
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .padding(16.dp),
+        modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -103,9 +103,9 @@ fun CreateGroupContent(
 
         SubmitButton(
             modifier =
-                Modifier
-                    .padding(bottom = 42.dp)
-                    .fillMaxWidth(0.5f),
+            Modifier
+                .padding(bottom = 42.dp)
+                .fillMaxWidth(0.5f),
             isLoading = createGroupUIState.isLoading,
             enabled = createGroupUIState.newGroupName.length >= 2 && !createGroupUIState.isLoading,
             onSubmitClick = { onIntent(CreateGroupIntent.CreateGroup) }

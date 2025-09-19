@@ -28,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun InvitePlayerScreen(
     onPlayerInvitedSuccess: () -> Unit,
-    invitePlayerViewModel: InvitePlayerViewModel = koinViewModel(),
+    invitePlayerViewModel: InvitePlayerViewModel = koinViewModel()
 ) {
     val inviteUserUIState by invitePlayerViewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -74,14 +74,13 @@ fun InvitePlayerScreen(
 fun InvitePlayerContent(
     modifier: Modifier = Modifier,
     inviteUserUIState: InvitePlayerUIState,
-    onIntent: (InvitePlayerIntent) -> Unit,
-
+    onIntent: (InvitePlayerIntent) -> Unit
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .padding(16.dp),
+        modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -95,13 +94,13 @@ fun InvitePlayerContent(
         EmailInput(
             label = "Player Email",
             email = inviteUserUIState.playerEmail,
-            onEmailChange =  { onIntent(InvitePlayerIntent.PlayerEmailChanged(it)) }
+            onEmailChange = { onIntent(InvitePlayerIntent.PlayerEmailChanged(it)) }
         )
         SubmitButton(
             modifier =
-                Modifier
-                    .padding(bottom = 42.dp)
-                    .fillMaxWidth(0.5f),
+            Modifier
+                .padding(bottom = 42.dp)
+                .fillMaxWidth(0.5f),
             isLoading = inviteUserUIState.isLoading,
             enabled = inviteUserUIState.playerEmail.isNotEmpty() && !inviteUserUIState.isLoading
         ) { onIntent(InvitePlayerIntent.InvitePlayer) }

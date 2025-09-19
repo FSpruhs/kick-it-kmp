@@ -58,7 +58,6 @@ import com.spruhs.group.presentation.PlayerDetailsUIState
 import com.spruhs.group.presentation.PlayerDetailsViewModel
 import com.spruhs.match.application.Match
 import com.spruhs.match.application.PlayerMatchResult
-import com.spruhs.match.application.PlayerStatus
 import com.spruhs.permission.PermissionManager
 import com.spruhs.screens.common.ConfirmAlertDialog
 import com.spruhs.screens.common.SubmitButton
@@ -68,16 +67,15 @@ import com.spruhs.ui.theme.CustomColor
 import com.spruhs.user.application.LabeledEnum
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
-import org.koin.androidx.compose.koinViewModel
-import java.time.format.DateTimeFormatter
 import java.util.Locale
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PlayerDetailsScreen(
     playerId: String,
     onLastMatchClick: (String) -> Unit,
     onPlayerRemoved: () -> Unit,
-    playerDetailsViewModel: PlayerDetailsViewModel = koinViewModel(),
+    playerDetailsViewModel: PlayerDetailsViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val playerDetailsUIState by playerDetailsViewModel.uiState.collectAsStateWithLifecycle()
@@ -95,7 +93,7 @@ fun PlayerDetailsScreen(
                     onPlayerRemoved()
                 }
 
-                PlayerDetailsEffect.PlayerUpdated ->  {
+                PlayerDetailsEffect.PlayerUpdated -> {
                     Toast
                         .makeText(
                             context,
@@ -122,7 +120,7 @@ fun PlayerDetailsScreen(
             GroupDetailsContent(
                 modifier = Modifier.padding(paddingValues),
                 onIntent = playerDetailsViewModel::processIntent,
-                uiState = playerDetailsUIState,
+                uiState = playerDetailsUIState
             )
         }
     )
@@ -132,7 +130,7 @@ fun PlayerDetailsScreen(
 fun GroupDetailsContent(
     modifier: Modifier = Modifier,
     onIntent: (PlayerDetailsIntent) -> Unit,
-    uiState: PlayerDetailsUIState,
+    uiState: PlayerDetailsUIState
 ) {
     when {
         uiState.isLoading -> {
@@ -147,7 +145,7 @@ fun GroupDetailsContent(
             PlayerDetailsContent(
                 modifier = modifier,
                 onIntent = onIntent,
-                uiState = uiState,
+                uiState = uiState
             )
         }
     }
@@ -161,9 +159,9 @@ fun PlayerDetailsContent(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+        modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         PlayerShortInfo(uiState.playerDetails, uiState.groupNames)
         PlayerStatsCard(uiState.playerStats)
@@ -189,10 +187,10 @@ fun PlayerDetailsContent(
             uiState = uiState,
             onIntent = onIntent,
             readOnly =
-                !PermissionManager.hasPermission(
-                    uiState.selectedGroup?.role,
-                    "playerDetailsScreen:playerPropertiesReadOnly"
-                )
+            !PermissionManager.hasPermission(
+                uiState.selectedGroup?.role,
+                "playerDetailsScreen:playerPropertiesReadOnly"
+            )
         )
     }
 }
@@ -206,16 +204,16 @@ fun PlayerProperties(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(14.dp),
         verticalAlignment = Alignment.Top
     ) {
         PlayerPropertiesDropdown(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp),
+            Modifier
+                .weight(1f)
+                .padding(start = 8.dp),
             readOnly = readOnly,
             initialStatus = uiState.selectedStatus ?: UserStatus.ACTIVE,
             options = listOf(UserStatus.ACTIVE, UserStatus.INACTIVE),
@@ -226,9 +224,9 @@ fun PlayerProperties(
 
         PlayerPropertiesDropdown(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp),
+            Modifier
+                .weight(1f)
+                .padding(start = 8.dp),
             readOnly = readOnly,
             initialStatus = uiState.selectedRole ?: UserRole.PLAYER,
             options = UserRole.entries,
@@ -241,25 +239,25 @@ fun PlayerProperties(
     if (!readOnly) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(14.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f))
             SubmitButton(
                 enabled =
-                    !uiState.isLoading &&
-                        (
-                            uiState.selectedStatus != playerDetails?.status ||
-                                uiState.selectedRole != playerDetails?.role
-                            ),
+                !uiState.isLoading &&
+                    (
+                        uiState.selectedStatus != playerDetails?.status ||
+                            uiState.selectedRole != playerDetails?.role
+                        ),
                 isLoading = uiState.isLoading
             ) { onIntent(PlayerDetailsIntent.UpdatePlayer) }
             Box(
                 modifier =
-                    Modifier
-                        .weight(1f),
+                Modifier
+                    .weight(1f),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 PlayerThreePointMenu(
@@ -271,7 +269,11 @@ fun PlayerProperties(
 }
 
 @Composable
-fun LastMatches(onIntent: (PlayerDetailsIntent) -> Unit, playerId: String, lastMatches: List<Match>) {
+fun LastMatches(
+    onIntent: (PlayerDetailsIntent) -> Unit,
+    playerId: String,
+    lastMatches: List<Match>
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
@@ -333,15 +335,15 @@ fun PlayerThreePointMenu(onRemovePlayer: () -> Unit) {
 fun PlayerShortInfo(playerDetails: PlayerDetails?, groupNames: Map<String, String>) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(14.dp),
         verticalAlignment = Alignment.Top
     ) {
         Column(
             modifier =
-                Modifier
-                    .weight(1f)
+            Modifier
+                .weight(1f)
         ) {
             Text(text = "Nickname", style = MaterialTheme.typography.titleMedium)
             Text(
@@ -367,7 +369,7 @@ fun PlayerShortInfo(playerDetails: PlayerDetails?, groupNames: Map<String, Strin
 fun LastMatchesList(
     lastMatches: List<Match>,
     playerId: String,
-    onIntent: (PlayerDetailsIntent) -> Unit,
+    onIntent: (PlayerDetailsIntent) -> Unit
 ) {
     Column {
         lastMatches.forEach { match ->
@@ -382,29 +384,29 @@ fun LastMatchItem(lastMatch: Match, playerId: String, onIntent: (PlayerDetailsIn
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clickable {
-                    onIntent(PlayerDetailsIntent.SelectLastMatch(lastMatch.id))
-                },
+        Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                onIntent(PlayerDetailsIntent.SelectLastMatch(lastMatch.id))
+            },
         colors =
-            when (result) {
-                PlayerMatchResult.WIN -> CardDefaults.cardColors(containerColor = CustomColor.Green)
-                PlayerMatchResult.LOSS -> CardDefaults.cardColors(containerColor = CustomColor.Red)
-                PlayerMatchResult.DRAW -> CardDefaults.cardColors(containerColor = CustomColor.Gray)
-                else ->
-                    CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-            }
+        when (result) {
+            PlayerMatchResult.WIN -> CardDefaults.cardColors(containerColor = CustomColor.Green)
+            PlayerMatchResult.LOSS -> CardDefaults.cardColors(containerColor = CustomColor.Red)
+            PlayerMatchResult.DRAW -> CardDefaults.cardColors(containerColor = CustomColor.Gray)
+            else ->
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+        }
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .padding(10.dp),
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
@@ -453,22 +455,22 @@ fun PlayerStatsCard(stats: PlayerStats) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(14.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(14.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
                 modifier =
-                    Modifier
-                        .weight(1f),
+                Modifier
+                    .weight(1f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -484,8 +486,8 @@ fun PlayerStatsCard(stats: PlayerStats) {
 
             Column(
                 modifier =
-                    Modifier
-                        .weight(2f),
+                Modifier
+                    .weight(2f),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
@@ -501,9 +503,9 @@ fun PlayerStatsCard(stats: PlayerStats) {
 
                 Column(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("Winrate", style = MaterialTheme.typography.titleMedium)

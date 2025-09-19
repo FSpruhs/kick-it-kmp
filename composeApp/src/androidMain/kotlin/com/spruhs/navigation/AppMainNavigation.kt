@@ -60,23 +60,25 @@ fun AppMainNavigation(
 
         composable(MainScreens.InvitePlayerScreen.route) {
             InvitePlayerScreen(
-                onPlayerInvitedSuccess = { navHostController.navigate(MainScreens.GroupScreen.route) }
+                onPlayerInvitedSuccess = {
+                    navHostController.navigate(MainScreens.GroupScreen.route)
+                }
             )
         }
 
         composable(
             route = "${MainScreens.PlayerDetailsScreen.route}/{playerId}",
             arguments =
-                listOf(
-                    navArgument("playerId") {
-                        type = NavType.StringType
-                    }
-                )
+            listOf(
+                navArgument("playerId") {
+                    type = NavType.StringType
+                }
+            )
         ) {
             PlayerDetailsScreen(
                 playerId = it.arguments?.getString("playerId") ?: "",
                 onLastMatchClick = TODO(),
-                onPlayerRemoved = TODO(),
+                onPlayerRemoved = TODO()
             )
         }
     }

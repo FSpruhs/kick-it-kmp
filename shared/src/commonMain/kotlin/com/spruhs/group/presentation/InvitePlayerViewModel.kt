@@ -2,7 +2,8 @@ package com.spruhs.group.presentation
 
 import com.spruhs.BaseViewModel
 
-class InvitePlayerViewModel : BaseViewModel<InvitePlayerEffect, InvitePlayerUIState>(InvitePlayerUIState()) {
+class InvitePlayerViewModel :
+    BaseViewModel<InvitePlayerEffect, InvitePlayerUIState>(InvitePlayerUIState()) {
 
     fun processIntent(intent: InvitePlayerIntent) {
         when (intent) {
@@ -10,7 +11,6 @@ class InvitePlayerViewModel : BaseViewModel<InvitePlayerEffect, InvitePlayerUISt
             is InvitePlayerIntent.PlayerEmailChanged -> TODO()
         }
     }
-
 }
 
 data class InvitePlayerUIState(
