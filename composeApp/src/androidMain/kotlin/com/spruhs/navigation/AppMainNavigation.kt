@@ -13,6 +13,7 @@ import com.spruhs.screens.group.PlayerDetailsScreen
 import com.spruhs.screens.main.BottomNavigationItem
 import com.spruhs.screens.match.EnterResultScreen
 import com.spruhs.screens.match.MatchResultDetailScreen
+import com.spruhs.screens.match.UpcomingMatchDetailsScreen
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
 
@@ -124,6 +125,25 @@ fun AppMainNavigation(
                     navHostController.navigate("${MainScreens.EnterResultScreen.route}/$matchId")
                 },
                 onBack = { navHostController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = "${MainScreens.UpcomingMatchDetailScreen.route}/{matchId}",
+            arguments =
+                listOf(
+                    navArgument("matchId") {
+                        type = NavType.StringType
+                    }
+                )
+        ) {
+            setBackIcon(true)
+            UpcomingMatchDetailsScreen(
+                matchId = it.arguments?.getString("matchId") ?: "",
+                onMatchCancelled = {
+                    navHostController.navigate(MainScreens.HomeScreen.route)
+                    updateBottomNavigation(BottomNavigationItem.Home)
+                }
             )
         }
     }

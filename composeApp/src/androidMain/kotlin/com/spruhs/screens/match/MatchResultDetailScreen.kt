@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.match.application.PlayerTeam
 import com.spruhs.match.presentation.MatchResultDetailIntent
 import com.spruhs.match.presentation.MatchResultDetailUIState
