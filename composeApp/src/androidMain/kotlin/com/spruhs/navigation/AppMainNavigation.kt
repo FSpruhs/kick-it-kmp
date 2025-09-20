@@ -12,6 +12,7 @@ import com.spruhs.screens.group.InvitePlayerScreen
 import com.spruhs.screens.group.PlayerDetailsScreen
 import com.spruhs.screens.main.BottomNavigationItem
 import com.spruhs.screens.match.EnterResultScreen
+import com.spruhs.screens.match.MatchResultDetailScreen
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
 
@@ -105,6 +106,25 @@ fun AppMainNavigation(
                 },
             )
             setBackIcon(true)
+        }
+
+        composable(
+            route = "${MainScreens.MatchResultDetailScreen.route}/{matchId}",
+            arguments =
+                listOf(
+                    navArgument("matchId") {
+                        type = NavType.StringType
+                    }
+                )
+        ) {
+            setBackIcon(true)
+            MatchResultDetailScreen(
+                matchId = it.arguments?.getString("matchId") ?: "",
+                onEnterResultClick = { matchId ->
+                    navHostController.navigate("${MainScreens.EnterResultScreen.route}/$matchId")
+                },
+                onBack = { navHostController.popBackStack() }
+            )
         }
     }
 }
