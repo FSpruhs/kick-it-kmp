@@ -11,6 +11,7 @@ import com.spruhs.screens.group.GroupScreen
 import com.spruhs.screens.group.InvitePlayerScreen
 import com.spruhs.screens.group.PlayerDetailsScreen
 import com.spruhs.screens.main.BottomNavigationItem
+import com.spruhs.screens.match.EnterResultScreen
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
 
@@ -77,9 +78,33 @@ fun AppMainNavigation(
         ) {
             PlayerDetailsScreen(
                 playerId = it.arguments?.getString("playerId") ?: "",
-                onLastMatchClick = TODO(),
-                onPlayerRemoved = TODO()
+                onLastMatchClick = { matchId ->
+                    navHostController.navigate("${MainScreens.PlayerDetailsScreen.route}/$matchId")
+                },
+                onPlayerRemoved = {
+                    navHostController.navigate(MainScreens.HomeScreen.route)
+                    updateBottomNavigation(BottomNavigationItem.Home)
+                }
             )
+        }
+
+        composable(
+            route = "${MainScreens.EnterResultScreen.route}/{matchId}",
+            arguments =
+                listOf(
+                    navArgument("matchId") {
+                        type = NavType.StringType
+                    }
+                )
+        ) {
+            EnterResultScreen(
+                matchId = it.arguments?.getString("matchId") ?: "",
+                onResultEntered = {
+                    navHostController.navigate(MainScreens.HomeScreen.route)
+                    updateBottomNavigation(BottomNavigationItem.Home)
+                },
+            )
+            setBackIcon(true)
         }
     }
 }
