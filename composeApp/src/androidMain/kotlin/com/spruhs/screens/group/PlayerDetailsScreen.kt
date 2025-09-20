@@ -373,13 +373,15 @@ fun LastMatchesList(
 ) {
     Column {
         lastMatches.forEach { match ->
-            LastMatchItem(match, playerId, onIntent)
+            LastMatchItem(match, playerId) {
+                onIntent(PlayerDetailsIntent.SelectLastMatch(it))
+            }
         }
     }
 }
 
 @Composable
-fun LastMatchItem(lastMatch: Match, playerId: String, onIntent: (PlayerDetailsIntent) -> Unit) {
+fun LastMatchItem(lastMatch: Match, playerId: String, onClick: (String) -> Unit) {
     val result = lastMatch.result.find { it.userId == playerId }?.result
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -388,7 +390,7 @@ fun LastMatchItem(lastMatch: Match, playerId: String, onIntent: (PlayerDetailsIn
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                onIntent(PlayerDetailsIntent.SelectLastMatch(lastMatch.id))
+                onClick(lastMatch.id)
             },
         colors =
         when (result) {

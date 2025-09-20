@@ -121,7 +121,7 @@ fun UpcomingMatchesContent(
                             upcomingMatchPreview = match,
                             groups = homeUiState.groups,
                             userId = homeUiState.userId ?: "",
-                            onIntent = onIntent
+                            onMatchClick = { onIntent(HomeIntent.SelectMatch(it)) }
                         )
                     }
                 }
@@ -134,7 +134,7 @@ fun UpcomingMatchesContent(
 fun UpcomingMatchesItem(
     upcomingMatchPreview: Match,
     groups: Map<String, UserGroupInfo>,
-    onIntent: (HomeIntent) -> Unit,
+    onMatchClick: (String) -> Unit,
     userId: String
 ) {
     Card(
@@ -151,7 +151,7 @@ fun UpcomingMatchesItem(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = LocalIndication.current
             ) {
-                onIntent(HomeIntent.SelectMatch(upcomingMatchPreview.id))
+                onMatchClick(upcomingMatchPreview.id)
             }
     ) {
         Row(
@@ -218,7 +218,8 @@ fun RegistrationDisplay(size: Int, actual: Int, from: Int) {
             .background(
                 color = MaterialTheme.colorScheme.background,
                 shape = CircleShape
-            ).border(1.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
+            )
+            .border(1.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
     ) {
         Text(
             text = "$actual/$from",

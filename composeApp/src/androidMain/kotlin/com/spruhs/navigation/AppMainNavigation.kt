@@ -13,6 +13,7 @@ import com.spruhs.screens.group.PlayerDetailsScreen
 import com.spruhs.screens.main.BottomNavigationItem
 import com.spruhs.screens.match.EnterResultScreen
 import com.spruhs.screens.match.MatchResultDetailScreen
+import com.spruhs.screens.match.MatchScreen
 import com.spruhs.screens.match.UpcomingMatchDetailsScreen
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
@@ -143,6 +144,23 @@ fun AppMainNavigation(
                 onMatchCancelled = {
                     navHostController.navigate(MainScreens.HomeScreen.route)
                     updateBottomNavigation(BottomNavigationItem.Home)
+                }
+            )
+        }
+
+        composable(MainScreens.MatchScreen.route) {
+            MatchScreen(
+                setBackIcon = setBackIcon,
+                onPlanMatchClick = { navHostController.navigate(MainScreens.PlanMatchScreen.route) },
+                onUpcomingMatchClick = { matchId ->
+                    navHostController.navigate(
+                        "${MainScreens.UpcomingMatchDetailScreen.route}/$matchId"
+                    )
+                },
+                onLastMatchClick = { matchId ->
+                    navHostController.navigate(
+                        "${MainScreens.MatchResultDetailScreen.route}/$matchId"
+                    )
                 }
             )
         }
