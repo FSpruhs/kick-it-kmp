@@ -7,21 +7,23 @@ import com.spruhs.user.application.UserRole
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDateTime
 
-class UpcomingMatchDetailsViewModel : BaseViewModel<UpcomingMatchDetailsEffect, UpcomingMatchDetailsUIState>(UpcomingMatchDetailsUIState()) {
+class UpcomingMatchDetailsViewModel :
+    BaseViewModel<UpcomingMatchDetailsEffect, UpcomingMatchDetailsUIState>(
+        UpcomingMatchDetailsUIState()
+    ) {
 
     init {
 
-
-                val match = Match()
-                val userId = ""
+        val match = Match()
+        val userId = ""
 
         val userPosition = when {
-                    match == null || userId == null -> null
-                    userId in match.cadre -> PlayerStatus.CADRE
-                    userId in match.waitingBench -> PlayerStatus.WAITING_BENCH
-                    userId in match.deregistered -> PlayerStatus.DEREGISTERED
-                    else -> null
-                }
+            match == null || userId == null -> null
+            userId in match.cadre -> PlayerStatus.CADRE
+            userId in match.waitingBench -> PlayerStatus.WAITING_BENCH
+            userId in match.deregistered -> PlayerStatus.DEREGISTERED
+            else -> null
+        }
 
         val startRegistration: Boolean? =
             when (userPosition) {
@@ -31,13 +33,13 @@ class UpcomingMatchDetailsViewModel : BaseViewModel<UpcomingMatchDetailsEffect, 
                 else -> null
             }
 
-        uiStateMutable.update { it.copy(userPosition = userPosition, startRegistration = startRegistration) }
+        uiStateMutable.update {
+            it.copy(userPosition = userPosition, startRegistration = startRegistration)
+        }
     }
 
     fun processIntent(intent: UpcomingMatchDetailsIntent) {
-
     }
-
 }
 
 data class UpcomingMatchDetailsUIState(

@@ -7,7 +7,8 @@ import com.spruhs.match.application.PlayerTeam
 import com.spruhs.user.application.SelectedGroup
 import kotlinx.coroutines.flow.update
 
-class MatchResultDetailViewModel : BaseViewModel<MatchResultDetailEffect, MatchResultDetailUIState>(MatchResultDetailUIState()) {
+class MatchResultDetailViewModel :
+    BaseViewModel<MatchResultDetailEffect, MatchResultDetailUIState>(MatchResultDetailUIState()) {
 
     init {
         val winnerTeam: PlayerTeam =
@@ -41,7 +42,6 @@ class MatchResultDetailViewModel : BaseViewModel<MatchResultDetailEffect, MatchR
     }
 
     fun processIntent(intent: MatchResultDetailIntent) {
-
     }
 }
 
@@ -54,7 +54,7 @@ data class MatchResultDetailUIState(
     val groupNameList: Map<String, String> = mapOf()
 )
 
-sealed class MatchResultDetailEffect {}
+sealed class MatchResultDetailEffect
 
 sealed class MatchResultDetailIntent {
     object EnterResult : MatchResultDetailIntent()

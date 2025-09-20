@@ -70,9 +70,8 @@ fun EnterResultScreen(
                             "Result entered!",
                             Toast.LENGTH_SHORT
                         ).show()
-                onResultEntered()
+                    onResultEntered()
                 }
-
             }
 
             if (enterMatchResultUIState.error != null) {
@@ -92,7 +91,7 @@ fun EnterResultScreen(
             EnterResultContent(
                 modifier = Modifier.padding(paddingValues),
                 enterMatchResultUIState = enterMatchResultUIState,
-                onIntent = enterMatchResultViewModel::processIntent,
+                onIntent = enterMatchResultViewModel::processIntent
             )
         }
     )
@@ -107,9 +106,9 @@ fun EnterResultContent(
     Column(modifier = modifier.fillMaxSize()) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
+            Modifier
+                .fillMaxSize()
+                .padding(8.dp)
         ) {
             PlayerAreaContent(
                 enterMatchResultUIState = enterMatchResultUIState,
@@ -123,7 +122,7 @@ fun EnterResultContent(
 
             PlayerSelectionContent(
                 enterMatchResultUIState = enterMatchResultUIState,
-                onIntent = onIntent,
+                onIntent = onIntent
             )
 
             PlayerAreaContent(
@@ -142,21 +141,21 @@ fun EnterResultContent(
 @Composable
 fun PlayerSelectionContent(
     enterMatchResultUIState: EnterMatchResultUIState,
-    onIntent: (EnterMatchResultIntent) -> Unit,
+    onIntent: (EnterMatchResultIntent) -> Unit
 ) {
     Column(
         modifier =
-            Modifier
-                .width(124.dp)
-                .fillMaxHeight()
-                .padding(8.dp),
+        Modifier
+            .width(124.dp)
+            .fillMaxHeight()
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SubmitButton(
             enabled =
-                enterMatchResultUIState.teamAPlayers.isNotEmpty() &&
-                    enterMatchResultUIState.teamBPlayers.isNotEmpty() &&
-                    !enterMatchResultUIState.isLoading,
+            enterMatchResultUIState.teamAPlayers.isNotEmpty() &&
+                enterMatchResultUIState.teamBPlayers.isNotEmpty() &&
+                !enterMatchResultUIState.isLoading,
             isLoading = enterMatchResultUIState.isLoading,
             onSubmitClick = { onIntent(EnterMatchResultIntent.EnterResult) }
         )
@@ -183,8 +182,8 @@ fun PlayerSelectionContent(
 
         HorizontalDivider(
             modifier =
-                Modifier
-                    .padding(bottom = 8.dp)
+            Modifier
+                .padding(bottom = 8.dp)
         )
 
         Text("Players:")
@@ -194,8 +193,8 @@ fun PlayerSelectionContent(
                 PlayerChipItem(
                     player = player,
                     selected =
-                        player == enterMatchResultUIState.selectedPlayer &&
-                            enterMatchResultUIState.selectedSide == Side.MIDDLE,
+                    player == enterMatchResultUIState.selectedPlayer &&
+                        enterMatchResultUIState.selectedSide == Side.MIDDLE,
                     onClick = {
                         onIntent(EnterMatchResultIntent.SelectPlayer(Side.MIDDLE))
                     },
@@ -218,36 +217,36 @@ fun RowScope.PlayerAreaContent(
 ) {
     Column(
         modifier =
-            Modifier
-                .weight(1f)
-                .fillMaxHeight()
+        Modifier
+            .weight(1f)
+            .fillMaxHeight()
     ) {
         Text(
             text = if (enterMatchResultUIState.isDraw) teamName else resultName,
             modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 4.dp),
+            Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 4.dp),
             style = MaterialTheme.typography.titleMedium
         )
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(
-                        if (enterMatchResultUIState.isDraw) CustomColor.Gray else color,
-                        RoundedCornerShape(8.dp)
-                    )
-                    .padding(8.dp)
+            Modifier
+                .fillMaxSize()
+                .background(
+                    if (enterMatchResultUIState.isDraw) CustomColor.Gray else color,
+                    RoundedCornerShape(8.dp)
+                )
+                .padding(8.dp)
         ) {
             LazyColumn {
                 items(team) { player ->
                     PlayerChipItem(
                         player = player,
                         selected =
-                            player == enterMatchResultUIState.selectedPlayer &&
-                                enterMatchResultUIState.selectedSide == teamSide,
+                        player == enterMatchResultUIState.selectedPlayer &&
+                            enterMatchResultUIState.selectedSide == teamSide,
                         onClick = {
                             onIntent(
                                 EnterMatchResultIntent.SelectPlayer(teamSide)
@@ -262,7 +261,10 @@ fun RowScope.PlayerAreaContent(
 }
 
 @Composable
-fun NavigationButtons(enterMatchResultUIState: EnterMatchResultUIState, onIntent: (EnterMatchResultIntent) -> Unit) {
+fun NavigationButtons(
+    enterMatchResultUIState: EnterMatchResultUIState,
+    onIntent: (EnterMatchResultIntent) -> Unit
+) {
     NavigationButton(
         enterMatchResultUIState = enterMatchResultUIState,
         imageVector = Icons.Default.ArrowCircleLeft,
@@ -302,7 +304,7 @@ fun NavigationButton(
     contentDescription: String,
     size: Int,
     moveTeam: Side,
-    onIntent: (EnterMatchResultIntent) -> Unit,
+    onIntent: (EnterMatchResultIntent) -> Unit
 ) {
     IconButton(
         onClick = { onIntent(EnterMatchResultIntent.MovePlayer(moveTeam)) },
@@ -314,33 +316,38 @@ fun NavigationButton(
             imageVector = imageVector,
             contentDescription = contentDescription,
             tint =
-                if (enterMatchResultUIState.selectedPlayer != null) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    Color.Gray
-                }
+            if (enterMatchResultUIState.selectedPlayer != null) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                Color.Gray
+            }
         )
     }
 }
 
 @Composable
-fun PlayerChipItem(enterMatchResultUIState: EnterMatchResultUIState, player: String, selected: Boolean, onClick: () -> Unit) {
+fun PlayerChipItem(
+    enterMatchResultUIState: EnterMatchResultUIState,
+    player: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
     AssistChip(
         colors =
-            AssistChipDefaults.assistChipColors(
-                containerColor =
-                    if (selected) {
-                        MaterialTheme.colorScheme.tertiary
-                    } else {
-                        Color.Transparent
-                    },
-                labelColor = if (selected) MaterialTheme.colorScheme.onTertiary else Color.Black
-            ),
+        AssistChipDefaults.assistChipColors(
+            containerColor =
+            if (selected) {
+                MaterialTheme.colorScheme.tertiary
+            } else {
+                Color.Transparent
+            },
+            labelColor = if (selected) MaterialTheme.colorScheme.onTertiary else Color.Black
+        ),
         onClick = { onClick() },
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 2.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp),
         shape = RoundedCornerShape(8.dp),
         label = {
             Box(

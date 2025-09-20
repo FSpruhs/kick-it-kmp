@@ -64,7 +64,7 @@ import org.koin.androidx.compose.koinViewModel
 fun UpcomingMatchDetailsScreen(
     matchId: String,
     onMatchCancelled: () -> Unit,
-    upcomingMatchDetailsViewModel: UpcomingMatchDetailsViewModel = koinViewModel(),
+    upcomingMatchDetailsViewModel: UpcomingMatchDetailsViewModel = koinViewModel()
 ) {
     val upcomingMatchDetailsUIState by upcomingMatchDetailsViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -101,7 +101,7 @@ fun UpcomingMatchDetailsScreen(
             UpcomingMatchDetailContent(
                 modifier = Modifier.padding(paddingValues),
                 upcomingMatchDetailsUIState = upcomingMatchDetailsUIState,
-                onIntent = upcomingMatchDetailsViewModel::processIntent,
+                onIntent = upcomingMatchDetailsViewModel::processIntent
             )
         }
     )
@@ -111,7 +111,7 @@ fun UpcomingMatchDetailsScreen(
 fun UpcomingMatchDetailContent(
     modifier: Modifier = Modifier,
     upcomingMatchDetailsUIState: UpcomingMatchDetailsUIState,
-    onIntent: (UpcomingMatchDetailsIntent) -> Unit,
+    onIntent: (UpcomingMatchDetailsIntent) -> Unit
 ) {
     var showDeregisterDialog by remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
@@ -119,10 +119,10 @@ fun UpcomingMatchDetailContent(
 
     Column(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+        modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MatchShortInfo(
@@ -136,7 +136,9 @@ fun UpcomingMatchDetailContent(
 
         RegistrationSelector(
             isRegistered = upcomingMatchDetailsUIState.selectedRegistration,
-            onSelectionChange = { onIntent(UpcomingMatchDetailsIntent.SelectRegistration(it ?: false)) },
+            onSelectionChange = {
+                onIntent(UpcomingMatchDetailsIntent.SelectRegistration(it ?: false))
+            },
             isLoading = upcomingMatchDetailsUIState.isLoading,
             onButtonClick = { registration ->
                 if (upcomingMatchDetailsUIState.startRegistration == true && !registration) {
@@ -158,10 +160,10 @@ fun UpcomingMatchDetailContent(
             menuText = "Remove from cadre",
             onMenuClick = { id -> onIntent(UpcomingMatchDetailsIntent.RemoveFromCadre(id)) },
             readOnly =
-                !PermissionManager.hasPermission(
-                    upcomingMatchDetailsUIState.userRole,
-                    "upcomingMatchDetailScreen:removePlayerFromCadre"
-                )
+            !PermissionManager.hasPermission(
+                upcomingMatchDetailsUIState.userRole,
+                "upcomingMatchDetailScreen:removePlayerFromCadre"
+            )
         )
 
         HorizontalDivider(
@@ -178,10 +180,10 @@ fun UpcomingMatchDetailContent(
             menuText = "Add to cadre",
             onMenuClick = { id -> onIntent(UpcomingMatchDetailsIntent.AddToCadre(id)) },
             readOnly =
-                !PermissionManager.hasPermission(
-                    upcomingMatchDetailsUIState.userRole,
-                    "upcomingMatchDetailScreen:addPlayerFromCadre"
-                )
+            !PermissionManager.hasPermission(
+                upcomingMatchDetailsUIState.userRole,
+                "upcomingMatchDetailScreen:addPlayerFromCadre"
+            )
         )
 
         HorizontalDivider(
@@ -247,9 +249,9 @@ fun PlayerSection(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -288,17 +290,17 @@ fun MatchShortInfo(
 ) {
     Row(
         modifier =
-            modifier
-                .fillMaxWidth(),
+        modifier
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier =
-                Modifier
-                    .padding(end = 16.dp)
-                    .width(72.dp)
-                    .weight(1F)
+            Modifier
+                .padding(end = 16.dp)
+                .width(72.dp)
+                .weight(1F)
         ) {
             PlayerMatchStatusIcon(
                 status = upcomingMatchDetailsUIState.userPosition,
@@ -311,12 +313,12 @@ fun MatchShortInfo(
             )
             Text(
                 text =
-                    when (upcomingMatchDetailsUIState.userPosition) {
-                        PlayerStatus.CADRE -> "Cadre"
-                        PlayerStatus.WAITING_BENCH -> "Waiting on Bench"
-                        PlayerStatus.DEREGISTERED -> "Deregistered"
-                        null -> "No Selection"
-                    },
+                when (upcomingMatchDetailsUIState.userPosition) {
+                    PlayerStatus.CADRE -> "Cadre"
+                    PlayerStatus.WAITING_BENCH -> "Waiting on Bench"
+                    PlayerStatus.DEREGISTERED -> "Deregistered"
+                    null -> "No Selection"
+                },
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
             )
@@ -343,12 +345,16 @@ fun MatchShortInfo(
                     text = "Playground",
                     style = MaterialTheme.typography.titleMedium
                 )
-                if (upcomingMatchDetailsUIState.playground.isNullOrBlank()) "-" else upcomingMatchDetailsUIState.playground?.let {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
+                if (upcomingMatchDetailsUIState.playground.isNullOrBlank()) {
+                    "-"
+                } else {
+                    upcomingMatchDetailsUIState.playground?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
+                    }
                 }
             }
         }
@@ -374,30 +380,30 @@ fun RegistrationSelector(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Box(
             modifier =
-                Modifier
-                    .border(
-                        width = 1.dp,
-                        color =
-                            if (isRegistered == true) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                Color.Transparent
-                            },
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .weight(1f)
-                    .height(64.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(if (isRegistered == true) Color(0xFF81C784) else Color(0xFFB2DFDB))
-                    .clickable { onSelectionChange(true) },
+            Modifier
+                .border(
+                    width = 1.dp,
+                    color =
+                    if (isRegistered == true) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        Color.Transparent
+                    },
+                    shape = MaterialTheme.shapes.small
+                )
+                .weight(1f)
+                .height(64.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(if (isRegistered == true) Color(0xFF81C784) else Color(0xFFB2DFDB))
+                .clickable { onSelectionChange(true) },
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -409,22 +415,22 @@ fun RegistrationSelector(
 
         Box(
             modifier =
-                Modifier
-                    .border(
-                        width = 1.dp,
-                        color =
-                            if (isRegistered == false) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                Color.Transparent
-                            },
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .weight(1f)
-                    .height(64.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(if (isRegistered == false) Color(0xFFE57373) else Color(0xFFFFCDD2))
-                    .clickable { onSelectionChange(false) },
+            Modifier
+                .border(
+                    width = 1.dp,
+                    color =
+                    if (isRegistered == false) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        Color.Transparent
+                    },
+                    shape = MaterialTheme.shapes.small
+                )
+                .weight(1f)
+                .height(64.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(if (isRegistered == false) Color(0xFFE57373) else Color(0xFFFFCDD2))
+                .clickable { onSelectionChange(false) },
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -455,17 +461,17 @@ fun PlayerChipArea(
 ) {
     Box(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(color, RoundedCornerShape(8.dp))
-                .padding(8.dp)
+        modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(color, RoundedCornerShape(8.dp))
+            .padding(8.dp)
     ) {
         FlowRow(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = (32.dp + 8.dp) * 3),
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = (32.dp + 8.dp) * 3),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {

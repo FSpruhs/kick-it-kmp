@@ -93,18 +93,18 @@ fun AppMainNavigation(
         composable(
             route = "${MainScreens.EnterResultScreen.route}/{matchId}",
             arguments =
-                listOf(
-                    navArgument("matchId") {
-                        type = NavType.StringType
-                    }
-                )
+            listOf(
+                navArgument("matchId") {
+                    type = NavType.StringType
+                }
+            )
         ) {
             EnterResultScreen(
                 matchId = it.arguments?.getString("matchId") ?: "",
                 onResultEntered = {
                     navHostController.navigate(MainScreens.HomeScreen.route)
                     updateBottomNavigation(BottomNavigationItem.Home)
-                },
+                }
             )
             setBackIcon(true)
         }
@@ -112,11 +112,11 @@ fun AppMainNavigation(
         composable(
             route = "${MainScreens.MatchResultDetailScreen.route}/{matchId}",
             arguments =
-                listOf(
-                    navArgument("matchId") {
-                        type = NavType.StringType
-                    }
-                )
+            listOf(
+                navArgument("matchId") {
+                    type = NavType.StringType
+                }
+            )
         ) {
             setBackIcon(true)
             MatchResultDetailScreen(
@@ -131,11 +131,11 @@ fun AppMainNavigation(
         composable(
             route = "${MainScreens.UpcomingMatchDetailScreen.route}/{matchId}",
             arguments =
-                listOf(
-                    navArgument("matchId") {
-                        type = NavType.StringType
-                    }
-                )
+            listOf(
+                navArgument("matchId") {
+                    type = NavType.StringType
+                }
+            )
         ) {
             setBackIcon(true)
             UpcomingMatchDetailsScreen(

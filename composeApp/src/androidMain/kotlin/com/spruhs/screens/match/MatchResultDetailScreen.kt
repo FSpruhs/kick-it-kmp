@@ -38,7 +38,7 @@ fun MatchResultDetailScreen(
     matchId: String,
     onEnterResultClick: (String) -> Unit,
     onBack: () -> Unit,
-    matchResultDetailViewModel: MatchResultDetailViewModel = koinViewModel(),
+    matchResultDetailViewModel: MatchResultDetailViewModel = koinViewModel()
 ) {
     val matchResultDetailUIState by matchResultDetailViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -46,12 +46,12 @@ fun MatchResultDetailScreen(
         ResultNotEnteredYetContent(
             selectedGroup = matchResultDetailUIState.selectedGroup,
             onBack = onBack,
-            onIntent = matchResultDetailViewModel::processIntent,
+            onIntent = matchResultDetailViewModel::processIntent
         )
     } else {
         MatchResultContent(
             matchResultDetailUIState = matchResultDetailUIState,
-            onIntent = matchResultDetailViewModel::processIntent,
+            onIntent = matchResultDetailViewModel::processIntent
         )
     }
 }
@@ -61,40 +61,39 @@ fun MatchResultContent(
     matchResultDetailUIState: MatchResultDetailUIState,
     onIntent: (MatchResultDetailIntent) -> Unit
 ) {
-
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Text(
             text =
-                if (matchResultDetailUIState.isDraw) {
-                    "Draw"
-                } else {
-                    "Winner-Team"
-                },
+            if (matchResultDetailUIState.isDraw) {
+                "Draw"
+            } else {
+                "Winner-Team"
+            },
             style = MaterialTheme.typography.titleMedium,
             modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 4.dp)
+            Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 4.dp)
         )
 
         PlayerChipArea(
             color =
-                if (matchResultDetailUIState.isDraw) {
-                    CustomColor.Gray
-                } else {
-                    CustomColor.Green
-                },
+            if (matchResultDetailUIState.isDraw) {
+                CustomColor.Gray
+            } else {
+                CustomColor.Green
+            },
             players =
-                if (matchResultDetailUIState.winnerTeam == PlayerTeam.A) {
-                    matchResultDetailUIState.playerResults
-                        .filter { it.team == PlayerTeam.A }
-                        .map { it.userId }
-                } else {
-                    matchResultDetailUIState
-                        .playerResults
-                        .filter { it.team == PlayerTeam.B }
-                        .map { it.userId }
-                },
+            if (matchResultDetailUIState.winnerTeam == PlayerTeam.A) {
+                matchResultDetailUIState.playerResults
+                    .filter { it.team == PlayerTeam.A }
+                    .map { it.userId }
+            } else {
+                matchResultDetailUIState
+                    .playerResults
+                    .filter { it.team == PlayerTeam.B }
+                    .map { it.userId }
+            },
             groupNameList = matchResultDetailUIState.groupNameList
         )
 
@@ -105,37 +104,37 @@ fun MatchResultContent(
 
         Text(
             text =
-                if (matchResultDetailUIState.isDraw) {
-                    "Draw"
-                } else {
-                    "Looser-Team"
-                },
+            if (matchResultDetailUIState.isDraw) {
+                "Draw"
+            } else {
+                "Looser-Team"
+            },
             style = MaterialTheme.typography.titleMedium,
             modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 4.dp)
+            Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 4.dp)
         )
 
         PlayerChipArea(
             color =
-                if (matchResultDetailUIState.isDraw) {
-                    CustomColor.Gray
-                } else {
-                    CustomColor.Red
-                },
+            if (matchResultDetailUIState.isDraw) {
+                CustomColor.Gray
+            } else {
+                CustomColor.Red
+            },
             players =
-                if (matchResultDetailUIState.winnerTeam == PlayerTeam.A) {
-                    matchResultDetailUIState
-                        .playerResults
-                        .filter { it.team == PlayerTeam.B }
-                        .map { it.userId }
-                } else {
-                    matchResultDetailUIState
-                        .playerResults
-                        .filter { it.team == PlayerTeam.A }
-                        .map { it.userId }
-                },
+            if (matchResultDetailUIState.winnerTeam == PlayerTeam.A) {
+                matchResultDetailUIState
+                    .playerResults
+                    .filter { it.team == PlayerTeam.B }
+                    .map { it.userId }
+            } else {
+                matchResultDetailUIState
+                    .playerResults
+                    .filter { it.team == PlayerTeam.A }
+                    .map { it.userId }
+            },
             groupNameList = matchResultDetailUIState.groupNameList
         )
 
@@ -175,9 +174,9 @@ fun ResultNotEnteredYetContent(
 ) {
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(24.dp),
+        Modifier
+            .fillMaxSize()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -188,9 +187,9 @@ fun ResultNotEnteredYetContent(
         ) {
             Button(
                 modifier =
-                    Modifier
-                        .width(200.dp)
-                        .height(56.dp),
+                Modifier
+                    .width(200.dp)
+                    .height(56.dp),
                 onClick = { onIntent(MatchResultDetailIntent.EnterResult) }
             ) { Text(text = "Enter result") }
         } else {
@@ -200,9 +199,9 @@ fun ResultNotEnteredYetContent(
 
             Button(
                 modifier =
-                    Modifier
-                        .width(200.dp)
-                        .height(56.dp),
+                Modifier
+                    .width(200.dp)
+                    .height(56.dp),
                 onClick = { onBack() }
             ) { Text("Back") }
         }
