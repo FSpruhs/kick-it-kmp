@@ -2,6 +2,7 @@ package com.spruhs.auth.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -106,5 +107,6 @@ data class RegisterUIState(
     val repeatedPassword: String = "",
     val isPasswordValid: Boolean? = null,
     val isInputValid: Boolean = false,
-    val isLoading: Boolean = false
-)
+    override val isLoading: Boolean = false,
+    override val error: String? = null
+) : BaseUIState

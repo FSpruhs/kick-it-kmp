@@ -1,5 +1,6 @@
 package com.spruhs.match.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.Match
 import com.spruhs.match.application.PlayerStatus
@@ -14,7 +15,18 @@ class UpcomingMatchDetailsViewModel :
 
     init {
 
-        val match = Match()
+        val match = Match(
+            id = "",
+            groupId = "",
+            start = LocalDateTime.parse("2023-01-01T12:00:00"),
+            playground = "",
+            maxPlayers = 1,
+            minPlayers = 2,
+            cadre = emptyList(),
+            waitingBench = emptyList(),
+            deregistered = emptyList(),
+            result = emptyList()
+        )
         val userId = ""
 
         val userPosition = when {
@@ -43,12 +55,12 @@ class UpcomingMatchDetailsViewModel :
 }
 
 data class UpcomingMatchDetailsUIState(
-    val isLoading: Boolean = false,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val userPosition: PlayerStatus? = null,
     val userRole: UserRole? = null,
     val startRegistration: Boolean? = null,
     val selectedRegistration: Boolean? = null,
-    val error: String? = null,
     val groupNameList: Map<String, String> = emptyMap(),
     val cadre: List<String> = emptyList(),
     val waitingBench: List<String> = emptyList(),
@@ -57,7 +69,7 @@ data class UpcomingMatchDetailsUIState(
     val playground: String? = null,
     val actualPlayersCount: Int = 0,
     val maxPlayers: Int = 0
-)
+) : BaseUIState
 
 sealed class UpcomingMatchDetailsIntent {
     object CancelMatch : UpcomingMatchDetailsIntent()

@@ -1,5 +1,6 @@
 package com.spruhs.group.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.user.application.SelectedGroup
@@ -14,11 +15,12 @@ class GroupViewModel : BaseViewModel<GroupEffect, GroupUiState>(GroupUiState()) 
 }
 
 data class GroupUiState(
-    val isLoading: Boolean = false,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val selectedGroup: SelectedGroup? = null,
     val players: List<PlayerDetails> = emptyList(),
     val groupNames: Map<String, String> = emptyMap()
-)
+) : BaseUIState
 
 sealed class GroupEffect {
     object LeavedGroup : GroupEffect()

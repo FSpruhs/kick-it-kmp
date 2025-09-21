@@ -1,5 +1,6 @@
 package com.spruhs.match.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.Match
 import com.spruhs.user.application.SelectedGroup
@@ -12,13 +13,14 @@ class MatchViewModel : BaseViewModel<MatchEffect, MatchUIState>(MatchUIState()) 
 }
 
 data class MatchUIState(
-    val isLoading: Boolean = false,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val selectedGroup: SelectedGroup? = null,
     val upcomingMatches: List<Match> = emptyList(),
     val lastMatches: List<Match> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null,
-)
+) : BaseUIState
 
 sealed class MatchEffect {}
 

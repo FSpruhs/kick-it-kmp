@@ -30,7 +30,7 @@ fun CreateGroupScreen(
     onCreateGroupSuccess: () -> Unit,
     createGroupViewModel: CreateGroupViewModel = koinViewModel()
 ) {
-    val createGroupUIState by createGroupViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by createGroupViewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -47,11 +47,11 @@ fun CreateGroupScreen(
                 }
             }
 
-            if (createGroupUIState.error != null) {
+            if (uiState.error != null) {
                 Toast
                     .makeText(
                         context,
-                        createGroupUIState.error,
+                        uiState.error,
                         Toast.LENGTH_SHORT
                     ).show()
             }
@@ -63,7 +63,7 @@ fun CreateGroupScreen(
         content = { paddingValues ->
             CreateGroupContent(
                 modifier = Modifier.padding(paddingValues),
-                createGroupUIState = createGroupUIState,
+                uiState = uiState,
                 onIntent = createGroupViewModel::processIntent
             )
         }
@@ -73,7 +73,7 @@ fun CreateGroupScreen(
 @Composable
 fun CreateGroupContent(
     modifier: Modifier = Modifier,
-    createGroupUIState: CreateGroupUIState,
+    uiState: CreateGroupUIState,
     onIntent: (CreateGroupIntent) -> Unit
 ) {
     Column(
@@ -92,11 +92,11 @@ fun CreateGroupContent(
         )
 
         OutlinedTextField(
-            value = createGroupUIState.newGroupName,
+            value = uiState.newGroupName,
             onValueChange = {
                 onIntent(CreateGroupIntent.NewGroupNameChanged(it))
             },
-            label = { Text("Group Name (max. ${createGroupUIState.maxChars} Chars)") },
+            label = { Text("Group Name (max. ${uiState.maxChars} Chars)") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f)
         )
@@ -106,8 +106,8 @@ fun CreateGroupContent(
             Modifier
                 .padding(bottom = 42.dp)
                 .fillMaxWidth(0.5f),
-            isLoading = createGroupUIState.isLoading,
-            enabled = createGroupUIState.newGroupName.length >= 2 && !createGroupUIState.isLoading,
+            isLoading = uiState.isLoading,
+            enabled = uiState.newGroupName.length >= 2 && !uiState.isLoading,
             onSubmitClick = { onIntent(CreateGroupIntent.CreateGroup) }
         )
     }

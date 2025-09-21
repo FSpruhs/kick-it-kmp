@@ -1,10 +1,12 @@
 package com.spruhs.match.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.Match
 import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.match.application.PlayerTeam
 import kotlinx.coroutines.flow.update
+import kotlinx.datetime.LocalDateTime
 
 class EnterMatchResultViewModel :
     BaseViewModel<EnterMatchResultEffect, EnterMatchResultUIState>(EnterMatchResultUIState()) {
@@ -21,7 +23,18 @@ class EnterMatchResultViewModel :
     }
 
     init {
-        val matchData: Match = Match()
+        val matchData: Match = Match(
+            id = "",
+            groupId = "",
+            start = LocalDateTime.parse("2023-01-01T12:00:00"),
+            playground = "",
+            maxPlayers = 1,
+            minPlayers = 2,
+            cadre = emptyList(),
+            waitingBench = emptyList(),
+            deregistered = emptyList(),
+            result = emptyList()
+        )
         val groupPlayers: Map<String, String> = mapOf()
 
         val winnerTeam: PlayerTeam =
@@ -93,8 +106,8 @@ class EnterMatchResultViewModel :
 }
 
 data class EnterMatchResultUIState(
-    val isLoading: Boolean = false,
-    val error: String? = null,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val isDraw: Boolean = false,
     val teamAPlayers: List<String> = emptyList(),
     val teamBPlayers: List<String> = emptyList(),
@@ -103,7 +116,7 @@ data class EnterMatchResultUIState(
     val playerNames: Map<String, String> = emptyMap(),
     val selectedPlayer: String? = null,
     val selectedSide: Side? = null
-)
+) : BaseUIState
 
 enum class Side {
     LEFT,

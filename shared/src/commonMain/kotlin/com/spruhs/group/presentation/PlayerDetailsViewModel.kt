@@ -1,5 +1,6 @@
 package com.spruhs.group.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.match.application.Match
@@ -22,8 +23,8 @@ class PlayerDetailsViewModel :
 }
 
 data class PlayerDetailsUIState(
-    val isLoading: Boolean = false,
-    val error: String? = null,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val playerDetails: PlayerDetails? = null,
     val groupNames: Map<String, String> = emptyMap(),
     val playerStats: PlayerStats = PlayerStats(),
@@ -31,7 +32,7 @@ data class PlayerDetailsUIState(
     val selectedGroup: SelectedGroup? = null,
     val selectedStatus: UserStatus? = null,
     val selectedRole: UserRole? = null
-)
+) : BaseUIState
 
 sealed class PlayerDetailsEffect {
     object PlayerRemoved : PlayerDetailsEffect()

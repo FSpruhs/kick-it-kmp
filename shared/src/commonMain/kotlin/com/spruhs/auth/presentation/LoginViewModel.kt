@@ -1,6 +1,7 @@
 package com.spruhs.auth.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.LoginUseCase
 import com.spruhs.user.application.LoadUserUseCase
@@ -79,5 +80,6 @@ data class LoginUIState(
     val password: String = "",
     val isInputValid: Boolean = false,
     val loginError: Boolean = false,
-    val isLoading: Boolean = false
-)
+    override val isLoading: Boolean = false,
+    override val error: String? = null
+) : BaseUIState

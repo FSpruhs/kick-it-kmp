@@ -1,6 +1,7 @@
 package com.spruhs.main
 
 import androidx.lifecycle.viewModelScope
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -55,5 +56,7 @@ sealed class TopBarEffect {
 data class TopBarUIState(
     val selectedGroupName: String? = null,
     val unreadMessage: Int = 0,
-    val imageUrl: String? = null
-)
+    val imageUrl: String? = null,
+    override val isLoading: Boolean = false,
+    override val error: String? = null
+) : BaseUIState

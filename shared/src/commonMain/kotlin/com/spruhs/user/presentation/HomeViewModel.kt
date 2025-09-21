@@ -2,6 +2,7 @@ package com.spruhs.user.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.Match
 import com.spruhs.match.application.MatchRepository
@@ -55,12 +56,12 @@ class HomeViewModel(
 }
 
 data class HomeUIState(
-    val isLoading: Boolean = false,
-    val error: String? = null,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val upcomingMatches: List<Match> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null
-)
+) : BaseUIState
 
 sealed class HomeIntent {
     data class SelectMatch(val matchId: String) : HomeIntent()

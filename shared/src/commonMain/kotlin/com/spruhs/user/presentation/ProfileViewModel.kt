@@ -1,6 +1,7 @@
 package com.spruhs.user.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.update
@@ -31,11 +32,12 @@ class ProfileViewModel(private val userRepository: UserRepository) :
 }
 
 data class ProfileUIState(
-    val isLoading: Boolean = false,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val nickName: String = "",
     val newNickName: String = "",
     val imageUrl: String? = null
-)
+) : BaseUIState
 
 sealed class ProfileIntent {
     object Logout : ProfileIntent()

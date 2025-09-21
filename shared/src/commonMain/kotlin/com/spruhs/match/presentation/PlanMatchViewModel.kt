@@ -1,5 +1,6 @@
 package com.spruhs.match.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import kotlinx.datetime.LocalDateTime
 
@@ -10,13 +11,13 @@ class PlanMatchViewModel : BaseViewModel<PlanMatchEffect, PlanMatchUIState>(Plan
 }
 
 data class PlanMatchUIState(
-    val isLoading: Boolean = false,
-    val error: String? = null,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val start: LocalDateTime? = null,
     val location: String = "",
     val minPlayers: Int = 4,
     val maxPlayers: Int = 8
-)
+) : BaseUIState
 
 sealed class PlanMatchEffect {
     object MatchPlanned : PlanMatchEffect()

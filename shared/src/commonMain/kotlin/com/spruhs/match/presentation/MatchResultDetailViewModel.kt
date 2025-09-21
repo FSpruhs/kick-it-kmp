@@ -1,5 +1,6 @@
 package com.spruhs.match.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.match.application.PlayerResult
@@ -46,13 +47,14 @@ class MatchResultDetailViewModel :
 }
 
 data class MatchResultDetailUIState(
-    val isLoading: Boolean = false,
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
     val playerResults: List<PlayerResult> = emptyList(),
     val selectedGroup: SelectedGroup? = null,
     val winnerTeam: PlayerTeam? = null,
     val isDraw: Boolean = false,
     val groupNameList: Map<String, String> = mapOf()
-)
+) : BaseUIState
 
 sealed class MatchResultDetailEffect
 

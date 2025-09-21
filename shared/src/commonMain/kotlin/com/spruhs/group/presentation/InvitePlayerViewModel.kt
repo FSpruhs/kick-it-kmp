@@ -1,5 +1,6 @@
 package com.spruhs.group.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 
 class InvitePlayerViewModel :
@@ -14,10 +15,10 @@ class InvitePlayerViewModel :
 }
 
 data class InvitePlayerUIState(
-    val isLoading: Boolean = false,
     val playerEmail: String = "",
-    val error: String? = null
-)
+    override val error: String? = null,
+    override val isLoading: Boolean = false,
+) : BaseUIState
 
 sealed class InvitePlayerEffect {
     object PlayerInvited : InvitePlayerEffect()

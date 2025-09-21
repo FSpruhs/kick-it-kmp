@@ -1,5 +1,6 @@
 package com.spruhs.group.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 
 class CreateGroupViewModel :
@@ -14,11 +15,11 @@ class CreateGroupViewModel :
 }
 
 data class CreateGroupUIState(
-    val isLoading: Boolean = false,
     val newGroupName: String = "",
     val maxChars: Int = 20,
-    val error: String? = null
-)
+    override val isLoading: Boolean = false,
+    override val error: String? = null
+) : BaseUIState
 
 sealed class CreateGroupEffect {
     object GroupCreated : CreateGroupEffect()

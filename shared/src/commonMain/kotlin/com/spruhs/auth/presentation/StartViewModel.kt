@@ -1,5 +1,6 @@
 package com.spruhs.auth.presentation
 
+import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.AuthenticateUseCase
 import com.spruhs.user.application.LoadUserUseCase
@@ -38,4 +39,4 @@ sealed class StartSideEffect {
     object NotAuthenticated : StartSideEffect()
 }
 
-data class StartUiState(val isLoading: Boolean = false)
+data class StartUiState(override val isLoading: Boolean = false, override val error: String? = null) : BaseUIState
