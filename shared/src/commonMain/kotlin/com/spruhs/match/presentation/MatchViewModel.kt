@@ -14,13 +14,16 @@ class MatchViewModel : BaseViewModel<MatchEffect, MatchUIState>(MatchUIState()) 
 
 data class MatchUIState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val selectedGroup: SelectedGroup? = null,
     val upcomingMatches: List<Match> = emptyList(),
     val lastMatches: List<Match> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null,
-) : BaseUIState
+) : BaseUIState<MatchUIState> {
+    override fun copyWith(isLoading: Boolean): MatchUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class MatchEffect {}
 

@@ -107,7 +107,6 @@ class EnterMatchResultViewModel :
 
 data class EnterMatchResultUIState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val isDraw: Boolean = false,
     val teamAPlayers: List<String> = emptyList(),
     val teamBPlayers: List<String> = emptyList(),
@@ -116,7 +115,11 @@ data class EnterMatchResultUIState(
     val playerNames: Map<String, String> = emptyMap(),
     val selectedPlayer: String? = null,
     val selectedSide: Side? = null
-) : BaseUIState
+) : BaseUIState<EnterMatchResultUIState> {
+    override fun copyWith(isLoading: Boolean): EnterMatchResultUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 enum class Side {
     LEFT,

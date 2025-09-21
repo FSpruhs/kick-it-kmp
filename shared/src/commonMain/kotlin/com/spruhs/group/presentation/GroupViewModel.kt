@@ -16,11 +16,14 @@ class GroupViewModel : BaseViewModel<GroupEffect, GroupUiState>(GroupUiState()) 
 
 data class GroupUiState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val selectedGroup: SelectedGroup? = null,
     val players: List<PlayerDetails> = emptyList(),
     val groupNames: Map<String, String> = emptyMap()
-) : BaseUIState
+) : BaseUIState<GroupUiState> {
+    override fun copyWith(isLoading: Boolean): GroupUiState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class GroupEffect {
     object LeavedGroup : GroupEffect()

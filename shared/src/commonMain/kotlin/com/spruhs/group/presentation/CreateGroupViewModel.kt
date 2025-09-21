@@ -1,7 +1,5 @@
 package com.spruhs.group.presentation
 
-import androidx.lifecycle.viewModelScope
-import com.spruhs.AppLogger
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.group.application.GroupRepository
@@ -10,13 +8,11 @@ import com.spruhs.user.application.UserRepository
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class CreateGroupViewModel(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository
-) :
-    BaseViewModel<CreateGroupEffect, CreateGroupUIState>(CreateGroupUIState()) {
+) : BaseViewModel<CreateGroupEffect, CreateGroupUIState>(CreateGroupUIState()) {
 
     fun processIntent(intent: CreateGroupIntent) {
         when (intent) {
@@ -26,25 +22,22 @@ class CreateGroupViewModel(
     }
 
     private fun handleCreateGroup() {
-        uiStateMutable.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            try {
-                val result = groupRepository.createGroup(uiState.value.groupName)
-                uiStateMutable.update { it.copy(isLoading = false) }
+        performAction(
+            onSuccess = { result ->
                 effectsMutable.emit(CreateGroupEffect.GroupCreated)
-                userRepository.addGroup(UserGroupInfo(
-                    id = result,
-                    name = uiState.value.groupName,
-                    userStatus = UserStatus.ACTIVE,
-                    userRole = UserRole.COACH,
-                ))
-            } catch (e: Exception) {
-                AppLogger.e("CreateGroupViewModel", "Error creating group", e)
-                uiStateMutable.update { it.copy(isLoading = false) }
-                effectsMutable.emit(CreateGroupEffect.ShowError("Error creating group"))
-            }
-        }
+                userRepository.addGroup(toUserGroupInfo(result))
+            },
+            onError = { effectsMutable.emit(CreateGroupEffect.ShowError("Error creating group")) },
+            action = { groupRepository.createGroup(uiState.value.groupName) }
+        )
     }
+
+    private fun toUserGroupInfo(id: String) = UserGroupInfo(
+            id = id,
+            name = uiState.value.groupName,
+            userStatus = UserStatus.ACTIVE,
+            userRole = UserRole.COACH,
+        )
 
     private fun handleNewGroupNameChanged(groupName: String) {
         if (groupName.length > uiState.value.maxChars) return
@@ -56,8 +49,9 @@ data class CreateGroupUIState(
     val groupName: String = "",
     val maxChars: Int = 20,
     override val isLoading: Boolean = false,
-    override val error: String? = null
-) : BaseUIState
+) : BaseUIState<CreateGroupUIState> {
+    override fun copyWith(isLoading: Boolean): CreateGroupUIState = copy(isLoading = isLoading)
+}
 
 sealed class CreateGroupEffect {
     object GroupCreated : CreateGroupEffect()

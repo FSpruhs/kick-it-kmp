@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<E, S : BaseUIState>(initialState: S) : ViewModel() {
+abstract class BaseViewModel<E, S : BaseUIState<S>>(initialState: S) : ViewModel()
+ {
 
     protected val uiStateMutable = MutableStateFlow(initialState)
     open val uiState: StateFlow<S> = uiStateMutable.asStateFlow()
@@ -22,13 +24,12 @@ abstract class BaseViewModel<E, S : BaseUIState>(initialState: S) : ViewModel() 
     val effects: SharedFlow<E> = effectsMutable.asSharedFlow()
 
     fun <T> performAction(
-        setLoading: ((Boolean) -> Unit)? = null,
         onSuccess: suspend (T) -> Unit,
         onError: suspend (Throwable) -> Unit,
         action: suspend () -> T
     ) {
         viewModelScope.launch {
-            setLoading?.invoke(true)
+            uiStateMutable.update { it.copyWith(isLoading = true) }
             try {
                 val result = action()
                 onSuccess(result)
@@ -36,7 +37,7 @@ abstract class BaseViewModel<E, S : BaseUIState>(initialState: S) : ViewModel() 
                 AppLogger.e("BaseViewModel", "Action failed: ${e.message}", e)
                 onError(e)
             } finally {
-                setLoading?.invoke(false)
+                uiStateMutable.update { it.copyWith(isLoading = false) }
             }
         }
     }

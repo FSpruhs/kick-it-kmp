@@ -4,7 +4,6 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.AuthenticateUseCase
 import com.spruhs.user.application.LoadUserUseCase
-import kotlinx.coroutines.flow.update
 
 class StartViewModel(
     private val authenticateUseCase: AuthenticateUseCase,
@@ -17,7 +16,6 @@ class StartViewModel(
 
     private fun authenticate() {
         performAction(
-            setLoading = { isLoading -> uiStateMutable.update { it.copy(isLoading = isLoading) } },
             onSuccess = { onAuthenticated(it) },
             onError = { effectsMutable.emit(StartSideEffect.NotAuthenticated) },
             action = { authenticateUseCase.authenticate() }
@@ -39,4 +37,6 @@ sealed class StartSideEffect {
     object NotAuthenticated : StartSideEffect()
 }
 
-data class StartUiState(override val isLoading: Boolean = false, override val error: String? = null) : BaseUIState
+data class StartUiState(override val isLoading: Boolean = false) : BaseUIState<StartUiState> {
+    override fun copyWith(isLoading: Boolean): StartUiState { return copy(isLoading = isLoading) }
+}

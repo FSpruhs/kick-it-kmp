@@ -56,7 +56,6 @@ class UpcomingMatchDetailsViewModel :
 
 data class UpcomingMatchDetailsUIState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val userPosition: PlayerStatus? = null,
     val userRole: UserRole? = null,
     val startRegistration: Boolean? = null,
@@ -69,7 +68,11 @@ data class UpcomingMatchDetailsUIState(
     val playground: String? = null,
     val actualPlayersCount: Int = 0,
     val maxPlayers: Int = 0
-) : BaseUIState
+) : BaseUIState<UpcomingMatchDetailsUIState> {
+    override fun copyWith(isLoading: Boolean): UpcomingMatchDetailsUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class UpcomingMatchDetailsIntent {
     object CancelMatch : UpcomingMatchDetailsIntent()

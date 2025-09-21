@@ -58,5 +58,8 @@ data class TopBarUIState(
     val unreadMessage: Int = 0,
     val imageUrl: String? = null,
     override val isLoading: Boolean = false,
-    override val error: String? = null
-) : BaseUIState
+) : BaseUIState<TopBarUIState> {
+    override fun copyWith(isLoading: Boolean): TopBarUIState {
+        return copy(isLoading = isLoading)
+    }
+}

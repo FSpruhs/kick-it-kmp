@@ -34,7 +34,7 @@ class HomeViewModel(
                 }
             } else {
                 AppLogger.e("HomeViewModel", "User not found in state")
-                uiStateMutable.update { it.copy(error = "User not found") }
+                effectsMutable.emit(HomeEffect.ShowError("User not found in state"))
             }
         }
     }
@@ -57,11 +57,14 @@ class HomeViewModel(
 
 data class HomeUIState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val upcomingMatches: List<Match> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null
-) : BaseUIState
+) : BaseUIState<HomeUIState> {
+    override fun copyWith(isLoading: Boolean): HomeUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class HomeIntent {
     data class SelectMatch(val matchId: String) : HomeIntent()
@@ -69,4 +72,5 @@ sealed class HomeIntent {
 
 sealed class HomeEffect {
     data class MatchSelected(val matchId: String) : HomeEffect()
+    data class ShowError(val message: String) : HomeEffect()
 }

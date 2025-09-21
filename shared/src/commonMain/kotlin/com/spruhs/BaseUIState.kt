@@ -1,6 +1,7 @@
 package com.spruhs
 
-interface BaseUIState {
+interface BaseUIState<S : BaseUIState<S>> {
     val isLoading: Boolean
-    val error: String?
+
+    fun copyWith(isLoading: Boolean = this.isLoading): S
 }

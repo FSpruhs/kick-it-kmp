@@ -74,7 +74,6 @@ class RegisterViewModel : BaseViewModel<RegisterEffect, RegisterUIState>(Registe
             return
         }
         performAction(
-            setLoading = { isLoading -> uiStateMutable.update { it.copy(isLoading = isLoading) } },
             onSuccess = {
                 viewModelScope.launch { effectsMutable.emit(RegisterEffect.RegisterSuccess) }
             },
@@ -108,5 +107,6 @@ data class RegisterUIState(
     val isPasswordValid: Boolean? = null,
     val isInputValid: Boolean = false,
     override val isLoading: Boolean = false,
-    override val error: String? = null
-) : BaseUIState
+) : BaseUIState<RegisterUIState> {
+    override fun copyWith(isLoading: Boolean): RegisterUIState { return copy(isLoading = isLoading) }
+}

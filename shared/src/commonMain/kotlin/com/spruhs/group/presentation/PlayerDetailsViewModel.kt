@@ -24,7 +24,6 @@ class PlayerDetailsViewModel :
 
 data class PlayerDetailsUIState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val playerDetails: PlayerDetails? = null,
     val groupNames: Map<String, String> = emptyMap(),
     val playerStats: PlayerStats = PlayerStats(),
@@ -32,7 +31,11 @@ data class PlayerDetailsUIState(
     val selectedGroup: SelectedGroup? = null,
     val selectedStatus: UserStatus? = null,
     val selectedRole: UserRole? = null
-) : BaseUIState
+) : BaseUIState<PlayerDetailsUIState> {
+    override fun copyWith(isLoading: Boolean): PlayerDetailsUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class PlayerDetailsEffect {
     object PlayerRemoved : PlayerDetailsEffect()

@@ -48,13 +48,16 @@ class MatchResultDetailViewModel :
 
 data class MatchResultDetailUIState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val playerResults: List<PlayerResult> = emptyList(),
     val selectedGroup: SelectedGroup? = null,
     val winnerTeam: PlayerTeam? = null,
     val isDraw: Boolean = false,
     val groupNameList: Map<String, String> = mapOf()
-) : BaseUIState
+) : BaseUIState<MatchResultDetailUIState> {
+    override fun copyWith(isLoading: Boolean): MatchResultDetailUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class MatchResultDetailEffect
 

@@ -43,7 +43,6 @@ class LoginViewModel(
 
     private fun login() {
         performAction(
-            setLoading = { isLoading -> uiStateMutable.update { it.copy(isLoading = isLoading) } },
             onSuccess = { onLoginSuccess(it) },
             onError = { uiStateMutable.update { it.copy(loginError = true) } },
             action = {
@@ -81,5 +80,6 @@ data class LoginUIState(
     val isInputValid: Boolean = false,
     val loginError: Boolean = false,
     override val isLoading: Boolean = false,
-    override val error: String? = null
-) : BaseUIState
+) : BaseUIState<LoginUIState> {
+    override fun copyWith(isLoading: Boolean): LoginUIState { return copy(isLoading = isLoading) }
+}

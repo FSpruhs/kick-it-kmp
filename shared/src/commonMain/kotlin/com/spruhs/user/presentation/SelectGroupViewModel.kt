@@ -15,10 +15,13 @@ class SelectGroupViewModel : BaseViewModel<SelectGroupEffect, SelectGroupUIState
 
 data class SelectGroupUIState(
     override val isLoading: Boolean = false,
-    override val error: String? = null,
     val id: String? = null,
     val groups: List<UserGroupInfo> = emptyList()
-) : BaseUIState
+) : BaseUIState<SelectGroupUIState> {
+    override fun copyWith(isLoading: Boolean): SelectGroupUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class SelectGroupEffect {
     object GroupSelected : SelectGroupEffect()

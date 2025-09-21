@@ -16,9 +16,12 @@ class InvitePlayerViewModel :
 
 data class InvitePlayerUIState(
     val playerEmail: String = "",
-    override val error: String? = null,
     override val isLoading: Boolean = false,
-) : BaseUIState
+) : BaseUIState<InvitePlayerUIState> {
+    override fun copyWith(isLoading: Boolean): InvitePlayerUIState {
+        return copy(isLoading = isLoading)
+    }
+}
 
 sealed class InvitePlayerEffect {
     object PlayerInvited : InvitePlayerEffect()
