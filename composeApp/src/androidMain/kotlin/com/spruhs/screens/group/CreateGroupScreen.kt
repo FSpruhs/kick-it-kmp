@@ -1,5 +1,6 @@
 package com.spruhs.screens.group
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import com.spruhs.group.presentation.CreateGroupIntent
 import com.spruhs.group.presentation.CreateGroupUIState
 import com.spruhs.group.presentation.CreateGroupViewModel
 import com.spruhs.screens.common.SubmitButton
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -31,32 +33,11 @@ fun CreateGroupScreen(
     createGroupViewModel: CreateGroupViewModel = koinViewModel()
 ) {
     val uiState by createGroupViewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        createGroupViewModel.effects.collect { effect ->
-            when (effect) {
-                CreateGroupEffect.GroupCreated -> {
-                    Toast
-                        .makeText(
-                            context,
-                            "Group created!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    onCreateGroupSuccess()
-                }
-            }
-
-            if (uiState.error != null) {
-                Toast
-                    .makeText(
-                        context,
-                        uiState.error,
-                        Toast.LENGTH_SHORT
-                    ).show()
-            }
-        }
-    }
+    HandleUiEffects(
+        effects = createGroupViewModel.effects,
+        onGroupCreated = onCreateGroupSuccess
+    )
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -68,6 +49,27 @@ fun CreateGroupScreen(
             )
         }
     )
+}
+
+@Composable
+fun HandleUiEffects(
+    effects: Flow<CreateGroupEffect>,
+    context: Context = LocalContext.current,
+    onGroupCreated: () -> Unit
+) {
+    LaunchedEffect(Unit) {
+        effects.collect { effect ->
+            when (effect) {
+                is CreateGroupEffect.GroupCreated -> {
+                    Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show()
+                    onGroupCreated()
+                }
+                is CreateGroupEffect.ShowError -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -92,9 +94,9 @@ fun CreateGroupContent(
         )
 
         OutlinedTextField(
-            value = uiState.newGroupName,
+            value = uiState.groupName,
             onValueChange = {
-                onIntent(CreateGroupIntent.NewGroupNameChanged(it))
+                onIntent(CreateGroupIntent.GroupNameChanged(it))
             },
             label = { Text("Group Name (max. ${uiState.maxChars} Chars)") },
             singleLine = true,
@@ -107,7 +109,7 @@ fun CreateGroupContent(
                 .padding(bottom = 42.dp)
                 .fillMaxWidth(0.5f),
             isLoading = uiState.isLoading,
-            enabled = uiState.newGroupName.length >= 2 && !uiState.isLoading,
+            enabled = uiState.groupName.length >= 2 && !uiState.isLoading,
             onSubmitClick = { onIntent(CreateGroupIntent.CreateGroup) }
         )
     }
