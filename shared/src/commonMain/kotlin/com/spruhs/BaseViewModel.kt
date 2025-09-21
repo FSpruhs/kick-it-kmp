@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<E, S : BaseUIState<S>>(initialState: S) : ViewModel()
- {
+abstract class BaseViewModel<E, S : BaseUIState<S>>(initialState: S) : ViewModel() {
 
     protected val uiStateMutable = MutableStateFlow(initialState)
     open val uiState: StateFlow<S> = uiStateMutable.asStateFlow()

@@ -79,7 +79,7 @@ data class LoginUIState(
     val password: String = "",
     val isInputValid: Boolean = false,
     val loginError: Boolean = false,
-    override val isLoading: Boolean = false,
+    override val isLoading: Boolean = false
 ) : BaseUIState<LoginUIState> {
-    override fun copyWith(isLoading: Boolean): LoginUIState { return copy(isLoading = isLoading) }
+    override fun copyWith(isLoading: Boolean): LoginUIState = copy(isLoading = isLoading)
 }

@@ -32,7 +32,7 @@ fun LoginScreen(
     onRegisterClick: () -> Unit,
     loginViewModel: LoginViewModel = koinViewModel()
 ) {
-    val loginUIState by loginViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by loginViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         loginViewModel.effects.collect { effect ->
@@ -48,7 +48,7 @@ fun LoginScreen(
         content = { paddingValues ->
             LoginContent(
                 modifier = Modifier.padding(paddingValues),
-                loginUIState = loginUIState,
+                uiState = uiState,
                 onIntent = loginViewModel::processIntent
             )
         }
@@ -58,7 +58,7 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     modifier: Modifier = Modifier,
-    loginUIState: LoginUIState,
+    uiState: LoginUIState,
     onIntent: (LoginIntent) -> Unit
 ) {
     Box(
@@ -81,12 +81,12 @@ fun LoginContent(
             )
 
             LoginFields(
-                loginUIState = loginUIState,
+                uiState = uiState,
                 onIntent = onIntent
             )
 
             LoginButtons(
-                loginUIState = loginUIState,
+                uiState = uiState,
                 onIntent = onIntent
             )
         }
@@ -95,7 +95,7 @@ fun LoginContent(
 
 @Composable
 fun LoginButtons(
-    loginUIState: LoginUIState,
+    uiState: LoginUIState,
     onIntent: (LoginIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -108,8 +108,8 @@ fun LoginButtons(
             modifier
                 .padding(bottom = 42.dp)
                 .fillMaxWidth(0.5f),
-            enabled = !loginUIState.isLoading && loginUIState.isInputValid,
-            isLoading = loginUIState.isLoading
+            enabled = !uiState.isLoading && uiState.isInputValid,
+            isLoading = uiState.isLoading
         ) {
             onIntent(LoginIntent.Login)
         }
@@ -124,7 +124,7 @@ fun LoginButtons(
 
 @Composable
 fun LoginFields(
-    loginUIState: LoginUIState,
+    uiState: LoginUIState,
     onIntent: (LoginIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -132,7 +132,7 @@ fun LoginFields(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if (loginUIState.loginError && !loginUIState.isLoading) {
+        if (uiState.loginError && !uiState.isLoading) {
             Text(
                 text = "E-Mail or Password incorrect.",
                 color = MaterialTheme.colorScheme.error,
@@ -144,12 +144,12 @@ fun LoginFields(
         }
 
         EmailInput(
-            email = loginUIState.email,
+            email = uiState.email,
             onEmailChange = { onIntent(LoginIntent.EmailChanged(it)) }
         )
 
         PasswordInput(
-            password = loginUIState.password,
+            password = uiState.password,
             onPasswordChange = { onIntent(LoginIntent.PasswordChanged(it)) }
         )
     }

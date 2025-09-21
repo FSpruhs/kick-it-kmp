@@ -61,9 +61,7 @@ data class HomeUIState(
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null
 ) : BaseUIState<HomeUIState> {
-    override fun copyWith(isLoading: Boolean): HomeUIState {
-        return copy(isLoading = isLoading)
-    }
+    override fun copyWith(isLoading: Boolean): HomeUIState = copy(isLoading = isLoading)
 }
 
 sealed class HomeIntent {

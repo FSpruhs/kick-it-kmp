@@ -20,9 +20,7 @@ data class GroupUiState(
     val players: List<PlayerDetails> = emptyList(),
     val groupNames: Map<String, String> = emptyMap()
 ) : BaseUIState<GroupUiState> {
-    override fun copyWith(isLoading: Boolean): GroupUiState {
-        return copy(isLoading = isLoading)
-    }
+    override fun copyWith(isLoading: Boolean): GroupUiState = copy(isLoading = isLoading)
 }
 
 sealed class GroupEffect {

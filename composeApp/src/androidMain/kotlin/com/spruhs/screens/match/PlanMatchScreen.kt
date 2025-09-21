@@ -31,10 +31,9 @@ import com.spruhs.match.presentation.PlanMatchIntent
 import com.spruhs.match.presentation.PlanMatchUIState
 import com.spruhs.match.presentation.PlanMatchViewModel
 import com.spruhs.screens.common.SubmitButton
+import java.util.Calendar
 import kotlinx.datetime.LocalDateTime
 import org.koin.androidx.compose.koinViewModel
-import java.util.Calendar
-
 
 @Composable
 fun PlanMatchScreen(
@@ -91,44 +90,48 @@ fun PlanMatchContent(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .padding(16.dp),
+        modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PlanMatchForm(
             context = context,
             onIntent = onIntent,
-            planMatchUiState = planMatchUiState,
+            planMatchUiState = planMatchUiState
         )
     }
 }
 
 @Composable
-fun PlanMatchForm(context: Context, onIntent: (PlanMatchIntent) -> Unit, planMatchUiState: PlanMatchUIState) {
+fun PlanMatchForm(
+    context: Context,
+    onIntent: (PlanMatchIntent) -> Unit,
+    planMatchUiState: PlanMatchUIState
+) {
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
         Text(
             text = "Plan Match",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier =
-                Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 16.dp)
+            Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 16.dp)
         )
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier =
-                Modifier
-                    .align(Alignment.Center)
-                    .fillMaxWidth()
+            Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth()
         ) {
             Button(
                 onClick = {
@@ -160,9 +163,9 @@ fun PlanMatchForm(context: Context, onIntent: (PlanMatchIntent) -> Unit, planMat
         }
         SubmitButton(
             modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp),
+            Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
             enabled = isSubmitButtonEnabled(planMatchUiState),
             onSubmitClick = { onIntent(PlanMatchIntent.PlanMatch) }
         )

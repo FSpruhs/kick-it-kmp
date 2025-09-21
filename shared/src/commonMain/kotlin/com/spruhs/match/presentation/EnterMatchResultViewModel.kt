@@ -116,9 +116,7 @@ data class EnterMatchResultUIState(
     val selectedPlayer: String? = null,
     val selectedSide: Side? = null
 ) : BaseUIState<EnterMatchResultUIState> {
-    override fun copyWith(isLoading: Boolean): EnterMatchResultUIState {
-        return copy(isLoading = isLoading)
-    }
+    override fun copyWith(isLoading: Boolean): EnterMatchResultUIState = copy(isLoading = isLoading)
 }
 
 enum class Side {

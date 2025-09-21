@@ -153,7 +153,9 @@ fun AppMainNavigation(
         composable(MainScreens.MatchScreen.route) {
             MatchScreen(
                 setBackIcon = setBackIcon,
-                onPlanMatchClick = { navHostController.navigate(MainScreens.PlanMatchScreen.route) },
+                onPlanMatchClick = {
+                    navHostController.navigate(MainScreens.PlanMatchScreen.route)
+                },
                 onUpcomingMatchClick = { matchId ->
                     navHostController.navigate(
                         "${MainScreens.UpcomingMatchDetailScreen.route}/$matchId"

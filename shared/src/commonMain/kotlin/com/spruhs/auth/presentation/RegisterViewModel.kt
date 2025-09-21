@@ -106,7 +106,7 @@ data class RegisterUIState(
     val repeatedPassword: String = "",
     val isPasswordValid: Boolean? = null,
     val isInputValid: Boolean = false,
-    override val isLoading: Boolean = false,
+    override val isLoading: Boolean = false
 ) : BaseUIState<RegisterUIState> {
-    override fun copyWith(isLoading: Boolean): RegisterUIState { return copy(isLoading = isLoading) }
+    override fun copyWith(isLoading: Boolean): RegisterUIState = copy(isLoading = isLoading)
 }

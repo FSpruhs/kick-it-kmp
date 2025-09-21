@@ -8,7 +8,6 @@ import com.spruhs.user.application.UserGroupInfo
 
 class MatchViewModel : BaseViewModel<MatchEffect, MatchUIState>(MatchUIState()) {
     fun processIntent(intent: MatchIntent) {
-
     }
 }
 
@@ -18,14 +17,12 @@ data class MatchUIState(
     val upcomingMatches: List<Match> = emptyList(),
     val lastMatches: List<Match> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap(),
-    val userId: String? = null,
+    val userId: String? = null
 ) : BaseUIState<MatchUIState> {
-    override fun copyWith(isLoading: Boolean): MatchUIState {
-        return copy(isLoading = isLoading)
-    }
+    override fun copyWith(isLoading: Boolean): MatchUIState = copy(isLoading = isLoading)
 }
 
-sealed class MatchEffect {}
+sealed class MatchEffect
 
 sealed class MatchIntent {
     data class SelectMatch(val matchId: String) : MatchIntent()

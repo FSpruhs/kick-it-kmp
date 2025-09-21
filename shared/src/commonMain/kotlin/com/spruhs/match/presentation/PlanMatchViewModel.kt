@@ -6,7 +6,6 @@ import kotlinx.datetime.LocalDateTime
 
 class PlanMatchViewModel : BaseViewModel<PlanMatchEffect, PlanMatchUIState>(PlanMatchUIState()) {
     fun processIntent(intent: PlanMatchIntent) {
-
     }
 }
 
@@ -17,9 +16,7 @@ data class PlanMatchUIState(
     val minPlayers: Int = 4,
     val maxPlayers: Int = 8
 ) : BaseUIState<PlanMatchUIState> {
-    override fun copyWith(isLoading: Boolean): PlanMatchUIState {
-        return copy(isLoading = isLoading)
-    }
+    override fun copyWith(isLoading: Boolean): PlanMatchUIState = copy(isLoading = isLoading)
 }
 
 sealed class PlanMatchEffect {

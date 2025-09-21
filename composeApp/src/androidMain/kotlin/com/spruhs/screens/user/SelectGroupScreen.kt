@@ -44,9 +44,7 @@ import com.spruhs.user.presentation.SelectGroupViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SelectGroupScreen(
-    selectGroupViewModel: SelectGroupViewModel = koinViewModel()
-) {
+fun SelectGroupScreen(selectGroupViewModel: SelectGroupViewModel = koinViewModel()) {
     val selectGroupUIState by selectGroupViewModel.uiState.collectAsStateWithLifecycle()
     GroupContent(
         modifier = Modifier.fillMaxSize(),
@@ -59,7 +57,7 @@ fun SelectGroupScreen(
 fun GroupContent(
     modifier: Modifier = Modifier,
     selectGroupUIState: SelectGroupUIState,
-    onIntent: (SelectGroupIntent) -> Unit,
+    onIntent: (SelectGroupIntent) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -79,9 +77,9 @@ fun GroupContent(
 fun GroupHeader(onCreateGroupClick: () -> Unit) {
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
+        Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
     ) {
         Text(
             text = "Groups",
@@ -92,10 +90,10 @@ fun GroupHeader(onCreateGroupClick: () -> Unit) {
         Button(
             onClick = { onCreateGroupClick() },
             modifier =
-                Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(48.dp)
-                    .clip(CircleShape),
+            Modifier
+                .align(Alignment.CenterEnd)
+                .size(48.dp)
+                .clip(CircleShape),
             contentPadding = PaddingValues(0.dp)
         ) {
             Icon(
@@ -113,7 +111,6 @@ fun GroupListContent(
     onIntent: (SelectGroupIntent) -> Unit
 ) {
     val id = selectGroupUIState.id
-
 
     when {
         selectGroupUIState.isLoading -> {
@@ -135,7 +132,6 @@ fun GroupListContent(
                 }
             }
         }
-
     }
 }
 
@@ -143,32 +139,32 @@ fun GroupListContent(
 fun GroupItem(userGroupInfo: UserGroupInfo, isSelected: Boolean, onClick: (UserGroupInfo) -> Unit) {
     Card(
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = LocalIndication.current
-                ) {
-                    onClick(userGroupInfo)
-                }
-                .border(
-                    width = 2.dp,
-                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                    shape = MaterialTheme.shapes.medium
-                )
+        Modifier
+            .fillMaxWidth()
+            .padding(6.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current
+            ) {
+                onClick(userGroupInfo)
+            }
+            .border(
+                width = 2.dp,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                shape = MaterialTheme.shapes.medium
+            )
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .padding(12.dp),
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {

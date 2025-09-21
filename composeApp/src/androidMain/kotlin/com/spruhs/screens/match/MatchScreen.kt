@@ -50,14 +50,14 @@ fun MatchScreen(
         content = { paddingValues ->
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(paddingValues)
-                        .padding(6.dp)
+                Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues)
+                    .padding(6.dp)
             ) {
                 MatchContent(
                     matchUIState = matchUIState,
-                    onIntent = matchViewModel::processIntent,
+                    onIntent = matchViewModel::processIntent
                 )
             }
         },
@@ -82,10 +82,7 @@ fun MatchScreen(
 }
 
 @Composable
-fun MatchContent(
-    matchUIState: MatchUIState,
-    onIntent: (MatchIntent) -> Unit,
-) {
+fun MatchContent(matchUIState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -115,7 +112,7 @@ fun MatchContent(
                         UpcomingMatchesItem(
                             upcomingMatchPreview = match,
                             groups = matchUIState.groups,
-                            onMatchClick = { onIntent(MatchIntent.SelectMatch(it))},
+                            onMatchClick = { onIntent(MatchIntent.SelectMatch(it)) },
                             userId = matchUIState.userId ?: ""
                         )
                     }

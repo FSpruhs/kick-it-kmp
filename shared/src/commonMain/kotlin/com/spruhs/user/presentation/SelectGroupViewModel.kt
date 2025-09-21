@@ -4,7 +4,8 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.user.application.UserGroupInfo
 
-class SelectGroupViewModel : BaseViewModel<SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
+class SelectGroupViewModel :
+    BaseViewModel<SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
     fun processIntent(intent: SelectGroupIntent) {
         when (intent) {
             is SelectGroupIntent.CreateGroup -> {}
@@ -18,9 +19,7 @@ data class SelectGroupUIState(
     val id: String? = null,
     val groups: List<UserGroupInfo> = emptyList()
 ) : BaseUIState<SelectGroupUIState> {
-    override fun copyWith(isLoading: Boolean): SelectGroupUIState {
-        return copy(isLoading = isLoading)
-    }
+    override fun copyWith(isLoading: Boolean): SelectGroupUIState = copy(isLoading = isLoading)
 }
 
 sealed class SelectGroupEffect {

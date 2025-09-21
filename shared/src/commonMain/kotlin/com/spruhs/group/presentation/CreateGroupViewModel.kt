@@ -33,11 +33,11 @@ class CreateGroupViewModel(
     }
 
     private fun toUserGroupInfo(id: String) = UserGroupInfo(
-            id = id,
-            name = uiState.value.groupName,
-            userStatus = UserStatus.ACTIVE,
-            userRole = UserRole.COACH,
-        )
+        id = id,
+        name = uiState.value.groupName,
+        userStatus = UserStatus.ACTIVE,
+        userRole = UserRole.COACH
+    )
 
     private fun handleNewGroupNameChanged(groupName: String) {
         if (groupName.length > uiState.value.maxChars) return
@@ -48,7 +48,7 @@ class CreateGroupViewModel(
 data class CreateGroupUIState(
     val groupName: String = "",
     val maxChars: Int = 20,
-    override val isLoading: Boolean = false,
+    override val isLoading: Boolean = false
 ) : BaseUIState<CreateGroupUIState> {
     override fun copyWith(isLoading: Boolean): CreateGroupUIState = copy(isLoading = isLoading)
 }

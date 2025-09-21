@@ -13,7 +13,8 @@ import org.koin.core.context.startKoin
 class KickItApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        val modules = platformModule + authModule + userModule + mainModule + groupModule + matchModule
+        val modules =
+            platformModule + authModule + userModule + mainModule + groupModule + matchModule
         startKoin {
             androidContext(applicationContext)
             modules(modules)

@@ -33,7 +33,7 @@ fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     registerViewModel: RegisterViewModel = koinViewModel()
 ) {
-    val registerState by registerViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by registerViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         registerViewModel.effects.collect { effect ->
@@ -50,7 +50,7 @@ fun RegisterScreen(
             RegisterUserContent(
                 modifier = Modifier.padding(paddingValues),
                 onIntent = registerViewModel::processIntent,
-                registerUIState = registerState
+                uiState = uiState
             )
         }
     )
@@ -60,7 +60,7 @@ fun RegisterScreen(
 fun RegisterUserContent(
     modifier: Modifier = Modifier,
     onIntent: (RegisterIntent) -> Unit,
-    registerUIState: RegisterUIState
+    uiState: RegisterUIState
 ) {
     Column(
         modifier =
@@ -78,31 +78,31 @@ fun RegisterUserContent(
         )
 
         RegisterFields(
-            registerUIState = registerUIState,
+            uiState = uiState,
             onIntent = onIntent
         )
 
         RegisterButtons(
-            registerUIState = registerUIState,
+            uiState = uiState,
             onIntent = onIntent
         )
     }
 }
 
 @Composable
-fun RegisterFields(onIntent: (RegisterIntent) -> Unit, registerUIState: RegisterUIState) {
+fun RegisterFields(onIntent: (RegisterIntent) -> Unit, uiState: RegisterUIState) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EmailInput(
-            email = registerUIState.email,
+            email = uiState.email,
             onEmailChange = { onIntent(RegisterIntent.EmailChanged(it)) }
         )
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(0.8f),
-            value = registerUIState.nickName,
+            value = uiState.nickName,
             onValueChange = { onIntent(RegisterIntent.NickNameChanged(it)) },
             label = { Text("Nickname (max. 20 Chars)") },
             singleLine = true
@@ -113,7 +113,7 @@ fun RegisterFields(onIntent: (RegisterIntent) -> Unit, registerUIState: Register
             color = MaterialTheme.colorScheme.outlineVariant
         )
 
-        if (registerUIState.isPasswordValid == false) {
+        if (uiState.isPasswordValid == false) {
             Text(
                 text =
                 """
@@ -133,7 +133,7 @@ fun RegisterFields(onIntent: (RegisterIntent) -> Unit, registerUIState: Register
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(0.8f),
-            value = registerUIState.password,
+            value = uiState.password,
             onValueChange = { onIntent(RegisterIntent.PasswordChanged(it)) },
             label = { Text("Password") },
             singleLine = true,
@@ -142,7 +142,7 @@ fun RegisterFields(onIntent: (RegisterIntent) -> Unit, registerUIState: Register
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(0.8f),
-            value = registerUIState.repeatedPassword,
+            value = uiState.repeatedPassword,
             onValueChange = { onIntent(RegisterIntent.RepeatedPasswordChanged(it)) },
             label = { Text("Repeat Password") },
             singleLine = true,
@@ -152,7 +152,7 @@ fun RegisterFields(onIntent: (RegisterIntent) -> Unit, registerUIState: Register
 }
 
 @Composable
-fun RegisterButtons(onIntent: (RegisterIntent) -> Unit, registerUIState: RegisterUIState) {
+fun RegisterButtons(onIntent: (RegisterIntent) -> Unit, uiState: RegisterUIState) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -162,8 +162,8 @@ fun RegisterButtons(onIntent: (RegisterIntent) -> Unit, registerUIState: Registe
             Modifier
                 .padding(bottom = 42.dp)
                 .fillMaxWidth(0.5f),
-            enabled = registerUIState.isInputValid && !registerUIState.isLoading,
-            isLoading = registerUIState.isLoading
+            enabled = uiState.isInputValid && !uiState.isLoading,
+            isLoading = uiState.isLoading
         ) { onIntent(RegisterIntent.Register) }
     }
 

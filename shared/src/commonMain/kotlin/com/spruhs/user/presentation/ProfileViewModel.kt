@@ -37,9 +37,7 @@ data class ProfileUIState(
     val newNickName: String = "",
     val imageUrl: String? = null
 ) : BaseUIState<ProfileUIState> {
-    override fun copyWith(isLoading: Boolean): ProfileUIState {
-        return copy(isLoading = isLoading)
-    }
+    override fun copyWith(isLoading: Boolean): ProfileUIState = copy(isLoading = isLoading)
 }
 
 sealed class ProfileIntent {
