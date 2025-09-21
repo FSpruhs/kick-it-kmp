@@ -66,7 +66,7 @@ fun UpcomingMatchDetailsScreen(
     onMatchCancelled: () -> Unit,
     upcomingMatchDetailsViewModel: UpcomingMatchDetailsViewModel = koinViewModel()
 ) {
-    val upcomingMatchDetailsUIState by upcomingMatchDetailsViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by upcomingMatchDetailsViewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 
@@ -84,11 +84,11 @@ fun UpcomingMatchDetailsScreen(
                 }
             }
 
-            if (upcomingMatchDetailsUIState.error != null) {
+            if (uiState.error != null) {
                 Toast
                     .makeText(
                         context,
-                        upcomingMatchDetailsUIState.error,
+                        uiState.error,
                         Toast.LENGTH_SHORT
                     ).show()
             }
@@ -100,7 +100,7 @@ fun UpcomingMatchDetailsScreen(
         content = { paddingValues ->
             UpcomingMatchDetailContent(
                 modifier = Modifier.padding(paddingValues),
-                upcomingMatchDetailsUIState = upcomingMatchDetailsUIState,
+                uiState = uiState,
                 onIntent = upcomingMatchDetailsViewModel::processIntent
             )
         }
@@ -110,7 +110,7 @@ fun UpcomingMatchDetailsScreen(
 @Composable
 fun UpcomingMatchDetailContent(
     modifier: Modifier = Modifier,
-    upcomingMatchDetailsUIState: UpcomingMatchDetailsUIState,
+    uiState: UpcomingMatchDetailsUIState,
     onIntent: (UpcomingMatchDetailsIntent) -> Unit
 ) {
     var showDeregisterDialog by remember { mutableStateOf(false) }
@@ -126,7 +126,7 @@ fun UpcomingMatchDetailContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MatchShortInfo(
-            upcomingMatchDetailsUIState = upcomingMatchDetailsUIState
+            uiState = uiState
         )
 
         HorizontalDivider(
@@ -135,13 +135,13 @@ fun UpcomingMatchDetailContent(
         )
 
         RegistrationSelector(
-            isRegistered = upcomingMatchDetailsUIState.selectedRegistration,
+            isRegistered = uiState.selectedRegistration,
             onSelectionChange = {
                 onIntent(UpcomingMatchDetailsIntent.SelectRegistration(it ?: false))
             },
-            isLoading = upcomingMatchDetailsUIState.isLoading,
+            isLoading = uiState.isLoading,
             onButtonClick = { registration ->
-                if (upcomingMatchDetailsUIState.startRegistration == true && !registration) {
+                if (uiState.startRegistration == true && !registration) {
                     showDeregisterDialog = true
                 } else {
                     onIntent(UpcomingMatchDetailsIntent.RegisterPlayer(registration))
@@ -154,14 +154,14 @@ fun UpcomingMatchDetailContent(
         PlayerSection(
             title = "Cadre",
             icon = Icons.Rounded.Check,
-            players = upcomingMatchDetailsUIState.cadre,
-            groupNameList = upcomingMatchDetailsUIState.groupNameList,
+            players = uiState.cadre,
+            groupNameList = uiState.groupNameList,
             color = CustomColor.Green,
             menuText = "Remove from cadre",
             onMenuClick = { id -> onIntent(UpcomingMatchDetailsIntent.RemoveFromCadre(id)) },
             readOnly =
             !PermissionManager.hasPermission(
-                upcomingMatchDetailsUIState.userRole,
+                uiState.userRole,
                 "upcomingMatchDetailScreen:removePlayerFromCadre"
             )
         )
@@ -174,14 +174,14 @@ fun UpcomingMatchDetailContent(
         PlayerSection(
             title = "Waitingbench",
             icon = Icons.Default.HourglassEmpty,
-            players = upcomingMatchDetailsUIState.waitingBench,
-            groupNameList = upcomingMatchDetailsUIState.groupNameList,
+            players = uiState.waitingBench,
+            groupNameList = uiState.groupNameList,
             color = CustomColor.Gray,
             menuText = "Add to cadre",
             onMenuClick = { id -> onIntent(UpcomingMatchDetailsIntent.AddToCadre(id)) },
             readOnly =
             !PermissionManager.hasPermission(
-                upcomingMatchDetailsUIState.userRole,
+                uiState.userRole,
                 "upcomingMatchDetailScreen:addPlayerFromCadre"
             )
         )
@@ -194,14 +194,14 @@ fun UpcomingMatchDetailContent(
         PlayerSection(
             title = "Deregistered",
             icon = Icons.Default.Close,
-            players = upcomingMatchDetailsUIState.deregistered,
-            groupNameList = upcomingMatchDetailsUIState.groupNameList,
+            players = uiState.deregistered,
+            groupNameList = uiState.groupNameList,
             color = CustomColor.Red,
             readOnly = true
         )
 
         RoleBasedVisibility(
-            upcomingMatchDetailsUIState.userRole,
+            uiState.userRole,
             "upcomingMatchDetailScreen:cancelMatchButton"
         ) {
             CancelButton(
@@ -286,7 +286,7 @@ fun PlayerSection(
 @Composable
 fun MatchShortInfo(
     modifier: Modifier = Modifier,
-    upcomingMatchDetailsUIState: UpcomingMatchDetailsUIState
+    uiState: UpcomingMatchDetailsUIState
 ) {
     Row(
         modifier =
@@ -303,7 +303,7 @@ fun MatchShortInfo(
                 .weight(1F)
         ) {
             PlayerMatchStatusIcon(
-                status = upcomingMatchDetailsUIState.userPosition,
+                status = uiState.userPosition,
                 size = 48
             )
             Text(
@@ -313,7 +313,7 @@ fun MatchShortInfo(
             )
             Text(
                 text =
-                when (upcomingMatchDetailsUIState.userPosition) {
+                when (uiState.userPosition) {
                     PlayerStatus.CADRE -> "Cadre"
                     PlayerStatus.WAITING_BENCH -> "Waiting on Bench"
                     PlayerStatus.DEREGISTERED -> "Deregistered"
@@ -334,7 +334,7 @@ fun MatchShortInfo(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = upcomingMatchDetailsUIState.start?.toString() ?: "",
+                    text = uiState.start?.toString() ?: "",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -345,10 +345,10 @@ fun MatchShortInfo(
                     text = "Playground",
                     style = MaterialTheme.typography.titleMedium
                 )
-                if (upcomingMatchDetailsUIState.playground.isNullOrBlank()) {
+                if (uiState.playground.isNullOrBlank()) {
                     "-"
                 } else {
-                    upcomingMatchDetailsUIState.playground?.let {
+                    uiState.playground?.let {
                         Text(
                             text = it,
                             style = MaterialTheme.typography.bodyMedium,
@@ -364,8 +364,8 @@ fun MatchShortInfo(
         ) {
             RegistrationDisplay(
                 size = 72,
-                actual = upcomingMatchDetailsUIState.actualPlayersCount,
-                from = upcomingMatchDetailsUIState.maxPlayers
+                actual = uiState.actualPlayersCount,
+                from = uiState.maxPlayers
             )
         }
     }
