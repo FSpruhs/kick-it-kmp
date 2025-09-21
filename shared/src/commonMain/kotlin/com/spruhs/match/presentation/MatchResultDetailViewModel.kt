@@ -55,8 +55,8 @@ data class MatchResultDetailUIState(
     val isDraw: Boolean = false,
     val groupNameList: Map<String, String> = mapOf()
 ) : BaseUIState<MatchResultDetailUIState> {
-    override fun copyWith(isLoading: Boolean): MatchResultDetailUIState =
-        copy(isLoading = isLoading)
+    override fun copyWith(isLoading: Boolean, error: String?): MatchResultDetailUIState =
+        copy(isLoading = isLoading, error = error)
 }
 
 sealed class MatchResultDetailEffect

@@ -20,7 +20,8 @@ data class MatchUIState(
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null
 ) : BaseUIState<MatchUIState> {
-    override fun copyWith(isLoading: Boolean): MatchUIState = copy(isLoading = isLoading)
+    override fun copyWith(isLoading: Boolean, error: String?): MatchUIState =
+        copy(isLoading = isLoading, error = error)
 }
 
 sealed class MatchEffect

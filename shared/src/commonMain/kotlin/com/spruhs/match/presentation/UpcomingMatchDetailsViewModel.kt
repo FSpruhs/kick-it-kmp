@@ -70,8 +70,8 @@ data class UpcomingMatchDetailsUIState(
     val actualPlayersCount: Int = 0,
     val maxPlayers: Int = 0
 ) : BaseUIState<UpcomingMatchDetailsUIState> {
-    override fun copyWith(isLoading: Boolean): UpcomingMatchDetailsUIState =
-        copy(isLoading = isLoading)
+    override fun copyWith(isLoading: Boolean, error: String?): UpcomingMatchDetailsUIState =
+        copy(isLoading = isLoading, error = error)
 }
 
 sealed class UpcomingMatchDetailsIntent {

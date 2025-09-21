@@ -46,10 +46,7 @@ import com.spruhs.user.presentation.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(
-    onMatchClick: (String) -> Unit,
-    homeViewModel: HomeViewModel = koinViewModel()
-) {
+fun HomeScreen(onMatchClick: (String) -> Unit, homeViewModel: HomeViewModel = koinViewModel()) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {

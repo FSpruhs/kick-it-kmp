@@ -33,7 +33,8 @@ data class PlayerDetailsUIState(
     val selectedStatus: UserStatus? = null,
     val selectedRole: UserRole? = null
 ) : BaseUIState<PlayerDetailsUIState> {
-    override fun copyWith(isLoading: Boolean): PlayerDetailsUIState = copy(isLoading = isLoading)
+    override fun copyWith(isLoading: Boolean, error: String?): PlayerDetailsUIState =
+        copy(isLoading = isLoading, error = error)
 }
 
 sealed class PlayerDetailsEffect {

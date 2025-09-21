@@ -32,9 +32,11 @@ abstract class BaseViewModel<E, S : BaseUIState<S>>(initialState: S) : ViewModel
             try {
                 val result = action()
                 onSuccess(result)
+                uiStateMutable.update { it.copyWith(error = null) }
             } catch (e: Throwable) {
                 AppLogger.e("BaseViewModel", "Action failed: ${e.message}", e)
                 onError(e)
+                uiStateMutable.update { it.copyWith(error = e.message) }
             } finally {
                 uiStateMutable.update { it.copyWith(isLoading = false) }
             }

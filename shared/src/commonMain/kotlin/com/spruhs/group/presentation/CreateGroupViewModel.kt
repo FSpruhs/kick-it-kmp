@@ -49,9 +49,10 @@ data class CreateGroupUIState(
     val groupName: String = "",
     val maxChars: Int = 20,
     override val isLoading: Boolean = false,
-    override val error: String? = null,
+    override val error: String? = null
 ) : BaseUIState<CreateGroupUIState> {
-    override fun copyWith(isLoading: Boolean): CreateGroupUIState = copy(isLoading = isLoading)
+    override fun copyWith(isLoading: Boolean, error: String?): CreateGroupUIState =
+        copy(isLoading = isLoading, error = error)
 }
 
 sealed class CreateGroupEffect {

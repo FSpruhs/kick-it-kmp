@@ -17,7 +17,8 @@ data class PlanMatchUIState(
     val minPlayers: Int = 4,
     val maxPlayers: Int = 8
 ) : BaseUIState<PlanMatchUIState> {
-    override fun copyWith(isLoading: Boolean): PlanMatchUIState = copy(isLoading = isLoading)
+    override fun copyWith(isLoading: Boolean, error: String?): PlanMatchUIState =
+        copy(isLoading = isLoading, error = error)
 }
 
 sealed class PlanMatchEffect {

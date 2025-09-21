@@ -20,7 +20,8 @@ data class SelectGroupUIState(
     val id: String? = null,
     val groups: List<UserGroupInfo> = emptyList()
 ) : BaseUIState<SelectGroupUIState> {
-    override fun copyWith(isLoading: Boolean): SelectGroupUIState = copy(isLoading = isLoading)
+    override fun copyWith(isLoading: Boolean, error: String?): SelectGroupUIState =
+        copy(isLoading = isLoading, error = error)
 }
 
 sealed class SelectGroupEffect {
