@@ -14,6 +14,7 @@ import com.spruhs.screens.main.BottomNavigationItem
 import com.spruhs.screens.match.EnterResultScreen
 import com.spruhs.screens.match.MatchResultDetailScreen
 import com.spruhs.screens.match.MatchScreen
+import com.spruhs.screens.match.PlanMatchScreen
 import com.spruhs.screens.match.UpcomingMatchDetailsScreen
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
@@ -163,6 +164,13 @@ fun AppMainNavigation(
                     )
                 }
             )
+        }
+
+        composable(MainScreens.PlanMatchScreen.route) {
+            PlanMatchScreen(
+                onPlanMatchSuccess = { navHostController.navigate(MainScreens.MatchScreen.route) }
+            )
+            setBackIcon(true)
         }
     }
 }
