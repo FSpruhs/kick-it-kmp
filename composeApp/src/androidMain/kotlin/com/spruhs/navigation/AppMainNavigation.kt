@@ -18,6 +18,7 @@ import com.spruhs.screens.match.PlanMatchScreen
 import com.spruhs.screens.match.UpcomingMatchDetailsScreen
 import com.spruhs.screens.user.HomeScreen
 import com.spruhs.screens.user.ProfileScreen
+import com.spruhs.screens.user.SelectGroupScreen
 
 @Composable
 fun AppMainNavigation(
@@ -171,6 +172,10 @@ fun AppMainNavigation(
                 onPlanMatchSuccess = { navHostController.navigate(MainScreens.MatchScreen.route) }
             )
             setBackIcon(true)
+        }
+
+        composable(MainScreens.SelectGroupScreen.route) {
+            SelectGroupScreen()
         }
     }
 }

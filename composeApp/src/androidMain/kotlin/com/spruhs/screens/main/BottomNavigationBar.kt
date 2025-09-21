@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 @Composable
 fun BottomNavigationBar(
     selectedItem: String,
+    onSelectGroupClick: (String) -> Unit,
     onHomeClick: (String) -> Unit,
     onGroupClick: (String) -> Unit,
     onMatchClick: (String) -> Unit
@@ -28,6 +29,14 @@ fun BottomNavigationBar(
             .fillMaxWidth(),
         containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) {
+        KickItNavigationItem(
+            itemName = BottomNavigationItem.SelectGroup.name,
+            imageVector = Icons.Default.Home,
+            contentDescription = "Select Group Icon",
+            onClick = onSelectGroupClick,
+            selectedItem = selectedItem
+        )
+
         KickItNavigationItem(
             itemName = BottomNavigationItem.Home.name,
             imageVector = Icons.Default.Home,
@@ -88,6 +97,7 @@ fun RowScope.KickItNavigationItem(
 }
 
 sealed class BottomNavigationItem(val name: String) {
+    data object SelectGroup : BottomNavigationItem("selectGroup")
     data object Home : BottomNavigationItem("home")
 
     data object Group : BottomNavigationItem("group")

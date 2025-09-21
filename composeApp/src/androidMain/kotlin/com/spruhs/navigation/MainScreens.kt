@@ -14,4 +14,6 @@ sealed class MainScreens(val route: String) {
     data object MatchResultDetailScreen : MainScreens("MatchResultDetail")
     data object UpcomingMatchDetailScreen : MainScreens("UpcomingMatchDetail")
     data object PlanMatchScreen : MainScreens("PlanMatch")
+    data object SelectGroupScreen : MainScreens("SelectGroup")
+
 }

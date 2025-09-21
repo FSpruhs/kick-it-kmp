@@ -51,6 +51,11 @@ fun MainContent(onLogout: () -> Unit) {
         bottomBar = {
             BottomNavigationBar(
                 selectedItem = selectedItem.value,
+                onSelectGroupClick = {
+                    navHostController.navigate(MainScreens.SelectGroupScreen.route)
+                    selectedItem.value = BottomNavigationItem.SelectGroup.name
+                    backIcon = false
+                },
                 onHomeClick = {
                     navHostController.navigate(MainScreens.HomeScreen.route)
                     selectedItem.value = BottomNavigationItem.Home.name
