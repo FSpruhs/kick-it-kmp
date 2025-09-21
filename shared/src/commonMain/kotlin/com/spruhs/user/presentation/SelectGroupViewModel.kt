@@ -6,7 +6,8 @@ import com.spruhs.user.application.UserGroupInfo
 class SelectGroupViewModel : BaseViewModel<SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
     fun processIntent(intent: SelectGroupIntent) {
         when (intent) {
-            SelectGroupIntent.SelectGroup -> {}
+            is SelectGroupIntent.CreateGroup -> {}
+            is SelectGroupIntent.SelectGroup -> {}
         }
     }
 }

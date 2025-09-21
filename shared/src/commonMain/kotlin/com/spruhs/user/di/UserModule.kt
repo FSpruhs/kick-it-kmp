@@ -11,6 +11,7 @@ import com.spruhs.user.data.createUserAuthService
 import com.spruhs.user.data.createUserNoAuthService
 import com.spruhs.user.presentation.HomeViewModel
 import com.spruhs.user.presentation.ProfileViewModel
+import com.spruhs.user.presentation.SelectGroupViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
@@ -31,4 +32,5 @@ val userModule = module {
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::ProfileViewModel)
+    viewModelOf(::SelectGroupViewModel)
 }
