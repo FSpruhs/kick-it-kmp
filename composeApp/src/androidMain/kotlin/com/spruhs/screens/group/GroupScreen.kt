@@ -48,7 +48,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun GroupScreen(
-    setBackIcon: (Boolean) -> Unit,
     onInvitePlayerClick: () -> Unit,
     onPlayerClick: (String) -> Unit,
     onLeaveGroup: () -> Unit,
@@ -57,7 +56,6 @@ fun GroupScreen(
     val groupUIState by groupViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        setBackIcon(false)
         groupViewModel.effects.collect { effect ->
             when (effect) {
                 is GroupEffect.LeavedGroup -> onLeaveGroup()

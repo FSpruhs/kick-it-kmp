@@ -107,6 +107,7 @@ class EnterMatchResultViewModel :
 
 data class EnterMatchResultUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val isDraw: Boolean = false,
     val teamAPlayers: List<String> = emptyList(),
     val teamBPlayers: List<String> = emptyList(),

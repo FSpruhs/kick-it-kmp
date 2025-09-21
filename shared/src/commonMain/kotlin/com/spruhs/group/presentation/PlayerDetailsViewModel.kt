@@ -24,6 +24,7 @@ class PlayerDetailsViewModel :
 
 data class PlayerDetailsUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val playerDetails: PlayerDetails? = null,
     val groupNames: Map<String, String> = emptyMap(),
     val playerStats: PlayerStats = PlayerStats(),

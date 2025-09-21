@@ -16,6 +16,7 @@ class SelectGroupViewModel :
 
 data class SelectGroupUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val id: String? = null,
     val groups: List<UserGroupInfo> = emptyList()
 ) : BaseUIState<SelectGroupUIState> {

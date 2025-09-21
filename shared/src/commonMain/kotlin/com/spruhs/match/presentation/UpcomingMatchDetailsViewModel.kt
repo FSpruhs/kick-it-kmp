@@ -56,6 +56,7 @@ class UpcomingMatchDetailsViewModel :
 
 data class UpcomingMatchDetailsUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val userPosition: PlayerStatus? = null,
     val userRole: UserRole? = null,
     val startRegistration: Boolean? = null,

@@ -32,20 +32,21 @@ fun AppMainNavigation(
         startDestination = MainScreens.HomeScreen.route
     ) {
         composable(MainScreens.HomeScreen.route) {
+            setBackIcon(false)
             HomeScreen(
                 onMatchClick = { matchId ->
                     navHostController.navigate("${MainScreens.MatchDetailScreen.route}/$matchId")
                 },
-                setBackIcon = setBackIcon
             )
         }
 
         composable(MainScreens.ProfileScreen.route) {
+            setBackIcon(true)
             ProfileScreen(onLogout)
         }
         composable(MainScreens.GroupScreen.route) {
+            setBackIcon(false)
             GroupScreen(
-                setBackIcon = setBackIcon,
                 onInvitePlayerClick = {
                     navHostController.navigate(MainScreens.InvitePlayerScreen.route)
                 },
@@ -59,12 +60,14 @@ fun AppMainNavigation(
             )
         }
         composable(MainScreens.CreateGroupScreen.route) {
+            setBackIcon(true)
             CreateGroupScreen(
                 onCreateGroupSuccess = { navHostController.navigate(MainScreens.HomeScreen.route) }
             )
         }
 
         composable(MainScreens.InvitePlayerScreen.route) {
+            setBackIcon(true)
             InvitePlayerScreen(
                 onPlayerInvitedSuccess = {
                     navHostController.navigate(MainScreens.GroupScreen.route)
@@ -81,6 +84,7 @@ fun AppMainNavigation(
                 }
             )
         ) {
+            setBackIcon(true)
             PlayerDetailsScreen(
                 playerId = it.arguments?.getString("playerId") ?: "",
                 onLastMatchClick = { matchId ->
@@ -151,8 +155,8 @@ fun AppMainNavigation(
         }
 
         composable(MainScreens.MatchScreen.route) {
+            setBackIcon(false)
             MatchScreen(
-                setBackIcon = setBackIcon,
                 onPlanMatchClick = {
                     navHostController.navigate(MainScreens.PlanMatchScreen.route)
                 },
@@ -177,6 +181,7 @@ fun AppMainNavigation(
         }
 
         composable(MainScreens.SelectGroupScreen.route) {
+            setBackIcon(false)
             SelectGroupScreen()
         }
     }

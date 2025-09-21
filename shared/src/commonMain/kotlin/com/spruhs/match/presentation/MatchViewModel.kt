@@ -13,6 +13,7 @@ class MatchViewModel : BaseViewModel<MatchEffect, MatchUIState>(MatchUIState()) 
 
 data class MatchUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val selectedGroup: SelectedGroup? = null,
     val upcomingMatches: List<Match> = emptyList(),
     val lastMatches: List<Match> = emptyList(),

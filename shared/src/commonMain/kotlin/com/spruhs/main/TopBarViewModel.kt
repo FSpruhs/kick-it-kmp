@@ -57,7 +57,8 @@ data class TopBarUIState(
     val selectedGroupName: String? = null,
     val unreadMessage: Int = 0,
     val imageUrl: String? = null,
-    override val isLoading: Boolean = false
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
 ) : BaseUIState<TopBarUIState> {
     override fun copyWith(isLoading: Boolean): TopBarUIState = copy(isLoading = isLoading)
 }

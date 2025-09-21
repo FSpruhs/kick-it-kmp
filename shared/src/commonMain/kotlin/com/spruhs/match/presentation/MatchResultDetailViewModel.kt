@@ -48,6 +48,7 @@ class MatchResultDetailViewModel :
 
 data class MatchResultDetailUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val playerResults: List<PlayerResult> = emptyList(),
     val selectedGroup: SelectedGroup? = null,
     val winnerTeam: PlayerTeam? = null,

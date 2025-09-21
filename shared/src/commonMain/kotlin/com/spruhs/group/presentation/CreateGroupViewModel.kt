@@ -48,7 +48,8 @@ class CreateGroupViewModel(
 data class CreateGroupUIState(
     val groupName: String = "",
     val maxChars: Int = 20,
-    override val isLoading: Boolean = false
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
 ) : BaseUIState<CreateGroupUIState> {
     override fun copyWith(isLoading: Boolean): CreateGroupUIState = copy(isLoading = isLoading)
 }

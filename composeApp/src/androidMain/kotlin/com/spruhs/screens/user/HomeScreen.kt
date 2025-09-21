@@ -48,16 +48,15 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     onMatchClick: (String) -> Unit,
-    setBackIcon: (Boolean) -> Unit,
     homeViewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        setBackIcon(false)
         homeViewModel.effects.collect { effect ->
             when (effect) {
                 is HomeEffect.MatchSelected -> onMatchClick(effect.matchId)
+                is HomeEffect.ShowError -> {}
             }
         }
     }

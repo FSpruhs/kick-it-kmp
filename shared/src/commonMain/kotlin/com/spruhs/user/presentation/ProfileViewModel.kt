@@ -33,6 +33,7 @@ class ProfileViewModel(private val userRepository: UserRepository) :
 
 data class ProfileUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val nickName: String = "",
     val newNickName: String = "",
     val imageUrl: String? = null

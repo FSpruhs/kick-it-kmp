@@ -11,6 +11,7 @@ class PlanMatchViewModel : BaseViewModel<PlanMatchEffect, PlanMatchUIState>(Plan
 
 data class PlanMatchUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val start: LocalDateTime? = null,
     val location: String = "",
     val minPlayers: Int = 4,

@@ -37,6 +37,9 @@ sealed class StartSideEffect {
     object NotAuthenticated : StartSideEffect()
 }
 
-data class StartUiState(override val isLoading: Boolean = false) : BaseUIState<StartUiState> {
+data class StartUiState(
+    override val isLoading: Boolean = false,
+    override val error: String? = null,
+    ) : BaseUIState<StartUiState> {
     override fun copyWith(isLoading: Boolean): StartUiState = copy(isLoading = isLoading)
 }

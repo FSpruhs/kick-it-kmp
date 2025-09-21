@@ -57,6 +57,7 @@ class HomeViewModel(
 
 data class HomeUIState(
     override val isLoading: Boolean = false,
+    override val error: String? = null,
     val upcomingMatches: List<Match> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null

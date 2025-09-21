@@ -34,16 +34,12 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MatchScreen(
-    setBackIcon: (Boolean) -> Unit,
     onPlanMatchClick: () -> Unit,
     onUpcomingMatchClick: (String) -> Unit,
     onLastMatchClick: (String) -> Unit,
     matchViewModel: MatchViewModel = koinViewModel()
 ) {
     val matchUIState by matchViewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        setBackIcon(false)
-    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
