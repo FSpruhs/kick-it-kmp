@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
+import com.spruhs.validateEmail
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -49,9 +50,7 @@ class RegisterViewModel : BaseViewModel<RegisterEffect, RegisterUIState>(Registe
         nickName: String,
         password: String,
         repeatedPassword: String
-    ): Boolean = email.contains("@") &&
-        email.contains(".") &&
-        email.length > 5 &&
+    ): Boolean = validateEmail(email) &&
         nickName.length >= 2 &&
         nickName.length <= MAX_NICKNAME_LENGTH &&
         password.length >= 6 &&

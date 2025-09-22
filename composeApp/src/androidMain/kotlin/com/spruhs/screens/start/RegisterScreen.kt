@@ -97,7 +97,8 @@ fun RegisterFields(onIntent: (RegisterIntent) -> Unit, uiState: RegisterUIState)
     ) {
         EmailInput(
             email = uiState.email,
-            onEmailChange = { onIntent(RegisterIntent.EmailChanged(it)) }
+            onEmailChange = { onIntent(RegisterIntent.EmailChanged(it)) },
+            error = uiState.error
         )
 
         OutlinedTextField(

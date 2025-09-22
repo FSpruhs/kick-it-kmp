@@ -145,7 +145,8 @@ fun LoginFields(
 
         EmailInput(
             email = uiState.email,
-            onEmailChange = { onIntent(LoginIntent.EmailChanged(it)) }
+            onEmailChange = { onIntent(LoginIntent.EmailChanged(it)) },
+            error = uiState.error
         )
 
         PasswordInput(

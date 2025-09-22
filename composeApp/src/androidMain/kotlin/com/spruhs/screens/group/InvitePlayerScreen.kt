@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,7 @@ import com.spruhs.group.presentation.InvitePlayerEffect
 import com.spruhs.group.presentation.InvitePlayerIntent
 import com.spruhs.group.presentation.InvitePlayerUIState
 import com.spruhs.group.presentation.InvitePlayerViewModel
+import com.spruhs.screens.common.EmailInput
 import com.spruhs.screens.common.SubmitButton
 import org.koin.androidx.compose.koinViewModel
 
@@ -30,7 +30,7 @@ fun InvitePlayerScreen(
     onPlayerInvitedSuccess: () -> Unit,
     invitePlayerViewModel: InvitePlayerViewModel = koinViewModel()
 ) {
-    val inviteUserUIState by invitePlayerViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by invitePlayerViewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -45,15 +45,10 @@ fun InvitePlayerScreen(
                         ).show()
                     onPlayerInvitedSuccess()
                 }
-            }
 
-            if (inviteUserUIState.error != null) {
-                Toast
-                    .makeText(
-                        context,
-                        inviteUserUIState.error,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                is InvitePlayerEffect.ShowError -> {
+                    Toast.makeText(context, uiState.error, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -63,7 +58,7 @@ fun InvitePlayerScreen(
         content = { paddingValues ->
             InvitePlayerContent(
                 modifier = Modifier.padding(paddingValues),
-                inviteUserUIState = inviteUserUIState,
+                uiState = uiState,
                 onIntent = invitePlayerViewModel::processIntent
             )
         }
@@ -73,7 +68,7 @@ fun InvitePlayerScreen(
 @Composable
 fun InvitePlayerContent(
     modifier: Modifier = Modifier,
-    inviteUserUIState: InvitePlayerUIState,
+    uiState: InvitePlayerUIState,
     onIntent: (InvitePlayerIntent) -> Unit
 ) {
     Column(
@@ -93,31 +88,18 @@ fun InvitePlayerContent(
 
         EmailInput(
             label = "Player Email",
-            email = inviteUserUIState.playerEmail,
-            onEmailChange = { onIntent(InvitePlayerIntent.PlayerEmailChanged(it)) }
+            email = uiState.email,
+            onEmailChange = { onIntent(InvitePlayerIntent.EmailChanged(it)) },
+            error = uiState.error
         )
+
         SubmitButton(
             modifier =
             Modifier
                 .padding(bottom = 42.dp)
                 .fillMaxWidth(0.5f),
-            isLoading = inviteUserUIState.isLoading,
-            enabled = inviteUserUIState.playerEmail.isNotEmpty() && !inviteUserUIState.isLoading
+            isLoading = uiState.isLoading,
+            enabled = uiState.email.isNotEmpty() && !uiState.isLoading
         ) { onIntent(InvitePlayerIntent.InvitePlayer) }
-    }
-}
-
-@Composable
-fun EmailInput(email: String, label: String = "Email", onEmailChange: (String) -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxWidth(0.8f)
-    ) {
-        OutlinedTextField(
-            value = email,
-            onValueChange = onEmailChange,
-            label = { Text(label) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
