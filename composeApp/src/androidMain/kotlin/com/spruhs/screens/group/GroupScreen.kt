@@ -1,5 +1,6 @@
 package com.spruhs.screens.group
 
+import android.widget.Toast
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spruhs.group.application.PlayerDetails
@@ -41,6 +42,7 @@ import com.spruhs.group.presentation.GroupUiState
 import com.spruhs.group.presentation.GroupViewModel
 import com.spruhs.screens.common.CancelButton
 import com.spruhs.screens.common.ConfirmAlertDialog
+import com.spruhs.screens.common.ContentUIState
 import com.spruhs.screens.common.RoleBasedVisibility
 import com.spruhs.screens.common.UserImage
 import com.spruhs.user.application.UserStatus
@@ -53,13 +55,17 @@ fun GroupScreen(
     onLeaveGroup: () -> Unit,
     groupViewModel: GroupViewModel = koinViewModel()
 ) {
-    val groupUIState by groupViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by groupViewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         groupViewModel.effects.collect { effect ->
             when (effect) {
                 is GroupEffect.LeavedGroup -> onLeaveGroup()
                 is GroupEffect.PlayerSelected -> onPlayerClick(effect.playerId)
+                is GroupEffect.ShowError -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -75,14 +81,14 @@ fun GroupScreen(
                     .padding(6.dp)
             ) {
                 GroupPlayersContent(
-                    groupUIState = groupUIState,
+                    uiState = uiState,
                     onIntent = groupViewModel::processIntent
                 )
             }
         },
         floatingActionButton = {
             RoleBasedVisibility(
-                groupUIState.selectedGroup?.role,
+                uiState.selectedGroup?.role,
                 "groupScreen:addPlayerButton"
             ) {
                 FloatingActionButton(
@@ -101,25 +107,19 @@ fun GroupScreen(
 }
 
 @Composable
-fun GroupPlayersContent(groupUIState: GroupUiState, onIntent: (GroupIntent) -> Unit) {
+fun GroupPlayersContent(uiState: GroupUiState, onIntent: (GroupIntent) -> Unit) {
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
-    when {
-        groupUIState.isLoading -> {
-            CircularProgressIndicator()
-        }
-
-        groupUIState.players.isEmpty() -> {
+    ContentUIState(contentUIState = uiState) {
+        if (uiState.players.isEmpty()) {
             Text(text = "No players found")
-        }
-
-        else -> {
+        } else {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(groupUIState.players) { player ->
+                items(uiState.players) { player ->
                     PlayerItem(
                         player,
-                        groupUIState.groupNames,
+                        uiState.groupNames,
                         onIntent
                     )
                 }
