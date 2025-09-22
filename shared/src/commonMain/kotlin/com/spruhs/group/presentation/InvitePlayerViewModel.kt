@@ -10,8 +10,7 @@ import kotlinx.coroutines.flow.update
 class InvitePlayerViewModel(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository
-    ) :
-    BaseViewModel<InvitePlayerEffect, InvitePlayerUIState>(InvitePlayerUIState()) {
+) : BaseViewModel<InvitePlayerEffect, InvitePlayerUIState>(InvitePlayerUIState()) {
 
     fun processIntent(intent: InvitePlayerIntent) {
         when (intent) {
@@ -36,10 +35,12 @@ class InvitePlayerViewModel(
     }
 
     private fun handleEmailChanged(email: String) {
-        uiStateMutable.update { it.copy(
-            email = email,
-            isEmailValid = validateEmail(email)
-        ) }
+        uiStateMutable.update {
+            it.copy(
+                email = email,
+                isEmailValid = validateEmail(email)
+            )
+        }
     }
 }
 

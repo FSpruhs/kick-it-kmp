@@ -284,10 +284,7 @@ fun PlayerSection(
 }
 
 @Composable
-fun MatchShortInfo(
-    modifier: Modifier = Modifier,
-    uiState: UpcomingMatchDetailsUIState
-) {
+fun MatchShortInfo(modifier: Modifier = Modifier, uiState: UpcomingMatchDetailsUIState) {
     Row(
         modifier =
         modifier

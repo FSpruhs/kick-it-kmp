@@ -8,7 +8,7 @@ import com.spruhs.BaseUIState
 @Composable
 fun <T : BaseUIState<T>> ContentUIState(
     contentUIState: BaseUIState<T>,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     when {
         contentUIState.isLoading -> {

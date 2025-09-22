@@ -22,10 +22,7 @@ abstract class BaseViewModel<E, S : BaseUIState<S>>(initialState: S) : ViewModel
     )
     val effects: SharedFlow<E> = effectsMutable.asSharedFlow()
 
-    fun fetchData(
-        onError: suspend (Throwable) -> Unit = {},
-        action: suspend () -> Unit
-    ) {
+    fun fetchData(onError: suspend (Throwable) -> Unit = {}, action: suspend () -> Unit) {
         viewModelScope.launch {
             uiStateMutable.update { it.copyWith(isLoading = true) }
             try {
