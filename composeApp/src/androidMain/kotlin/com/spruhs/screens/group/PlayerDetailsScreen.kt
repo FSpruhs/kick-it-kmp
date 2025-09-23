@@ -1,5 +1,6 @@
 package com.spruhs.screens.group
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -68,20 +69,48 @@ import com.spruhs.user.application.LabeledEnum
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 import java.util.Locale
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun PlayerDetailsScreen(
     playerId: String,
     onLastMatchClick: (String) -> Unit,
     onPlayerRemoved: () -> Unit,
-    playerDetailsViewModel: PlayerDetailsViewModel = koinViewModel()
+    playerDetailsViewModel: PlayerDetailsViewModel = koinViewModel(
+        parameters = { parametersOf(playerId) }
+    )
 ) {
-    val context = LocalContext.current
-    val playerDetailsUIState by playerDetailsViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by playerDetailsViewModel.uiState.collectAsStateWithLifecycle()
 
+    HandlePlayerDetailsEffect(
+        effects = playerDetailsViewModel.effects,
+        onPlayerRemoved = onPlayerRemoved,
+        onLastMatchClick = onLastMatchClick
+    )
+
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        content = { paddingValues ->
+            GroupDetailsContent(
+                modifier = Modifier.padding(paddingValues),
+                onIntent = playerDetailsViewModel::processIntent,
+                uiState = uiState
+            )
+        }
+    )
+}
+
+@Composable
+fun HandlePlayerDetailsEffect(
+    effects: Flow<PlayerDetailsEffect>,
+    context: Context = LocalContext.current,
+    onPlayerRemoved: () -> Unit,
+    onLastMatchClick: (String) -> Unit
+) {
     LaunchedEffect(Unit) {
-        playerDetailsViewModel.effects.collect { effect ->
+        effects.collect { effect ->
             when (effect) {
                 PlayerDetailsEffect.PlayerRemoved -> {
                     Toast
@@ -101,29 +130,16 @@ fun PlayerDetailsScreen(
                             Toast.LENGTH_SHORT
                         ).show()
                 }
-            }
 
-            if (playerDetailsUIState.error != null) {
-                Toast
-                    .makeText(
-                        context,
-                        playerDetailsUIState.error,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                is PlayerDetailsEffect.MatchSelected -> {
+                    onLastMatchClick(effect.matchId)
+                }
+                is PlayerDetailsEffect.ShowError -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
-
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        content = { paddingValues ->
-            GroupDetailsContent(
-                modifier = Modifier.padding(paddingValues),
-                onIntent = playerDetailsViewModel::processIntent,
-                uiState = playerDetailsUIState
-            )
-        }
-    )
 }
 
 @Composable

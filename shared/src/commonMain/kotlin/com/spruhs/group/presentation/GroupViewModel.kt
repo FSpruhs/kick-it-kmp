@@ -4,15 +4,15 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.group.application.GetGroupDataUseCase
+import com.spruhs.group.application.LeaveGroupUseCase
 import com.spruhs.group.application.PlayerDetails
-import com.spruhs.group.application.RemoveGroupUseCase
 import com.spruhs.user.application.SelectedGroup
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class GroupViewModel(
     private val getGroupDataUseCase: GetGroupDataUseCase,
-    private val leaveGroupUseCase: RemoveGroupUseCase
+    private val leaveGroupUseCase: LeaveGroupUseCase
 ) : BaseViewModel<GroupIntent, GroupEffect, GroupUiState>(GroupUiState()) {
 
     init {
@@ -37,15 +37,13 @@ class GroupViewModel(
         }
     }
 
-    private fun handleLeaveGroup() {
-        performAction(
-            onSuccess = { effectsMutable.emit(GroupEffect.LeavedGroup) },
-            onError = {
-                effectsMutable.emit(GroupEffect.ShowError("Failed to leave group"))
-            },
-            action = { leaveGroupUseCase.leave(uiState.value.selectedGroup!!.id) }
-        )
-    }
+    private fun handleLeaveGroup() = performAction(
+        onSuccess = { effectsMutable.emit(GroupEffect.LeavedGroup) },
+        onError = {
+            effectsMutable.emit(GroupEffect.ShowError("Failed to leave group"))
+        },
+        action = { leaveGroupUseCase.leave(uiState.value.selectedGroup!!.id) }
+    )
 
     private fun handleSelectPlayer(playerId: String) {
         viewModelScope.launch {

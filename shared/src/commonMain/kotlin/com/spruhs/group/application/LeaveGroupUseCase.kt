@@ -2,7 +2,7 @@ package com.spruhs.group.application
 
 import com.spruhs.user.application.UserRepository
 
-class RemoveGroupUseCase(
+class LeaveGroupUseCase(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository
 ) {

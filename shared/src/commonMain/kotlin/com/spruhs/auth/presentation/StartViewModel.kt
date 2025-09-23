@@ -14,13 +14,11 @@ class StartViewModel(
         authenticate()
     }
 
-    private fun authenticate() {
-        performAction(
-            onSuccess = { onAuthenticated(it) },
-            onError = { effectsMutable.emit(StartEffect.NotAuthenticated) },
-            action = { authenticateUseCase.authenticate() }
-        )
-    }
+    private fun authenticate() = performAction(
+        onSuccess = { onAuthenticated(it) },
+        onError = { effectsMutable.emit(StartEffect.NotAuthenticated) },
+        action = { authenticateUseCase.authenticate() }
+    )
 
     private suspend fun onAuthenticated(userId: String?) {
         if (userId == null) {

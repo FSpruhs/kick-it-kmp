@@ -3,25 +3,33 @@ package com.spruhs.group.presentation
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.group.application.PlayerDetails
+import com.spruhs.group.application.RemovePlayerUseCase
 import com.spruhs.match.application.Match
 import com.spruhs.statistics.application.PlayerStats
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 
-class PlayerDetailsViewModel :
-    BaseViewModel<PlayerDetailsIntent, PlayerDetailsEffect, PlayerDetailsUIState>(
-        PlayerDetailsUIState()
-    ) {
+class PlayerDetailsViewModel(
+    private val playerId: String,
+    private val removePlayerUseCase: RemovePlayerUseCase
+) : BaseViewModel<PlayerDetailsIntent, PlayerDetailsEffect, PlayerDetailsUIState>(
+    PlayerDetailsUIState()
+) {
     override fun processIntent(intent: PlayerDetailsIntent) {
         when (intent) {
-            is PlayerDetailsIntent.RemovePlayer -> {}
-            is PlayerDetailsIntent.UpdatePlayer -> TODO()
-            is PlayerDetailsIntent.SelectRole -> TODO()
-            is PlayerDetailsIntent.SelectStatus -> TODO()
-            is PlayerDetailsIntent.SelectLastMatch -> TODO()
+            is PlayerDetailsIntent.RemovePlayer -> handleRemovePlayer()
+            is PlayerDetailsIntent.UpdatePlayer -> {}
+            is PlayerDetailsIntent.SelectRole -> {}
+            is PlayerDetailsIntent.SelectStatus -> {}
+            is PlayerDetailsIntent.SelectLastMatch -> {}
         }
     }
+
+    private fun handleRemovePlayer() = performAction(
+        action = { removePlayerUseCase.remove(playerId) },
+        onSuccess = { effectsMutable.emit(PlayerDetailsEffect.PlayerRemoved) }
+    )
 }
 
 data class PlayerDetailsUIState(
@@ -42,6 +50,8 @@ data class PlayerDetailsUIState(
 sealed class PlayerDetailsEffect {
     object PlayerRemoved : PlayerDetailsEffect()
     object PlayerUpdated : PlayerDetailsEffect()
+    data class MatchSelected(val matchId: String) : PlayerDetailsEffect()
+    data class ShowError(val message: String) : PlayerDetailsEffect()
 }
 
 sealed class PlayerDetailsIntent {

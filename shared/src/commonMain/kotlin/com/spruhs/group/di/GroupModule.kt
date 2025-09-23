@@ -2,6 +2,7 @@ package com.spruhs.group.di
 
 import com.spruhs.group.application.CreateGroupUseCase
 import com.spruhs.group.application.GroupRepository
+import com.spruhs.group.application.LeaveGroupUseCase
 import com.spruhs.group.data.GroupRepositoryImpl
 import com.spruhs.group.presentation.CreateGroupViewModel
 import com.spruhs.group.presentation.GroupViewModel
@@ -12,6 +13,7 @@ import org.koin.dsl.module
 
 val groupModule = module {
     single { CreateGroupUseCase(get(), get()) }
+    single { LeaveGroupUseCase(get(), get()) }
     single<GroupRepository> { GroupRepositoryImpl() }
 
     viewModelOf(::CreateGroupViewModel)

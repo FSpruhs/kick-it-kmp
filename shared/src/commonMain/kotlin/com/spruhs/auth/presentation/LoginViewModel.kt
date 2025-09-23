@@ -39,16 +39,14 @@ class LoginViewModel(
     private fun validateInput(email: String, password: String): Boolean =
         validateEmail(email) && password.length >= 8
 
-    private fun login() {
-        performAction(
-            onSuccess = { onLoginSuccess(it) },
-            onError = { uiStateMutable.update { it.copy(loginError = true) } },
-            action = {
-                require(uiStateMutable.value.isInputValid)
-                loginUseCase.login(uiStateMutable.value.email, uiStateMutable.value.password)
-            }
-        )
-    }
+    private fun login() = performAction(
+        onSuccess = { onLoginSuccess(it) },
+        onError = { uiStateMutable.update { it.copy(loginError = true) } },
+        action = {
+            require(uiStateMutable.value.isInputValid)
+            loginUseCase.login(uiStateMutable.value.email, uiStateMutable.value.password)
+        }
+    )
 
     private suspend fun onLoginSuccess(userId: String?) {
         if (userId != null) {

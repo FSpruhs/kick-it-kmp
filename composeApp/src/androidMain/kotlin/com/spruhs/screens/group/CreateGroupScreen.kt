@@ -34,7 +34,7 @@ fun CreateGroupScreen(
 ) {
     val uiState by createGroupViewModel.uiState.collectAsStateWithLifecycle()
 
-    HandleUiEffects(
+    HandleCreateGroupEffect(
         effects = createGroupViewModel.effects,
         onGroupCreated = onCreateGroupSuccess
     )
@@ -52,7 +52,7 @@ fun CreateGroupScreen(
 }
 
 @Composable
-fun HandleUiEffects(
+fun HandleCreateGroupEffect(
     effects: Flow<CreateGroupEffect>,
     context: Context = LocalContext.current,
     onGroupCreated: () -> Unit

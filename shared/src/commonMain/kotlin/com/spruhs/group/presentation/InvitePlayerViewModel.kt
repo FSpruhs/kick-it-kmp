@@ -18,19 +18,17 @@ class InvitePlayerViewModel(private val invitePlayerUseCase: InvitePlayerUseCase
         }
     }
 
-    private fun handlePlayerInvited() {
-        performAction(
-            onSuccess = { effectsMutable.emit(InvitePlayerEffect.PlayerInvited) },
-            onError = {
-                effectsMutable.emit(InvitePlayerEffect.ShowError("Inviting player failed"))
-            },
-            action = {
-                if (uiState.value.isEmailValid) {
-                    invitePlayerUseCase.invite(uiState.value.email)
-                }
+    private fun handlePlayerInvited() = performAction(
+        onSuccess = { effectsMutable.emit(InvitePlayerEffect.PlayerInvited) },
+        onError = {
+            effectsMutable.emit(InvitePlayerEffect.ShowError("Inviting player failed"))
+        },
+        action = {
+            if (uiState.value.isEmailValid) {
+                invitePlayerUseCase.invite(uiState.value.email)
             }
-        )
-    }
+        }
+    )
 
     private fun handleEmailChanged(email: String) {
         uiStateMutable.update {
