@@ -1,29 +1,77 @@
 package com.spruhs.group.presentation
 
+import androidx.lifecycle.viewModelScope
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
+import com.spruhs.group.application.GetPlayerDetailsUseCase
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.group.application.RemovePlayerUseCase
-import com.spruhs.match.application.Match
+import com.spruhs.group.application.UpdatePlayerUseCase
+import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.statistics.application.PlayerStats
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class PlayerDetailsViewModel(
     private val playerId: String,
-    private val removePlayerUseCase: RemovePlayerUseCase
+    private val removePlayerUseCase: RemovePlayerUseCase,
+    private val updatePlayerUseCase: UpdatePlayerUseCase,
+    private val getPlayerDetailsUseCase: GetPlayerDetailsUseCase,
 ) : BaseViewModel<PlayerDetailsIntent, PlayerDetailsEffect, PlayerDetailsUIState>(
     PlayerDetailsUIState()
 ) {
+
+    init {
+        performAction(
+            action = { getPlayerDetailsUseCase.getPlayerDetails(playerId) },
+            onSuccess = {  }
+        )
+    }
+
     override fun processIntent(intent: PlayerDetailsIntent) {
         when (intent) {
             is PlayerDetailsIntent.RemovePlayer -> handleRemovePlayer()
-            is PlayerDetailsIntent.UpdatePlayer -> {}
-            is PlayerDetailsIntent.SelectRole -> {}
-            is PlayerDetailsIntent.SelectStatus -> {}
-            is PlayerDetailsIntent.SelectLastMatch -> {}
+            is PlayerDetailsIntent.UpdatePlayer -> handleUpdatePlayer()
+            is PlayerDetailsIntent.SelectRole -> handleSelectRole(intent.role)
+            is PlayerDetailsIntent.SelectStatus -> handleSelectStatus(intent.status)
+            is PlayerDetailsIntent.SelectLastMatch -> handleSelectLastMatch(intent.matchId)
         }
+    }
+
+    private fun handleUpdatePlayer() {
+        if (
+            uiState.value.playerDetails?.status == uiState.value.selectedStatus &&
+            uiState.value.playerDetails?.role == uiState.value.selectedRole
+            ) {
+            performAction(
+                onSuccess = { effectsMutable.emit(PlayerDetailsEffect.PlayerUpdated) },
+                action = {
+                    updatePlayerUseCase.update(
+                        playerId,
+                        uiState.value.selectedStatus,
+                        uiState.value.selectedRole
+                    )
+                }
+            )
+        }
+
+    }
+
+    private fun handleSelectLastMatch(matchId: String) {
+        viewModelScope.launch {
+            effectsMutable.emit(PlayerDetailsEffect.MatchSelected(matchId))
+        }
+    }
+
+    private fun handleSelectStatus(staus: String) {
+        uiStateMutable.update { it.copy(selectedStatus = UserStatus.valueOf(staus)) }
+    }
+
+    private fun handleSelectRole(role: String) {
+        uiStateMutable.update { it.copy(selectedRole = UserRole.valueOf(role)) }
     }
 
     private fun handleRemovePlayer() = performAction(
@@ -32,16 +80,24 @@ class PlayerDetailsViewModel(
     )
 }
 
+data class PlayerMatchPreview(
+    val id: String,
+    val playerResult: PlayerMatchResult,
+    val result: List<PlayerMatchResult>,
+    val start: String,
+    val playground: String?
+)
+
 data class PlayerDetailsUIState(
     override val isLoading: Boolean = false,
     override val error: String? = null,
     val playerDetails: PlayerDetails? = null,
     val groupNames: Map<String, String> = emptyMap(),
     val playerStats: PlayerStats = PlayerStats(),
-    val lastMatches: List<Match> = emptyList(),
+    val lastMatches: List<PlayerMatchPreview> = emptyList(),
     val selectedGroup: SelectedGroup? = null,
-    val selectedStatus: UserStatus? = null,
-    val selectedRole: UserRole? = null
+    val selectedStatus: UserStatus = UserStatus.ACTIVE,
+    val selectedRole: UserRole = UserRole.PLAYER
 ) : BaseUIState<PlayerDetailsUIState> {
     override fun copyWith(isLoading: Boolean, error: String?): PlayerDetailsUIState =
         copy(isLoading = isLoading, error = error)

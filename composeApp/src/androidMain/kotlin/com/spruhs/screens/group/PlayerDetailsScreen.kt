@@ -20,11 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Handshake
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,10 +55,11 @@ import com.spruhs.group.presentation.PlayerDetailsEffect
 import com.spruhs.group.presentation.PlayerDetailsIntent
 import com.spruhs.group.presentation.PlayerDetailsUIState
 import com.spruhs.group.presentation.PlayerDetailsViewModel
-import com.spruhs.match.application.Match
+import com.spruhs.group.presentation.PlayerMatchPreview
 import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.permission.PermissionManager
 import com.spruhs.screens.common.ConfirmAlertDialog
+import com.spruhs.screens.common.ContentUIState
 import com.spruhs.screens.common.SubmitButton
 import com.spruhs.screens.common.UserImage
 import com.spruhs.statistics.application.PlayerStats
@@ -148,22 +147,12 @@ fun GroupDetailsContent(
     onIntent: (PlayerDetailsIntent) -> Unit,
     uiState: PlayerDetailsUIState
 ) {
-    when {
-        uiState.isLoading -> {
-            CircularProgressIndicator()
-        }
-
-        uiState.error != null -> {
-            Text(text = uiState.error ?: "")
-        }
-
-        else -> {
-            PlayerDetailsContent(
-                modifier = modifier,
-                onIntent = onIntent,
-                uiState = uiState
-            )
-        }
+    ContentUIState(uiState) {
+        PlayerDetailsContent(
+            modifier = modifier,
+            onIntent = onIntent,
+            uiState = uiState
+        )
     }
 }
 
@@ -190,7 +179,6 @@ fun PlayerDetailsContent(
         LastMatches(
             onIntent = onIntent,
             lastMatches = uiState.lastMatches,
-            playerId = uiState.playerDetails?.id ?: ""
         )
 
         HorizontalDivider(
@@ -231,7 +219,7 @@ fun PlayerProperties(
                 .weight(1f)
                 .padding(start = 8.dp),
             readOnly = readOnly,
-            initialStatus = uiState.selectedStatus ?: UserStatus.ACTIVE,
+            initialStatus = uiState.selectedStatus,
             options = listOf(UserStatus.ACTIVE, UserStatus.INACTIVE),
             label = "Status"
         ) {
@@ -244,7 +232,7 @@ fun PlayerProperties(
                 .weight(1f)
                 .padding(start = 8.dp),
             readOnly = readOnly,
-            initialStatus = uiState.selectedRole ?: UserRole.PLAYER,
+            initialStatus = uiState.selectedRole,
             options = UserRole.entries,
             label = "Role"
         ) {
@@ -266,7 +254,7 @@ fun PlayerProperties(
                 !uiState.isLoading &&
                     (
                         uiState.selectedStatus != playerDetails?.status ||
-                            uiState.selectedRole != playerDetails?.role
+                            uiState.selectedRole != playerDetails.role
                         ),
                 isLoading = uiState.isLoading
             ) { onIntent(PlayerDetailsIntent.UpdatePlayer) }
@@ -287,8 +275,7 @@ fun PlayerProperties(
 @Composable
 fun LastMatches(
     onIntent: (PlayerDetailsIntent) -> Unit,
-    playerId: String,
-    lastMatches: List<Match>
+    lastMatches: List<PlayerMatchPreview>
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -304,7 +291,6 @@ fun LastMatches(
     Row {
         LastMatchesList(
             lastMatches = lastMatches,
-            playerId = playerId,
             onIntent = onIntent
         )
     }
@@ -383,13 +369,12 @@ fun PlayerShortInfo(playerDetails: PlayerDetails?, groupNames: Map<String, Strin
 
 @Composable
 fun LastMatchesList(
-    lastMatches: List<Match>,
-    playerId: String,
+    lastMatches: List<PlayerMatchPreview>,
     onIntent: (PlayerDetailsIntent) -> Unit
 ) {
     Column {
         lastMatches.forEach { match ->
-            LastMatchItem(match, playerId) {
+            LastMatchItem(match) {
                 onIntent(PlayerDetailsIntent.SelectLastMatch(it))
             }
         }
@@ -397,8 +382,7 @@ fun LastMatchesList(
 }
 
 @Composable
-fun LastMatchItem(lastMatch: Match, playerId: String, onClick: (String) -> Unit) {
-    val result = lastMatch.result.find { it.userId == playerId }?.result
+fun LastMatchItem(lastMatch: PlayerMatchPreview, onClick: (String) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier =
@@ -409,14 +393,10 @@ fun LastMatchItem(lastMatch: Match, playerId: String, onClick: (String) -> Unit)
                 onClick(lastMatch.id)
             },
         colors =
-        when (result) {
+        when (lastMatch.playerResult) {
             PlayerMatchResult.WIN -> CardDefaults.cardColors(containerColor = CustomColor.Green)
             PlayerMatchResult.LOSS -> CardDefaults.cardColors(containerColor = CustomColor.Red)
             PlayerMatchResult.DRAW -> CardDefaults.cardColors(containerColor = CustomColor.Gray)
-            else ->
-                CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                )
         }
     ) {
         Row(
@@ -431,13 +411,13 @@ fun LastMatchItem(lastMatch: Match, playerId: String, onClick: (String) -> Unit)
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = lastMatch.start.toString(),
+                    text = lastMatch.start,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
 
             Column(horizontalAlignment = Alignment.End) {
-                when (result) {
+                when (lastMatch.playerResult) {
                     PlayerMatchResult.WIN ->
                         Icon(
                             imageVector = Icons.Outlined.Star,
@@ -455,13 +435,6 @@ fun LastMatchItem(lastMatch: Match, playerId: String, onClick: (String) -> Unit)
                             imageVector = Icons.Outlined.Handshake,
                             contentDescription = "Draw"
                         )
-
-                    else -> {
-                        Icon(
-                            imageVector = Icons.Outlined.Schedule,
-                            contentDescription = "no result"
-                        )
-                    }
                 }
             }
         }
