@@ -19,7 +19,7 @@ class PlayerDetailsViewModel(
     private val playerId: String,
     private val removePlayerUseCase: RemovePlayerUseCase,
     private val updatePlayerUseCase: UpdatePlayerUseCase,
-    private val getPlayerDetailsUseCase: GetPlayerDetailsUseCase,
+    private val getPlayerDetailsUseCase: GetPlayerDetailsUseCase
 ) : BaseViewModel<PlayerDetailsIntent, PlayerDetailsEffect, PlayerDetailsUIState>(
     PlayerDetailsUIState()
 ) {
@@ -27,7 +27,7 @@ class PlayerDetailsViewModel(
     init {
         performAction(
             action = { getPlayerDetailsUseCase.getPlayerDetails(playerId) },
-            onSuccess = {  }
+            onSuccess = { }
         )
     }
 
@@ -45,7 +45,7 @@ class PlayerDetailsViewModel(
         if (
             uiState.value.playerDetails?.status == uiState.value.selectedStatus &&
             uiState.value.playerDetails?.role == uiState.value.selectedRole
-            ) {
+        ) {
             performAction(
                 onSuccess = { effectsMutable.emit(PlayerDetailsEffect.PlayerUpdated) },
                 action = {
@@ -57,7 +57,6 @@ class PlayerDetailsViewModel(
                 }
             )
         }
-
     }
 
     private fun handleSelectLastMatch(matchId: String) {

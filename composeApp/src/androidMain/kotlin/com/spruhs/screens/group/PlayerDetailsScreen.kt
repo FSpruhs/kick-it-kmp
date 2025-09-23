@@ -178,7 +178,7 @@ fun PlayerDetailsContent(
 
         LastMatches(
             onIntent = onIntent,
-            lastMatches = uiState.lastMatches,
+            lastMatches = uiState.lastMatches
         )
 
         HorizontalDivider(
@@ -273,10 +273,7 @@ fun PlayerProperties(
 }
 
 @Composable
-fun LastMatches(
-    onIntent: (PlayerDetailsIntent) -> Unit,
-    lastMatches: List<PlayerMatchPreview>
-) {
+fun LastMatches(onIntent: (PlayerDetailsIntent) -> Unit, lastMatches: List<PlayerMatchPreview>) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
