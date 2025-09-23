@@ -4,11 +4,12 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
+import com.spruhs.auth.application.RegisterUseCase
 import com.spruhs.validateEmail
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RegisterViewModel :
+class RegisterViewModel(private val registerUseCase: RegisterUseCase) :
     BaseViewModel<RegisterIntent, RegisterEffect, RegisterUIState>(RegisterUIState()) {
 
     companion object {
@@ -80,6 +81,11 @@ class RegisterViewModel :
             onError = { uiStateMutable.update { it.copy(isPasswordValid = false) } },
             action = {
                 uiStateMutable.update { it.copy(isPasswordValid = validatePassword(it.password)) }
+                registerUseCase.register(
+                    uiStateMutable.value.email,
+                    uiStateMutable.value.password,
+                    uiStateMutable.value.nickName
+                )
             }
         )
     }

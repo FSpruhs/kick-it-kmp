@@ -5,6 +5,7 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.auth.application.LoginUseCase
 import com.spruhs.user.application.LoadUserUseCase
+import com.spruhs.validateEmail
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -36,9 +37,7 @@ class LoginViewModel(
     }
 
     private fun validateInput(email: String, password: String): Boolean {
-        val isEmailValid = email.contains("@") && email.contains(".") && email.length > 5
-        val isPasswordValid = password.length >= 8
-        return isEmailValid && isPasswordValid
+        return  validateEmail(email) && password.length >= 8
     }
 
     private fun login() {
