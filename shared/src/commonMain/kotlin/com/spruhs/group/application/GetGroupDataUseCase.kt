@@ -11,8 +11,7 @@ class GetGroupDataUseCase(
 ) {
 
     suspend fun getResult(): Result {
-        val selectedGroup = userRepository.selectedGroup.value
-            ?: throw IllegalStateException("No selected group")
+        val selectedGroup = userRepository.getSelectedGroupOrThrow()
 
         val (group, groupNames) = coroutineScope {
             val groupDeferred = async { groupRepository.getGroup(selectedGroup.id) }

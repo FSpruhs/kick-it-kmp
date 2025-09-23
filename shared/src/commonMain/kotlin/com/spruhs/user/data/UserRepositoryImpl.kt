@@ -16,6 +16,9 @@ class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
     private val _selectedGroup = MutableStateFlow<SelectedGroup?>(null)
     override val selectedGroup: StateFlow<SelectedGroup?> = _selectedGroup
 
+    override suspend fun getSelectedGroupOrThrow(): SelectedGroup =
+        selectedGroup.value ?: throw IllegalStateException("No selected group")
+
     override suspend fun loadUser(id: String): User = userApi.getUser(id).also { user ->
         _userState.value = user
 

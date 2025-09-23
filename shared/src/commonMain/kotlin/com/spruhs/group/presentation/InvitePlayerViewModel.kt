@@ -2,14 +2,12 @@ package com.spruhs.group.presentation
 
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
-import com.spruhs.group.application.GroupRepository
-import com.spruhs.user.application.UserRepository
+import com.spruhs.group.application.InvitePlayerUseCase
 import com.spruhs.validateEmail
 import kotlinx.coroutines.flow.update
 
 class InvitePlayerViewModel(
-    private val groupRepository: GroupRepository,
-    private val userRepository: UserRepository
+    private val invitePlayerUseCase: InvitePlayerUseCase
 ) : BaseViewModel<InvitePlayerIntent, InvitePlayerEffect, InvitePlayerUIState>(
     InvitePlayerUIState()
 ) {
@@ -23,15 +21,14 @@ class InvitePlayerViewModel(
 
     private fun handlePlayerInvited() {
         performAction(
-            onSuccess = {
-                effectsMutable.emit(InvitePlayerEffect.PlayerInvited)
-            },
+            onSuccess = { effectsMutable.emit(InvitePlayerEffect.PlayerInvited) },
             onError = {
                 effectsMutable.emit(InvitePlayerEffect.ShowError("Inviting player failed"))
-            },
+                      },
             action = {
-                val selectedGroup = userRepository.selectedGroup
-                groupRepository.invitePlayer(selectedGroup.value!!.id, uiState.value.email)
+                if (uiState.value.isEmailValid) {
+                    invitePlayerUseCase.invite(uiState.value.email)
+                }
             }
         )
     }
