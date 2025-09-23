@@ -2,16 +2,11 @@ package com.spruhs.group.presentation
 
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
-import com.spruhs.group.application.GroupRepository
-import com.spruhs.user.application.UserGroupInfo
-import com.spruhs.user.application.UserRepository
-import com.spruhs.user.application.UserRole
-import com.spruhs.user.application.UserStatus
+import com.spruhs.group.application.CreateGroupUseCase
 import kotlinx.coroutines.flow.update
 
 class CreateGroupViewModel(
-    private val groupRepository: GroupRepository,
-    private val userRepository: UserRepository
+    private val createGroupUseCase: CreateGroupUseCase
 ) : BaseViewModel<CreateGroupIntent, CreateGroupEffect, CreateGroupUIState>(CreateGroupUIState()) {
 
     override fun processIntent(intent: CreateGroupIntent) {
@@ -25,19 +20,11 @@ class CreateGroupViewModel(
         performAction(
             onSuccess = { result ->
                 effectsMutable.emit(CreateGroupEffect.GroupCreated)
-                userRepository.addGroup(toUserGroupInfo(result))
             },
             onError = { effectsMutable.emit(CreateGroupEffect.ShowError("Error creating group")) },
-            action = { groupRepository.createGroup(uiState.value.groupName) }
+            action = { createGroupUseCase.create(uiState.value.groupName) }
         )
     }
-
-    private fun toUserGroupInfo(id: String) = UserGroupInfo(
-        id = id,
-        name = uiState.value.groupName,
-        userStatus = UserStatus.ACTIVE,
-        userRole = UserRole.COACH
-    )
 
     private fun handleNewGroupNameChanged(groupName: String) {
         if (groupName.length > uiState.value.maxChars) return
