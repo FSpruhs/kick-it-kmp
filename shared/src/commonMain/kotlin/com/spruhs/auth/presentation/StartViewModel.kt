@@ -8,7 +8,7 @@ import com.spruhs.user.application.LoadUserUseCase
 class StartViewModel(
     private val authenticateUseCase: AuthenticateUseCase,
     private val loadUserUseCase: LoadUserUseCase
-) : BaseViewModel<StartSideEffect, StartUiState>(StartUiState()) {
+) : BaseViewModel<StartIntent, StartEffect, StartUiState>(StartUiState()) {
 
     init {
         authenticate()
@@ -17,24 +17,26 @@ class StartViewModel(
     private fun authenticate() {
         performAction(
             onSuccess = { onAuthenticated(it) },
-            onError = { effectsMutable.emit(StartSideEffect.NotAuthenticated) },
+            onError = { effectsMutable.emit(StartEffect.NotAuthenticated) },
             action = { authenticateUseCase.authenticate() }
         )
     }
 
     private suspend fun onAuthenticated(userId: String?) {
         if (userId == null) {
-            effectsMutable.emit(StartSideEffect.NotAuthenticated)
+            effectsMutable.emit(StartEffect.NotAuthenticated)
         } else {
             loadUserUseCase.loadUser(userId)
-            effectsMutable.emit(StartSideEffect.Authenticated)
+            effectsMutable.emit(StartEffect.Authenticated)
         }
     }
 }
 
-sealed class StartSideEffect {
-    object Authenticated : StartSideEffect()
-    object NotAuthenticated : StartSideEffect()
+sealed class StartIntent
+
+sealed class StartEffect {
+    object Authenticated : StartEffect()
+    object NotAuthenticated : StartEffect()
 }
 
 data class StartUiState(

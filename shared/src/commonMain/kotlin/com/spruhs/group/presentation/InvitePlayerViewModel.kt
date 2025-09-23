@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.update
 class InvitePlayerViewModel(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository
-) : BaseViewModel<InvitePlayerEffect, InvitePlayerUIState>(InvitePlayerUIState()) {
+) : BaseViewModel<InvitePlayerIntent, InvitePlayerEffect, InvitePlayerUIState>(InvitePlayerUIState()) {
 
-    fun processIntent(intent: InvitePlayerIntent) {
+    override fun processIntent(intent: InvitePlayerIntent) {
         when (intent) {
             is InvitePlayerIntent.InvitePlayer -> handlePlayerInvited()
             is InvitePlayerIntent.EmailChanged -> handleEmailChanged(intent.playerEmail)

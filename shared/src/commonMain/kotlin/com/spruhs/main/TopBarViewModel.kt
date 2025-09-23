@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TopBarViewModel(userRepository: UserRepository) :
-    BaseViewModel<TopBarEffect, TopBarUIState>(TopBarUIState()) {
+    BaseViewModel<TopBarIntent, TopBarEffect, TopBarUIState>(TopBarUIState()) {
 
     override val uiState: StateFlow<TopBarUIState> = combine(
         userRepository.userState,
@@ -28,7 +28,7 @@ class TopBarViewModel(userRepository: UserRepository) :
         initialValue = TopBarUIState()
     )
 
-    fun processIntent(intent: TopBarIntent) {
+    override fun processIntent(intent: TopBarIntent) {
         when (intent) {
             TopBarIntent.Back -> viewModelScope.launch { effectsMutable.emit(TopBarEffect.Back) }
             TopBarIntent.Messages -> viewModelScope.launch {

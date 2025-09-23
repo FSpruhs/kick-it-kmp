@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class GroupViewModel(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository
-) : BaseViewModel<GroupEffect, GroupUiState>(GroupUiState()) {
+) : BaseViewModel<GroupIntent, GroupEffect, GroupUiState>(GroupUiState()) {
 
     init {
         fetchData {
@@ -40,7 +40,7 @@ class GroupViewModel(
         }
     }
 
-    fun processIntent(intent: GroupIntent) {
+    override fun processIntent(intent: GroupIntent) {
         when (intent) {
             is GroupIntent.LeaveGroup -> handleLeaveGroup()
             is GroupIntent.SelectPlayer -> handleSelectPlayer(intent.playerId)

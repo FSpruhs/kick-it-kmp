@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.update
 class CreateGroupViewModel(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository
-) : BaseViewModel<CreateGroupEffect, CreateGroupUIState>(CreateGroupUIState()) {
+) : BaseViewModel<CreateGroupIntent, CreateGroupEffect, CreateGroupUIState>(CreateGroupUIState()) {
 
-    fun processIntent(intent: CreateGroupIntent) {
+    override fun processIntent(intent: CreateGroupIntent) {
         when (intent) {
             is CreateGroupIntent.CreateGroup -> handleCreateGroup()
             is CreateGroupIntent.GroupNameChanged -> handleNewGroupNameChanged(intent.groupName)

@@ -4,8 +4,8 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import kotlinx.datetime.LocalDateTime
 
-class PlanMatchViewModel : BaseViewModel<PlanMatchEffect, PlanMatchUIState>(PlanMatchUIState()) {
-    fun processIntent(intent: PlanMatchIntent) {
+class PlanMatchViewModel : BaseViewModel<PlanMatchIntent, PlanMatchEffect, PlanMatchUIState>(PlanMatchUIState()) {
+    override fun processIntent(intent: PlanMatchIntent) {
     }
 }
 

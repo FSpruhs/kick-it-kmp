@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
     private val loadUserUseCase: LoadUserUseCase
-) : BaseViewModel<LoginSideEffect, LoginUIState>(LoginUIState()) {
+) : BaseViewModel<LoginIntent, LoginSideEffect, LoginUIState>(LoginUIState()) {
 
-    fun processIntent(intent: LoginIntent) {
+    override fun processIntent(intent: LoginIntent) {
         when (intent) {
             is LoginIntent.Login -> login()
             is LoginIntent.Register -> viewModelScope.launch {

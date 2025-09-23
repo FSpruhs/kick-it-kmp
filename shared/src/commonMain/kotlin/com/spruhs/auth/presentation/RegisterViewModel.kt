@@ -8,13 +8,13 @@ import com.spruhs.validateEmail
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RegisterViewModel : BaseViewModel<RegisterEffect, RegisterUIState>(RegisterUIState()) {
+class RegisterViewModel : BaseViewModel<RegisterIntent, RegisterEffect, RegisterUIState>(RegisterUIState()) {
 
     companion object {
         private const val MAX_NICKNAME_LENGTH = 20
     }
 
-    fun processIntent(intent: RegisterIntent) {
+    override fun processIntent(intent: RegisterIntent) {
         when (intent) {
             is RegisterIntent.Register -> register()
             is RegisterIntent.Back -> viewModelScope.launch {

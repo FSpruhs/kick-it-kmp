@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDateTime
 
 class UpcomingMatchDetailsViewModel :
-    BaseViewModel<UpcomingMatchDetailsEffect, UpcomingMatchDetailsUIState>(
+    BaseViewModel<UpcomingMatchDetailsIntent, UpcomingMatchDetailsEffect, UpcomingMatchDetailsUIState>(
         UpcomingMatchDetailsUIState()
     ) {
 
@@ -50,7 +50,7 @@ class UpcomingMatchDetailsViewModel :
         }
     }
 
-    fun processIntent(intent: UpcomingMatchDetailsIntent) {
+    override fun processIntent(intent: UpcomingMatchDetailsIntent) {
     }
 }
 

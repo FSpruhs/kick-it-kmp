@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val userRepository: UserRepository,
     private val matchRepository: MatchRepository
-) : BaseViewModel<HomeEffect, HomeUIState>(HomeUIState()) {
+) : BaseViewModel<HomeIntent, HomeEffect, HomeUIState>(HomeUIState()) {
 
     init {
         loadState()
@@ -46,7 +46,7 @@ class HomeViewModel(
         emptyList()
     }.toList()
 
-    fun processIntent(intent: HomeIntent) {
+    override fun processIntent(intent: HomeIntent) {
         when (intent) {
             is HomeIntent.SelectMatch -> viewModelScope.launch {
                 effectsMutable.emit(HomeEffect.MatchSelected(intent.matchId))

@@ -5,8 +5,8 @@ import com.spruhs.BaseViewModel
 import com.spruhs.user.application.UserGroupInfo
 
 class SelectGroupViewModel :
-    BaseViewModel<SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
-    fun processIntent(intent: SelectGroupIntent) {
+    BaseViewModel<SelectGroupIntent, SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
+    override fun processIntent(intent: SelectGroupIntent) {
         when (intent) {
             is SelectGroupIntent.CreateGroup -> {}
             is SelectGroupIntent.SelectGroup -> {}

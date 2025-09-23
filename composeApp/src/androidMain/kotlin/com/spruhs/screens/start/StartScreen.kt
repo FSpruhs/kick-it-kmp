@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.spruhs.auth.presentation.StartSideEffect
+import com.spruhs.auth.presentation.StartEffect
 import com.spruhs.auth.presentation.StartViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -20,8 +20,8 @@ fun StartScreen(
     LaunchedEffect(Unit) {
         startViewModel.effects.collect { effect ->
             when (effect) {
-                StartSideEffect.Authenticated -> onLoggedIn()
-                StartSideEffect.NotAuthenticated -> onLoginFailed()
+                StartEffect.Authenticated -> onLoggedIn()
+                StartEffect.NotAuthenticated -> onLoginFailed()
             }
         }
     }

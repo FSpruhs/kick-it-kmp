@@ -6,8 +6,8 @@ import com.spruhs.match.application.Match
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserGroupInfo
 
-class MatchViewModel : BaseViewModel<MatchEffect, MatchUIState>(MatchUIState()) {
-    fun processIntent(intent: MatchIntent) {
+class MatchViewModel : BaseViewModel<MatchIntent, MatchEffect, MatchUIState>(MatchUIState()) {
+    override fun processIntent(intent: MatchIntent) {
     }
 }
 

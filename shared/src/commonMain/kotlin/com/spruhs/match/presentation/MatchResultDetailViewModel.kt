@@ -9,7 +9,7 @@ import com.spruhs.user.application.SelectedGroup
 import kotlinx.coroutines.flow.update
 
 class MatchResultDetailViewModel :
-    BaseViewModel<MatchResultDetailEffect, MatchResultDetailUIState>(MatchResultDetailUIState()) {
+    BaseViewModel<MatchResultDetailIntent, MatchResultDetailEffect, MatchResultDetailUIState>(MatchResultDetailUIState()) {
 
     init {
         val winnerTeam: PlayerTeam =
@@ -42,7 +42,7 @@ class MatchResultDetailViewModel :
         uiStateMutable.update { it.copy(winnerTeam = winnerTeam) }
     }
 
-    fun processIntent(intent: MatchResultDetailIntent) {
+    override fun processIntent(intent: MatchResultDetailIntent) {
     }
 }
 

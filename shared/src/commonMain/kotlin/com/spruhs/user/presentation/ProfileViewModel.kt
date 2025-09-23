@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val userRepository: UserRepository) :
-    BaseViewModel<ProfileEffect, ProfileUIState>(ProfileUIState()) {
+    BaseViewModel<ProfileIntent, ProfileEffect, ProfileUIState>(ProfileUIState()) {
 
-    fun processIntent(intent: ProfileIntent) {
+    override fun processIntent(intent: ProfileIntent) {
         viewModelScope.launch {
             when (intent) {
                 is ProfileIntent.Logout -> {
