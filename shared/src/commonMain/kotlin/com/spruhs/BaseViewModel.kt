@@ -24,21 +24,6 @@ abstract class BaseViewModel<I, E, S : BaseUIState<S>>(initialState: S) : ViewMo
 
     open fun processIntent(intent: I) {}
 
-    fun fetchData(onError: suspend (Throwable) -> Unit = {}, action: suspend () -> Unit) {
-        viewModelScope.launch {
-            uiStateMutable.update { it.copyWith(isLoading = true) }
-            try {
-                action()
-            } catch (e: Throwable) {
-                AppLogger.e("BaseViewModel", "Action failed: ${e.message}", e)
-                onError(e)
-                uiStateMutable.update { it.copyWith(error = e.message) }
-            } finally {
-                uiStateMutable.update { it.copyWith(isLoading = false) }
-            }
-        }
-    }
-
     fun <T> performAction(
         onSuccess: suspend (T) -> Unit,
         onError: suspend (Throwable) -> Unit = {},

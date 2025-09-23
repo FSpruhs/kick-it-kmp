@@ -59,9 +59,6 @@ kotlin {
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.coroutines.test)
-            implementation(libs.junit)
-            implementation(libs.assertk)
         }
     }
 }

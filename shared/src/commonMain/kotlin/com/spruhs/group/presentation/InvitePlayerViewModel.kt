@@ -6,11 +6,10 @@ import com.spruhs.group.application.InvitePlayerUseCase
 import com.spruhs.validateEmail
 import kotlinx.coroutines.flow.update
 
-class InvitePlayerViewModel(
-    private val invitePlayerUseCase: InvitePlayerUseCase
-) : BaseViewModel<InvitePlayerIntent, InvitePlayerEffect, InvitePlayerUIState>(
-    InvitePlayerUIState()
-) {
+class InvitePlayerViewModel(private val invitePlayerUseCase: InvitePlayerUseCase) :
+    BaseViewModel<InvitePlayerIntent, InvitePlayerEffect, InvitePlayerUIState>(
+        InvitePlayerUIState()
+    ) {
 
     override fun processIntent(intent: InvitePlayerIntent) {
         when (intent) {
@@ -24,7 +23,7 @@ class InvitePlayerViewModel(
             onSuccess = { effectsMutable.emit(InvitePlayerEffect.PlayerInvited) },
             onError = {
                 effectsMutable.emit(InvitePlayerEffect.ShowError("Inviting player failed"))
-                      },
+            },
             action = {
                 if (uiState.value.isEmailValid) {
                     invitePlayerUseCase.invite(uiState.value.email)

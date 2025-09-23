@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class GroupViewModel(
     private val getGroupDataUseCase: GetGroupDataUseCase,
-    private val leaveGroupUseCase: RemoveGroupUseCase,
+    private val leaveGroupUseCase: RemoveGroupUseCase
 ) : BaseViewModel<GroupIntent, GroupEffect, GroupUiState>(GroupUiState()) {
 
     init {

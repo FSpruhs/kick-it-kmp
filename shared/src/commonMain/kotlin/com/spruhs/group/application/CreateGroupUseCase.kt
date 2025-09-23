@@ -7,7 +7,7 @@ import com.spruhs.user.application.UserStatus
 
 class CreateGroupUseCase(
     private val groupRepository: GroupRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository
 ) {
     suspend fun create(groupName: String) {
         groupRepository.createGroup(groupName).also {

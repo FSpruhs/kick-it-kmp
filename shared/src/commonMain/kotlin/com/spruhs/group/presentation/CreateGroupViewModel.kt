@@ -5,9 +5,8 @@ import com.spruhs.BaseViewModel
 import com.spruhs.group.application.CreateGroupUseCase
 import kotlinx.coroutines.flow.update
 
-class CreateGroupViewModel(
-    private val createGroupUseCase: CreateGroupUseCase
-) : BaseViewModel<CreateGroupIntent, CreateGroupEffect, CreateGroupUIState>(CreateGroupUIState()) {
+class CreateGroupViewModel(private val createGroupUseCase: CreateGroupUseCase) :
+    BaseViewModel<CreateGroupIntent, CreateGroupEffect, CreateGroupUIState>(CreateGroupUIState()) {
 
     override fun processIntent(intent: CreateGroupIntent) {
         when (intent) {

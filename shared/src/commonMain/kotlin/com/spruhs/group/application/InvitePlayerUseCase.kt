@@ -4,7 +4,7 @@ import com.spruhs.user.application.UserRepository
 
 class InvitePlayerUseCase(
     private val groupRepository: GroupRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository
 ) {
     suspend fun invite(email: String) {
         val selectedGroup = userRepository.getSelectedGroupOrThrow()

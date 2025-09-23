@@ -36,9 +36,8 @@ class LoginViewModel(
         )
     }
 
-    private fun validateInput(email: String, password: String): Boolean {
-        return  validateEmail(email) && password.length >= 8
-    }
+    private fun validateInput(email: String, password: String): Boolean =
+        validateEmail(email) && password.length >= 8
 
     private fun login() {
         performAction(
