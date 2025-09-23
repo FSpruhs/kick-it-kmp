@@ -10,7 +10,9 @@ import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 
 class PlayerDetailsViewModel :
-    BaseViewModel<PlayerDetailsIntent, PlayerDetailsEffect, PlayerDetailsUIState>(PlayerDetailsUIState()) {
+    BaseViewModel<PlayerDetailsIntent, PlayerDetailsEffect, PlayerDetailsUIState>(
+        PlayerDetailsUIState()
+    ) {
     override fun processIntent(intent: PlayerDetailsIntent) {
         when (intent) {
             is PlayerDetailsIntent.RemovePlayer -> {}

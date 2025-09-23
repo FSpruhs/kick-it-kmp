@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDateTime
 
 class EnterMatchResultViewModel :
-    BaseViewModel<EnterMatchResultIntent, EnterMatchResultEffect, EnterMatchResultUIState>(EnterMatchResultUIState()) {
+    BaseViewModel<EnterMatchResultIntent, EnterMatchResultEffect, EnterMatchResultUIState>(
+        EnterMatchResultUIState()
+    ) {
     override fun processIntent(intent: EnterMatchResultIntent) {
         when (intent) {
             is EnterMatchResultIntent.EnterResult -> {}

@@ -8,10 +8,11 @@ import com.spruhs.user.application.UserRole
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDateTime
 
-class UpcomingMatchDetailsViewModel :
-    BaseViewModel<UpcomingMatchDetailsIntent, UpcomingMatchDetailsEffect, UpcomingMatchDetailsUIState>(
-        UpcomingMatchDetailsUIState()
-    ) {
+class UpcomingMatchDetailsViewModel : BaseViewModel<
+    UpcomingMatchDetailsIntent,
+    UpcomingMatchDetailsEffect,
+    UpcomingMatchDetailsUIState
+    >(UpcomingMatchDetailsUIState()) {
 
     init {
 

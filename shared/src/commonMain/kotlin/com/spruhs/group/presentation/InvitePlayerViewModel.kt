@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.update
 class InvitePlayerViewModel(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository
-) : BaseViewModel<InvitePlayerIntent, InvitePlayerEffect, InvitePlayerUIState>(InvitePlayerUIState()) {
+) : BaseViewModel<InvitePlayerIntent, InvitePlayerEffect, InvitePlayerUIState>(
+    InvitePlayerUIState()
+) {
 
     override fun processIntent(intent: InvitePlayerIntent) {
         when (intent) {

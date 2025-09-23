@@ -9,7 +9,9 @@ import com.spruhs.user.application.SelectedGroup
 import kotlinx.coroutines.flow.update
 
 class MatchResultDetailViewModel :
-    BaseViewModel<MatchResultDetailIntent, MatchResultDetailEffect, MatchResultDetailUIState>(MatchResultDetailUIState()) {
+    BaseViewModel<MatchResultDetailIntent, MatchResultDetailEffect, MatchResultDetailUIState>(
+        MatchResultDetailUIState()
+    ) {
 
     init {
         val winnerTeam: PlayerTeam =
