@@ -3,6 +3,7 @@ package com.spruhs.group.data
 import com.spruhs.group.application.Group
 import com.spruhs.group.application.GroupNameEntry
 import com.spruhs.group.application.GroupRepository
+import com.spruhs.group.application.PlayerDetails
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 
@@ -12,6 +13,13 @@ class GroupRepositoryImpl : GroupRepository {
     }
 
     override suspend fun getGroup(groupId: String): Group {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getPlayer(
+        groupId: String,
+        userId: String
+    ): PlayerDetails {
         TODO("Not yet implemented")
     }
 

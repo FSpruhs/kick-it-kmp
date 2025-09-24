@@ -7,6 +7,7 @@ import com.spruhs.group.application.GetPlayerDetailsUseCase
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.group.application.RemovePlayerUseCase
 import com.spruhs.group.application.UpdatePlayerUseCase
+import com.spruhs.match.application.Match
 import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.statistics.application.PlayerStats
 import com.spruhs.user.application.SelectedGroup
@@ -27,7 +28,17 @@ class PlayerDetailsViewModel(
     init {
         performAction(
             action = { getPlayerDetailsUseCase.getPlayerDetails(playerId) },
-            onSuccess = { }
+            onSuccess = { result ->
+                uiStateMutable.update {
+                    it.copy(
+                        playerDetails = result.player,
+                        groupNames = result.groupNames,
+                        playerStats = result.statistics,
+                        lastMatches = result.lastMatches.map { match -> match.toPlayerMatchPreview() },
+                        selectedGroup = result.selectedGroup
+                    )
+                }
+            }
         )
     }
 
@@ -40,6 +51,13 @@ class PlayerDetailsViewModel(
             is PlayerDetailsIntent.SelectLastMatch -> handleSelectLastMatch(intent.matchId)
         }
     }
+
+    private fun Match.toPlayerMatchPreview() =  PlayerMatchPreview(
+        id = id,
+        playerResult = this.result.find { it.userId == playerId }?.result ?: PlayerMatchResult.DRAW,
+        start = start.toString(),
+        playground = playground
+    )
 
     private fun handleUpdatePlayer() {
         if (
@@ -82,7 +100,6 @@ class PlayerDetailsViewModel(
 data class PlayerMatchPreview(
     val id: String,
     val playerResult: PlayerMatchResult,
-    val result: List<PlayerMatchResult>,
     val start: String,
     val playground: String?
 )
