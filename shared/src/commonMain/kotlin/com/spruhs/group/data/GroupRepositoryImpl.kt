@@ -16,10 +16,7 @@ class GroupRepositoryImpl : GroupRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPlayer(
-        groupId: String,
-        userId: String
-    ): PlayerDetails {
+    override suspend fun getPlayer(groupId: String, userId: String): PlayerDetails {
         TODO("Not yet implemented")
     }
 

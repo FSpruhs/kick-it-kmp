@@ -15,7 +15,8 @@ class KickItApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         val modules =
-            platformModule + authModule + userModule + mainModule + groupModule + matchModule + statisticModule
+            platformModule + authModule + userModule + mainModule + groupModule + matchModule +
+                statisticModule
         startKoin {
             androidContext(applicationContext)
             modules(modules)

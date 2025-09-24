@@ -6,14 +6,13 @@ import com.spruhs.statistics.application.PlayerStats
 import com.spruhs.statistics.application.StatisticsRepository
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRepository
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 class GetPlayerDetailsUseCase(
     private val userRepository: UserRepository,
@@ -25,8 +24,8 @@ class GetPlayerDetailsUseCase(
     suspend fun getPlayerDetails(playerId: String): Result {
         val selectedGroup = userRepository.getSelectedGroupOrThrow()
         return coroutineScope {
-
-            val statisticDeferred = async { statisticsRepository.findByUserId(playerId, selectedGroup.id) }
+            val statisticDeferred =
+                async { statisticsRepository.findByUserId(playerId, selectedGroup.id) }
             val playerDeferred = async { groupRepository.getPlayer(selectedGroup.id, playerId) }
             val groupNamesDeferred = async { groupRepository.getGroupNames(selectedGroup.id) }
             val lastMatchesDeferred = async {
@@ -54,6 +53,6 @@ class GetPlayerDetailsUseCase(
         val player: PlayerDetails,
         val groupNames: Map<String, String>,
         val lastMatches: List<Match>,
-        val selectedGroup: SelectedGroup,
+        val selectedGroup: SelectedGroup
     )
 }

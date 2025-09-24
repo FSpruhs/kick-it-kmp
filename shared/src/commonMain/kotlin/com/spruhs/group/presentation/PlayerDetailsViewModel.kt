@@ -34,7 +34,9 @@ class PlayerDetailsViewModel(
                         playerDetails = result.player,
                         groupNames = result.groupNames,
                         playerStats = result.statistics,
-                        lastMatches = result.lastMatches.map { match -> match.toPlayerMatchPreview() },
+                        lastMatches = result.lastMatches.map { match ->
+                            match.toPlayerMatchPreview()
+                        },
                         selectedGroup = result.selectedGroup
                     )
                 }
@@ -52,7 +54,7 @@ class PlayerDetailsViewModel(
         }
     }
 
-    private fun Match.toPlayerMatchPreview() =  PlayerMatchPreview(
+    private fun Match.toPlayerMatchPreview() = PlayerMatchPreview(
         id = id,
         playerResult = this.result.find { it.userId == playerId }?.result ?: PlayerMatchResult.DRAW,
         start = start.toString(),
