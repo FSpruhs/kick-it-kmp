@@ -58,7 +58,7 @@ fun EnterResultScreen(
     matchId: String,
     onResultEntered: () -> Unit,
     enterMatchResultViewModel: EnterMatchResultViewModel = koinViewModel(
-            parameters = { parametersOf(matchId) }
+        parameters = { parametersOf(matchId) }
     )
 ) {
     val uiState by enterMatchResultViewModel.uiState.collectAsState()
@@ -84,7 +84,7 @@ fun EnterResultScreen(
 fun HandleEnterResultEffect(
     effects: Flow<EnterMatchResultEffect>,
     context: Context = LocalContext.current,
-    onResultEntered: () -> Unit,
+    onResultEntered: () -> Unit
 ) {
     LaunchedEffect(Unit) {
         effects.collect { effect ->

@@ -27,11 +27,9 @@ enum class PlayerTeam {
     A,
     B;
 
-    fun opposite(): PlayerTeam {
-        return when (this) {
-            A -> B
-            B -> A
-        }
+    fun opposite(): PlayerTeam = when (this) {
+        A -> B
+        B -> A
     }
 }
 

@@ -9,10 +9,9 @@ import kotlinx.coroutines.flow.update
 class EnterMatchResultViewModel(
     private val matchId: String,
     private val getEnterResultDataUseCase: GetEnterResultDataUseCase
-) :
-    BaseViewModel<EnterMatchResultIntent, EnterMatchResultEffect, EnterMatchResultUIState>(
-        EnterMatchResultUIState()
-    ) {
+) : BaseViewModel<EnterMatchResultIntent, EnterMatchResultEffect, EnterMatchResultUIState>(
+    EnterMatchResultUIState()
+) {
 
     override fun processIntent(intent: EnterMatchResultIntent) {
         when (intent) {

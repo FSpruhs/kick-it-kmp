@@ -19,7 +19,6 @@ class GetEnterResultDataUseCase(
         return buildResult(groupPlayers, match.result.takeIf { firstResult != null }, winnerTeam)
     }
 
-
     private fun buildResult(
         groupPlayers: Map<String, String>,
         matchResults: List<PlayerResult>?,
@@ -42,24 +41,27 @@ class GetEnterResultDataUseCase(
         )
     }
 
-    private suspend fun fetchData(matchId: String): Pair<Match, Map<String, String>> = coroutineScope {
-        val selectedGroupDeferred = async { userRepository.getSelectedGroupOrThrow() }
-        val matchDeferred = async { matchRepository.getMatchById(matchId).first() }
+    private suspend fun fetchData(matchId: String): Pair<Match, Map<String, String>> =
+        coroutineScope {
+            val selectedGroupDeferred = async { userRepository.getSelectedGroupOrThrow() }
+            val matchDeferred = async { matchRepository.getMatchById(matchId).first() }
 
-        val selectedGroup = selectedGroupDeferred.await()
-        val groupPlayers = groupRepository.getGroupNames(selectedGroup.id).associate { it.id to it.name }
+            val selectedGroup = selectedGroupDeferred.await()
+            val groupPlayers = groupRepository.getGroupNames(selectedGroup.id).associate {
+                it.id to
+                    it.name
+            }
 
-        val match = matchDeferred.await()
+            val match = matchDeferred.await()
 
-        match to groupPlayers
-    }
-
-    private fun determineWinner(firstResult: PlayerResult): PlayerTeam =
-        when (firstResult.result) {
-            PlayerMatchResult.DRAW -> PlayerTeam.A
-            PlayerMatchResult.WIN -> firstResult.team
-            PlayerMatchResult.LOSS -> firstResult.team.opposite()
+            match to groupPlayers
         }
+
+    private fun determineWinner(firstResult: PlayerResult): PlayerTeam = when (firstResult.result) {
+        PlayerMatchResult.DRAW -> PlayerTeam.A
+        PlayerMatchResult.WIN -> firstResult.team
+        PlayerMatchResult.LOSS -> firstResult.team.opposite()
+    }
 
     private fun getNoTeamPlayers(allPlayerIds: Set<String>, teamPlayers: Set<String>): Set<String> =
         allPlayerIds - teamPlayers
@@ -73,6 +75,6 @@ class GetEnterResultDataUseCase(
         val teamBPlayers: Set<String>,
         val noTeamPlayers: Set<String>,
         val winnerTeam: PlayerTeam,
-        val playerNames: Map<String, String>,
+        val playerNames: Map<String, String>
     )
 }
