@@ -1,5 +1,6 @@
 package com.spruhs.screens.match
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -48,20 +49,45 @@ import com.spruhs.match.presentation.EnterMatchResultViewModel
 import com.spruhs.match.presentation.Side
 import com.spruhs.screens.common.SubmitButton
 import com.spruhs.ui.theme.CustomColor
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun EnterResultScreen(
     matchId: String,
     onResultEntered: () -> Unit,
-    enterMatchResultViewModel: EnterMatchResultViewModel = koinViewModel()
+    enterMatchResultViewModel: EnterMatchResultViewModel = koinViewModel(
+            parameters = { parametersOf(matchId) }
+    )
 ) {
-    val enterMatchResultUIState by enterMatchResultViewModel.uiState.collectAsState()
+    val uiState by enterMatchResultViewModel.uiState.collectAsState()
 
-    val context = LocalContext.current
+    HandleEnterResultEffect(
+        effects = enterMatchResultViewModel.effects,
+        onResultEntered = onResultEntered
+    )
 
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        content = { paddingValues ->
+            EnterResultContent(
+                modifier = Modifier.padding(paddingValues),
+                uiState = uiState,
+                onIntent = enterMatchResultViewModel::processIntent
+            )
+        }
+    )
+}
+
+@Composable
+fun HandleEnterResultEffect(
+    effects: Flow<EnterMatchResultEffect>,
+    context: Context = LocalContext.current,
+    onResultEntered: () -> Unit,
+) {
     LaunchedEffect(Unit) {
-        enterMatchResultViewModel.effects.collect { effect ->
+        effects.collect { effect ->
             when (effect) {
                 EnterMatchResultEffect.ResultEntered -> {
                     Toast
@@ -72,35 +98,24 @@ fun EnterResultScreen(
                         ).show()
                     onResultEntered()
                 }
-            }
 
-            if (enterMatchResultUIState.error != null) {
-                Toast
-                    .makeText(
-                        context,
-                        enterMatchResultUIState.error,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                is EnterMatchResultEffect.ShowError -> {
+                    Toast
+                        .makeText(
+                            context,
+                            effect.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                }
             }
         }
     }
-
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        content = { paddingValues ->
-            EnterResultContent(
-                modifier = Modifier.padding(paddingValues),
-                enterMatchResultUIState = enterMatchResultUIState,
-                onIntent = enterMatchResultViewModel::processIntent
-            )
-        }
-    )
 }
 
 @Composable
 fun EnterResultContent(
     modifier: Modifier = Modifier,
-    enterMatchResultUIState: EnterMatchResultUIState,
+    uiState: EnterMatchResultUIState,
     onIntent: (EnterMatchResultIntent) -> Unit
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -111,27 +126,27 @@ fun EnterResultContent(
                 .padding(8.dp)
         ) {
             PlayerAreaContent(
-                enterMatchResultUIState = enterMatchResultUIState,
+                uiState = uiState,
                 resultName = "Winner",
                 teamName = "Team-A",
                 color = CustomColor.Green,
                 teamSide = Side.LEFT,
-                team = enterMatchResultUIState.teamAPlayers,
+                team = uiState.teamAPlayers,
                 onIntent = onIntent
             )
 
             PlayerSelectionContent(
-                enterMatchResultUIState = enterMatchResultUIState,
+                uiState = uiState,
                 onIntent = onIntent
             )
 
             PlayerAreaContent(
-                enterMatchResultUIState = enterMatchResultUIState,
+                uiState = uiState,
                 resultName = "Looser",
                 teamName = "Team-B",
                 color = CustomColor.Red,
                 teamSide = Side.RIGHT,
-                team = enterMatchResultUIState.teamBPlayers,
+                team = uiState.teamBPlayers,
                 onIntent = onIntent
             )
         }
@@ -140,7 +155,7 @@ fun EnterResultContent(
 
 @Composable
 fun PlayerSelectionContent(
-    enterMatchResultUIState: EnterMatchResultUIState,
+    uiState: EnterMatchResultUIState,
     onIntent: (EnterMatchResultIntent) -> Unit
 ) {
     Column(
@@ -153,10 +168,10 @@ fun PlayerSelectionContent(
     ) {
         SubmitButton(
             enabled =
-            enterMatchResultUIState.teamAPlayers.isNotEmpty() &&
-                enterMatchResultUIState.teamBPlayers.isNotEmpty() &&
-                !enterMatchResultUIState.isLoading,
-            isLoading = enterMatchResultUIState.isLoading,
+            uiState.teamAPlayers.isNotEmpty() &&
+                uiState.teamBPlayers.isNotEmpty() &&
+                !uiState.isLoading,
+            isLoading = uiState.isLoading,
             onSubmitClick = { onIntent(EnterMatchResultIntent.EnterResult) }
         )
 
@@ -167,14 +182,14 @@ fun PlayerSelectionContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        NavigationButtons(enterMatchResultUIState, onIntent)
+        NavigationButtons(uiState, onIntent)
 
         Row(
             modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = enterMatchResultUIState.isDraw,
+                checked = uiState.isDraw,
                 onCheckedChange = { onIntent(EnterMatchResultIntent.UpdateIsDraw(it)) }
             )
             Text(text = "Draw")
@@ -189,16 +204,16 @@ fun PlayerSelectionContent(
         Text("Players:")
 
         LazyColumn(modifier = Modifier.fillMaxHeight()) {
-            items(enterMatchResultUIState.noTeamPlayers) { player ->
+            items(uiState.noTeamPlayers.toList()) { player ->
                 PlayerChipItem(
                     player = player,
                     selected =
-                    player == enterMatchResultUIState.selectedPlayer &&
-                        enterMatchResultUIState.selectedSide == Side.MIDDLE,
+                    player == uiState.selectedPlayer &&
+                        uiState.selectedSide == Side.MIDDLE,
                     onClick = {
                         onIntent(EnterMatchResultIntent.SelectPlayer(Side.MIDDLE))
                     },
-                    enterMatchResultUIState = enterMatchResultUIState
+                    uiState = uiState
                 )
             }
         }
@@ -209,10 +224,10 @@ fun PlayerSelectionContent(
 fun RowScope.PlayerAreaContent(
     resultName: String,
     teamName: String,
-    enterMatchResultUIState: EnterMatchResultUIState,
+    uiState: EnterMatchResultUIState,
     color: Color,
     teamSide: Side,
-    team: List<String>,
+    team: Set<String>,
     onIntent: (EnterMatchResultIntent) -> Unit
 ) {
     Column(
@@ -222,7 +237,7 @@ fun RowScope.PlayerAreaContent(
             .fillMaxHeight()
     ) {
         Text(
-            text = if (enterMatchResultUIState.isDraw) teamName else resultName,
+            text = if (uiState.isDraw) teamName else resultName,
             modifier =
             Modifier
                 .align(Alignment.CenterHorizontally)
@@ -235,24 +250,24 @@ fun RowScope.PlayerAreaContent(
             Modifier
                 .fillMaxSize()
                 .background(
-                    if (enterMatchResultUIState.isDraw) CustomColor.Gray else color,
+                    if (uiState.isDraw) CustomColor.Gray else color,
                     RoundedCornerShape(8.dp)
                 )
                 .padding(8.dp)
         ) {
             LazyColumn {
-                items(team) { player ->
+                items(team.toList()) { player ->
                     PlayerChipItem(
                         player = player,
                         selected =
-                        player == enterMatchResultUIState.selectedPlayer &&
-                            enterMatchResultUIState.selectedSide == teamSide,
+                        player == uiState.selectedPlayer &&
+                            uiState.selectedSide == teamSide,
                         onClick = {
                             onIntent(
                                 EnterMatchResultIntent.SelectPlayer(teamSide)
                             )
                         },
-                        enterMatchResultUIState = enterMatchResultUIState
+                        uiState = uiState
                     )
                 }
             }
@@ -327,7 +342,7 @@ fun NavigationButton(
 
 @Composable
 fun PlayerChipItem(
-    enterMatchResultUIState: EnterMatchResultUIState,
+    uiState: EnterMatchResultUIState,
     player: String,
     selected: Boolean,
     onClick: () -> Unit
@@ -355,7 +370,7 @@ fun PlayerChipItem(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = enterMatchResultUIState.playerNames[player] ?: "Unknown name",
+                    text = uiState.playerNames[player] ?: "Unknown name",
                     modifier = Modifier.padding(8.dp),
                     textAlign = TextAlign.Center
                 )

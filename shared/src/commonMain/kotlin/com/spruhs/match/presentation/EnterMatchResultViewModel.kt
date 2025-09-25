@@ -2,16 +2,18 @@ package com.spruhs.match.presentation
 
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
-import com.spruhs.match.application.Match
-import com.spruhs.match.application.PlayerMatchResult
+import com.spruhs.match.application.GetEnterResultDataUseCase
 import com.spruhs.match.application.PlayerTeam
 import kotlinx.coroutines.flow.update
-import kotlinx.datetime.LocalDateTime
 
-class EnterMatchResultViewModel :
+class EnterMatchResultViewModel(
+    private val matchId: String,
+    private val getEnterResultDataUseCase: GetEnterResultDataUseCase
+) :
     BaseViewModel<EnterMatchResultIntent, EnterMatchResultEffect, EnterMatchResultUIState>(
         EnterMatchResultUIState()
     ) {
+
     override fun processIntent(intent: EnterMatchResultIntent) {
         when (intent) {
             is EnterMatchResultIntent.EnterResult -> {}
@@ -25,60 +27,22 @@ class EnterMatchResultViewModel :
     }
 
     init {
-        val matchData: Match = Match(
-            id = "",
-            groupId = "",
-            start = LocalDateTime.parse("2023-01-01T12:00:00"),
-            playground = "",
-            maxPlayers = 1,
-            minPlayers = 2,
-            cadre = emptyList(),
-            waitingBench = emptyList(),
-            deregistered = emptyList(),
-            result = emptyList()
-        )
-        val groupPlayers: Map<String, String> = mapOf()
-
-        val winnerTeam: PlayerTeam =
-            when (matchData.result.first().result) {
-                PlayerMatchResult.DRAW -> {
-                    uiStateMutable.update { it.copy(isDraw = true) }
-                    PlayerTeam.A
-                }
-
-                PlayerMatchResult.WIN -> if (matchData.result.first().team ==
-                    PlayerTeam.A
-                ) {
-                    PlayerTeam.A
-                } else {
-                    PlayerTeam.B
-                }
-                PlayerMatchResult.LOSS -> if (matchData.result.first().team ==
-                    PlayerTeam.A
-                ) {
-                    PlayerTeam.B
-                } else {
-                    PlayerTeam.A
+        performAction(
+            action = {
+                getEnterResultDataUseCase.getData(matchId)
+            },
+            onSuccess = { result ->
+                uiStateMutable.update {
+                    it.copy(
+                        teamAPlayers = result.teamAPlayers,
+                        teamBPlayers = result.teamBPlayers,
+                        noTeamPlayers = result.noTeamPlayers,
+                        winnerTeam = result.winnerTeam,
+                        playerNames = result.playerNames
+                    )
                 }
             }
-        val teamAPlayers = matchData.result.filter { it.team == PlayerTeam.A }.map { it.userId }
-        val teamBPlayers = matchData.result.filter { it.team == PlayerTeam.B }.map { it.userId }
-
-        val playerIds = (teamAPlayers) + (teamBPlayers)
-        val noTeamPlayers =
-            groupPlayers.keys
-                .filter { playerId ->
-                    playerId !in playerIds
-                }
-        uiStateMutable.update {
-            it.copy(
-                teamAPlayers = teamAPlayers,
-                teamBPlayers = teamBPlayers,
-                noTeamPlayers = noTeamPlayers,
-                winnerTeam = winnerTeam,
-                playerNames = groupPlayers
-            )
-        }
+        )
     }
 
     private fun movePlayer(to: Side) {
@@ -111,9 +75,9 @@ data class EnterMatchResultUIState(
     override val isLoading: Boolean = false,
     override val error: String? = null,
     val isDraw: Boolean = false,
-    val teamAPlayers: List<String> = emptyList(),
-    val teamBPlayers: List<String> = emptyList(),
-    val noTeamPlayers: List<String> = emptyList(),
+    val teamAPlayers: Set<String> = emptySet(),
+    val teamBPlayers: Set<String> = emptySet(),
+    val noTeamPlayers: Set<String> = emptySet(),
     val winnerTeam: PlayerTeam = PlayerTeam.A,
     val playerNames: Map<String, String> = emptyMap(),
     val selectedPlayer: String? = null,
@@ -131,6 +95,7 @@ enum class Side {
 
 sealed class EnterMatchResultEffect {
     object ResultEntered : EnterMatchResultEffect()
+    data class ShowError(val message: String) : EnterMatchResultEffect()
 }
 
 sealed class EnterMatchResultIntent {

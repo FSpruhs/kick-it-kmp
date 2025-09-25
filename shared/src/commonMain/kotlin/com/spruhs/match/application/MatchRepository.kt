@@ -13,4 +13,5 @@ interface MatchRepository {
     ): Flow<List<Match>>
 
     suspend fun upcomingMatches(userId: String): Collection<Match>
+    suspend fun getMatchById(matchId: String): Flow<Match>
 }

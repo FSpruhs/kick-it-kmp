@@ -25,7 +25,14 @@ enum class PlayerMatchResult {
 
 enum class PlayerTeam {
     A,
-    B
+    B;
+
+    fun opposite(): PlayerTeam {
+        return when (this) {
+            A -> B
+            B -> A
+        }
+    }
 }
 
 enum class PlayerStatus {
