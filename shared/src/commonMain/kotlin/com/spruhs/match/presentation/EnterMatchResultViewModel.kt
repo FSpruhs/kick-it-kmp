@@ -2,22 +2,29 @@ package com.spruhs.match.presentation
 
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
+import com.spruhs.match.application.EnterResultUseCase
 import com.spruhs.match.application.GetEnterResultDataUseCase
+import com.spruhs.match.application.MatchResult
 import com.spruhs.match.application.PlayerTeam
 import kotlinx.coroutines.flow.update
 
 class EnterMatchResultViewModel(
     private val matchId: String,
-    private val getEnterResultDataUseCase: GetEnterResultDataUseCase
+    private val getEnterResultDataUseCase: GetEnterResultDataUseCase,
+    private val enterResultUseCase: EnterResultUseCase
 ) : BaseViewModel<EnterMatchResultIntent, EnterMatchResultEffect, EnterMatchResultUIState>(
     EnterMatchResultUIState()
 ) {
 
     override fun processIntent(intent: EnterMatchResultIntent) {
         when (intent) {
-            is EnterMatchResultIntent.EnterResult -> {}
-            is EnterMatchResultIntent.UpdateIsDraw -> {}
-            is EnterMatchResultIntent.SelectPlayer -> {}
+            is EnterMatchResultIntent.EnterResult -> handelEnterResult()
+            is EnterMatchResultIntent.UpdateIsDraw -> {
+                uiStateMutable.update { it.copy(isDraw = intent.isDraw) }
+            }
+            is EnterMatchResultIntent.SelectPlayer -> {
+                uiStateMutable.update { it.copy(selectedPlayer = intent.player, selectedSide = intent.side) }
+            }
             is EnterMatchResultIntent.MovePlayer -> {
                 movePlayer(intent.to)
                 uiStateMutable.update { it.copy(selectedPlayer = null, selectedSide = null) }
@@ -40,6 +47,22 @@ class EnterMatchResultViewModel(
                         playerNames = result.playerNames
                     )
                 }
+            }
+        )
+    }
+
+    private fun handelEnterResult() {
+        performAction(
+            action = {
+                enterResultUseCase.enterResult(
+                    matchId,
+                    if (uiState.value.isDraw) MatchResult.DRAW else MatchResult.TEAM_A,
+                    uiState.value.teamAPlayers.toList(),
+                    uiState.value.teamBPlayers.toList()
+                )
+            },
+            onSuccess = {
+                effectsMutable.emit(EnterMatchResultEffect.ResultEntered)
             }
         )
     }
@@ -100,6 +123,6 @@ sealed class EnterMatchResultEffect {
 sealed class EnterMatchResultIntent {
     object EnterResult : EnterMatchResultIntent()
     data class UpdateIsDraw(val isDraw: Boolean) : EnterMatchResultIntent()
-    data class SelectPlayer(val side: Side) : EnterMatchResultIntent()
+    data class SelectPlayer(val side: Side, val player: String) : EnterMatchResultIntent()
     data class MovePlayer(val to: Side) : EnterMatchResultIntent()
 }

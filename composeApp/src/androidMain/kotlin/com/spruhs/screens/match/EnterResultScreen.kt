@@ -211,7 +211,7 @@ fun PlayerSelectionContent(
                     player == uiState.selectedPlayer &&
                         uiState.selectedSide == Side.MIDDLE,
                     onClick = {
-                        onIntent(EnterMatchResultIntent.SelectPlayer(Side.MIDDLE))
+                        onIntent(EnterMatchResultIntent.SelectPlayer(Side.MIDDLE, player))
                     },
                     uiState = uiState
                 )
@@ -264,7 +264,7 @@ fun RowScope.PlayerAreaContent(
                             uiState.selectedSide == teamSide,
                         onClick = {
                             onIntent(
-                                EnterMatchResultIntent.SelectPlayer(teamSide)
+                                EnterMatchResultIntent.SelectPlayer(teamSide, player)
                             )
                         },
                         uiState = uiState

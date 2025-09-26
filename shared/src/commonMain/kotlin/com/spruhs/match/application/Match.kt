@@ -17,6 +17,12 @@ data class Match(
 
 data class PlayerResult(val userId: String, val result: PlayerMatchResult, val team: PlayerTeam)
 
+enum class MatchResult {
+    DRAW,
+    TEAM_A,
+    TEAM_B
+}
+
 enum class PlayerMatchResult {
     WIN,
     LOSS,

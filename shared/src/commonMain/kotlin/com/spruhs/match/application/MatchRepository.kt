@@ -14,4 +14,11 @@ interface MatchRepository {
 
     suspend fun upcomingMatches(userId: String): Collection<Match>
     suspend fun getMatchById(matchId: String): Flow<Match>
+
+    suspend fun enterMatchResult(
+        matchId: String,
+        matchResult: MatchResult,
+        teamA: List<String>,
+        teamB: List<String>
+    )
 }
