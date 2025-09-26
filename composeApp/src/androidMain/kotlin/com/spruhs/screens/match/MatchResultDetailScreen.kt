@@ -12,6 +12,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spruhs.match.application.PlayerTeam
+import com.spruhs.match.presentation.MatchResultDetailEffect
 import com.spruhs.match.presentation.MatchResultDetailIntent
 import com.spruhs.match.presentation.MatchResultDetailUIState
 import com.spruhs.match.presentation.MatchResultDetailViewModel
@@ -32,25 +34,42 @@ import com.spruhs.ui.theme.CustomColor
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRole
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MatchResultDetailScreen(
     matchId: String,
     onEnterResultClick: (String) -> Unit,
     onBack: () -> Unit,
-    matchResultDetailViewModel: MatchResultDetailViewModel = koinViewModel()
+    matchResultDetailViewModel: MatchResultDetailViewModel = koinViewModel(
+        parameters = { parametersOf(matchId) }
+    )
 ) {
-    val matchResultDetailUIState by matchResultDetailViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by matchResultDetailViewModel.uiState.collectAsStateWithLifecycle()
 
-    if (matchResultDetailUIState.playerResults.isEmpty()) {
+    LaunchedEffect(Unit) {
+        matchResultDetailViewModel.effects.collect {
+            when (it) {
+                MatchResultDetailEffect.EnterResult -> {
+                    onEnterResultClick(matchId)
+                }
+
+                MatchResultDetailEffect.ChangeResult -> {
+                    onEnterResultClick(matchId)
+                }
+            }
+        }
+    }
+
+    if (uiState.playerResults.isEmpty()) {
         ResultNotEnteredYetContent(
-            selectedGroup = matchResultDetailUIState.selectedGroup,
+            selectedGroup = uiState.selectedGroup,
             onBack = onBack,
             onIntent = matchResultDetailViewModel::processIntent
         )
     } else {
         MatchResultContent(
-            matchResultDetailUIState = matchResultDetailUIState,
+            uiState = uiState,
             onIntent = matchResultDetailViewModel::processIntent
         )
     }
@@ -58,13 +77,13 @@ fun MatchResultDetailScreen(
 
 @Composable
 fun MatchResultContent(
-    matchResultDetailUIState: MatchResultDetailUIState,
+    uiState: MatchResultDetailUIState,
     onIntent: (MatchResultDetailIntent) -> Unit
 ) {
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Text(
             text =
-            if (matchResultDetailUIState.isDraw) {
+            if (uiState.isDraw) {
                 "Draw"
             } else {
                 "Winner-Team"
@@ -77,24 +96,19 @@ fun MatchResultContent(
         )
 
         PlayerChipArea(
-            color =
-            if (matchResultDetailUIState.isDraw) {
-                CustomColor.Gray
-            } else {
-                CustomColor.Green
-            },
+            color = if (uiState.isDraw) CustomColor.Gray else CustomColor.Green,
             players =
-            if (matchResultDetailUIState.winnerTeam == PlayerTeam.A) {
-                matchResultDetailUIState.playerResults
+            if (uiState.winnerTeam == PlayerTeam.A) {
+                uiState.playerResults
                     .filter { it.team == PlayerTeam.A }
                     .map { it.userId }
             } else {
-                matchResultDetailUIState
+                uiState
                     .playerResults
                     .filter { it.team == PlayerTeam.B }
                     .map { it.userId }
             },
-            groupNameList = matchResultDetailUIState.groupNameList
+            groupNameList = uiState.groupNameList
         )
 
         HorizontalDivider(
@@ -104,7 +118,7 @@ fun MatchResultContent(
 
         Text(
             text =
-            if (matchResultDetailUIState.isDraw) {
+            if (uiState.isDraw) {
                 "Draw"
             } else {
                 "Looser-Team"
@@ -118,31 +132,27 @@ fun MatchResultContent(
 
         PlayerChipArea(
             color =
-            if (matchResultDetailUIState.isDraw) {
-                CustomColor.Gray
-            } else {
-                CustomColor.Red
-            },
+            if (uiState.isDraw) CustomColor.Gray else CustomColor.Red,
             players =
-            if (matchResultDetailUIState.winnerTeam == PlayerTeam.A) {
-                matchResultDetailUIState
+            if (uiState.winnerTeam == PlayerTeam.A) {
+                uiState
                     .playerResults
                     .filter { it.team == PlayerTeam.B }
                     .map { it.userId }
             } else {
-                matchResultDetailUIState
+                uiState
                     .playerResults
                     .filter { it.team == PlayerTeam.A }
                     .map { it.userId }
             },
-            groupNameList = matchResultDetailUIState.groupNameList
+            groupNameList = uiState.groupNameList
         )
 
         var menuExpanded by remember { mutableStateOf(false) }
         var showDialog by remember { mutableStateOf(false) }
 
         RoleBasedVisibility(
-            matchResultDetailUIState.selectedGroup?.role,
+            uiState.selectedGroup?.role,
             "matchResultDetailScreen:changeResultButton"
         ) {
             CancelButton(
