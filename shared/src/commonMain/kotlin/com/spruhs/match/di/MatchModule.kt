@@ -3,6 +3,7 @@ package com.spruhs.match.di
 import com.spruhs.match.application.EnterResultUseCase
 import com.spruhs.match.application.GetEnterResultDataUseCase
 import com.spruhs.match.application.GetMatchResultDetailsUseCase
+import com.spruhs.match.application.GetMatchesDataUseCases
 import com.spruhs.match.presentation.EnterMatchResultViewModel
 import com.spruhs.match.presentation.MatchResultDetailViewModel
 import com.spruhs.match.presentation.MatchViewModel
@@ -15,6 +16,7 @@ val matchModule = module {
     single { GetEnterResultDataUseCase(get(), get(), get()) }
     single { EnterResultUseCase(get()) }
     single { GetMatchResultDetailsUseCase(get(), get(), get()) }
+    single { GetMatchesDataUseCases(get(), get()) }
 
     viewModelOf(::EnterMatchResultViewModel)
     viewModelOf(::MatchResultDetailViewModel)

@@ -4,9 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
-import com.spruhs.match.application.Match
 import com.spruhs.match.application.MatchRepository
-import com.spruhs.match.application.PlayerStatus
 import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
@@ -47,8 +45,6 @@ class HomeViewModel(
         AppLogger.e("HomeViewModel", "Error fetching upcoming matches", it)
         emptyList()
     }.toList()
-
-
 
     override fun processIntent(intent: HomeIntent) {
         when (intent) {

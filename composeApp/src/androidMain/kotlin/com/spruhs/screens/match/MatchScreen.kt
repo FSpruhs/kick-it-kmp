@@ -113,7 +113,7 @@ fun MatchContent(uiState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
                         UpcomingMatchesItem(
                             upcomingMatchPreview = match,
                             groups = uiState.groups,
-                            onMatchClick = { onIntent(MatchIntent.SelectUpcomingMatch(it)) },
+                            onMatchClick = { onIntent(MatchIntent.SelectUpcomingMatch(it)) }
                         )
                     }
                 }

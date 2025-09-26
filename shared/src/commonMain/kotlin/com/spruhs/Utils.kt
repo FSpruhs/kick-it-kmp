@@ -1,9 +1,9 @@
 package com.spruhs
 
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 fun validateEmail(email: String): Boolean = email.contains("@") &&
     email.contains(".") &&

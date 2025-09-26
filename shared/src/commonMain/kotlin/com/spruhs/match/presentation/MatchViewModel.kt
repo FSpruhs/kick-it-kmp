@@ -11,9 +11,8 @@ import com.spruhs.user.application.UserGroupInfo
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MatchViewModel(
-    private val getMatchesDataUseCases: GetMatchesDataUseCases
-) : BaseViewModel<MatchIntent, MatchEffect, MatchUIState>(MatchUIState()) {
+class MatchViewModel(private val getMatchesDataUseCases: GetMatchesDataUseCases) :
+    BaseViewModel<MatchIntent, MatchEffect, MatchUIState>(MatchUIState()) {
 
     init {
         performAction(
@@ -21,12 +20,14 @@ class MatchViewModel(
                 getMatchesDataUseCases.getData()
             },
             onSuccess = { result ->
-                uiStateMutable.update { it.copy(
-                    selectedGroup = result.selectedGroup,
-                    upcomingMatches = result.upcomingMatches,
-                    lastMatches = result.lastMatches,
-                    groups = result.groups
-                ) }
+                uiStateMutable.update {
+                    it.copy(
+                        selectedGroup = result.selectedGroup,
+                        upcomingMatches = result.upcomingMatches,
+                        lastMatches = result.lastMatches,
+                        groups = result.groups
+                    )
+                }
             }
         )
     }
@@ -53,7 +54,7 @@ data class MatchUIState(
     val selectedGroup: SelectedGroup? = null,
     val upcomingMatches: List<UpcomingMatchPreview> = emptyList(),
     val lastMatches: List<PlayerMatchPreview> = emptyList(),
-    val groups: Map<String, UserGroupInfo> = emptyMap(),
+    val groups: Map<String, UserGroupInfo> = emptyMap()
 ) : BaseUIState<MatchUIState> {
     override fun copyWith(isLoading: Boolean, error: String?): MatchUIState =
         copy(isLoading = isLoading, error = error)

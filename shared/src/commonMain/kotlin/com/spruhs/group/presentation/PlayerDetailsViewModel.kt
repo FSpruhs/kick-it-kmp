@@ -7,9 +7,7 @@ import com.spruhs.group.application.GetPlayerDetailsUseCase
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.group.application.RemovePlayerUseCase
 import com.spruhs.group.application.UpdatePlayerUseCase
-import com.spruhs.match.application.Match
 import com.spruhs.match.application.PlayerMatchPreview
-import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.match.application.toLastPreview
 import com.spruhs.statistics.application.PlayerStats
 import com.spruhs.user.application.SelectedGroup

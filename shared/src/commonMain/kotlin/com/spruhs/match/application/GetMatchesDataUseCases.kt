@@ -50,6 +50,6 @@ class GetMatchesDataUseCases(
         val selectedGroup: SelectedGroup?,
         val upcomingMatches: List<UpcomingMatchPreview>,
         val lastMatches: List<PlayerMatchPreview>,
-        val groups: Map<String, UserGroupInfo>,
+        val groups: Map<String, UserGroupInfo>
     )
 }

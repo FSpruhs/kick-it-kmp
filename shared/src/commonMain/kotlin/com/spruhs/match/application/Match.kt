@@ -22,7 +22,7 @@ fun Match.toUpcomingPreview(playerId: String) = UpcomingMatchPreview(
     minPlayers = minPlayers,
     maxPlayers = maxPlayers,
     start = start.toString(),
-    playerStatus = calculatePlayerStatus(this, playerId),
+    playerStatus = calculatePlayerStatus(this, playerId)
 )
 
 private fun calculatePlayerStatus(match: Match, userId: String) = when {
@@ -33,13 +33,12 @@ private fun calculatePlayerStatus(match: Match, userId: String) = when {
     else -> null
 }
 
-fun Match.toLastPreview(playerId: String) =
-    PlayerMatchPreview(
-        id = id,
-        playerResult = this.result.find { it.userId == playerId }?.result ?: PlayerMatchResult.DRAW,
-        start = start.toString(),
-        playground = playground
-    )
+fun Match.toLastPreview(playerId: String) = PlayerMatchPreview(
+    id = id,
+    playerResult = this.result.find { it.userId == playerId }?.result ?: PlayerMatchResult.DRAW,
+    start = start.toString(),
+    playground = playground
+)
 
 data class UpcomingMatchPreview(
     val id: String,

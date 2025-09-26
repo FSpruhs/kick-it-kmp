@@ -36,13 +36,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spruhs.match.application.PlayerStatus
+import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.screens.common.PlayerMatchStatusIcon
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.presentation.HomeEffect
 import com.spruhs.user.presentation.HomeIntent
 import com.spruhs.user.presentation.HomeUIState
 import com.spruhs.user.presentation.HomeViewModel
-import com.spruhs.user.presentation.UpcomingMatchPreview
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -129,7 +129,7 @@ fun UpcomingMatchesContent(
 fun UpcomingMatchesItem(
     upcomingMatchPreview: UpcomingMatchPreview,
     groups: Map<String, UserGroupInfo>,
-    onMatchClick: (String) -> Unit,
+    onMatchClick: (String) -> Unit
 ) {
     Card(
         colors =
