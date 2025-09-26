@@ -23,7 +23,9 @@ class EnterMatchResultViewModel(
                 uiStateMutable.update { it.copy(isDraw = intent.isDraw) }
             }
             is EnterMatchResultIntent.SelectPlayer -> {
-                uiStateMutable.update { it.copy(selectedPlayer = intent.player, selectedSide = intent.side) }
+                uiStateMutable.update {
+                    it.copy(selectedPlayer = intent.player, selectedSide = intent.side)
+                }
             }
             is EnterMatchResultIntent.MovePlayer -> {
                 movePlayer(intent.to)
