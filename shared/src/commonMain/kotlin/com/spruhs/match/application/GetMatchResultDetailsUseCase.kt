@@ -3,10 +3,10 @@ package com.spruhs.match.application
 import com.spruhs.group.application.GroupRepository
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRepository
+import kotlin.collections.firstOrNull
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
-import kotlin.collections.firstOrNull
 
 class GetMatchResultDetailsUseCase(
     private val matchRepository: MatchRepository,
@@ -14,9 +14,9 @@ class GetMatchResultDetailsUseCase(
     private val groupRepository: GroupRepository
 ) {
     suspend fun getData(matchId: String): Result = coroutineScope {
-        val matchDeferred = async { matchRepository.getMatchById(matchId).first()}
+        val matchDeferred = async { matchRepository.getMatchById(matchId).first() }
         val selectedGroup = userRepository.getSelectedGroupOrThrow()
-        val groupNameListDeferred = async { groupRepository.getGroupNames(selectedGroup.id)}
+        val groupNameListDeferred = async { groupRepository.getGroupNames(selectedGroup.id) }
         val match = matchDeferred.await()
 
         val winnerTeam = match.result.firstOrNull()?.let { determineWinner(it) }
@@ -31,11 +31,12 @@ class GetMatchResultDetailsUseCase(
         )
     }
 
-    private fun determineWinner(firstResult: PlayerResult): PlayerTeam? = when (firstResult.result) {
-        PlayerMatchResult.DRAW -> null
-        PlayerMatchResult.WIN -> firstResult.team
-        PlayerMatchResult.LOSS -> firstResult.team.opposite()
-    }
+    private fun determineWinner(firstResult: PlayerResult): PlayerTeam? =
+        when (firstResult.result) {
+            PlayerMatchResult.DRAW -> null
+            PlayerMatchResult.WIN -> firstResult.team
+            PlayerMatchResult.LOSS -> firstResult.team.opposite()
+        }
 
     data class Result(
         val playerResults: List<PlayerResult>,

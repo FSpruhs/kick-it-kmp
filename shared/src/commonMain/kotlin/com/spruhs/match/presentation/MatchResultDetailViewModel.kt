@@ -4,33 +4,33 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.GetMatchResultDetailsUseCase
-import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.match.application.PlayerResult
 import com.spruhs.match.application.PlayerTeam
 import com.spruhs.user.application.SelectedGroup
+import kotlin.collections.List
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.List
 
 class MatchResultDetailViewModel(
     private val matchId: String,
     private val getMatchResultDetailsUseCase: GetMatchResultDetailsUseCase
-) :
-    BaseViewModel<MatchResultDetailIntent, MatchResultDetailEffect, MatchResultDetailUIState>(
-        MatchResultDetailUIState()
-    ) {
+) : BaseViewModel<MatchResultDetailIntent, MatchResultDetailEffect, MatchResultDetailUIState>(
+    MatchResultDetailUIState()
+) {
 
     init {
         performAction(
-            action = {getMatchResultDetailsUseCase.getData(matchId)},
+            action = { getMatchResultDetailsUseCase.getData(matchId) },
             onSuccess = { result ->
-                uiStateMutable.update { it.copy(
-                    playerResults = result.playerResults,
-                    selectedGroup = result.selectedGroup,
-                    winnerTeam = result.winnerTeam,
-                    isDraw = result.isDraw,
-                    groupNameList = result.groupNameList
-                ) }
+                uiStateMutable.update {
+                    it.copy(
+                        playerResults = result.playerResults,
+                        selectedGroup = result.selectedGroup,
+                        winnerTeam = result.winnerTeam,
+                        isDraw = result.isDraw,
+                        groupNameList = result.groupNameList
+                    )
+                }
             }
         )
     }
