@@ -6,6 +6,8 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.Match
 import com.spruhs.match.application.MatchRepository
+import com.spruhs.match.application.PlayerStatus
+import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.firstOrNull
@@ -46,6 +48,8 @@ class HomeViewModel(
         emptyList()
     }.toList()
 
+
+
     override fun processIntent(intent: HomeIntent) {
         when (intent) {
             is HomeIntent.SelectMatch -> viewModelScope.launch {
@@ -58,7 +62,7 @@ class HomeViewModel(
 data class HomeUIState(
     override val isLoading: Boolean = false,
     override val error: String? = null,
-    val upcomingMatches: List<Match> = emptyList(),
+    val upcomingMatches: List<UpcomingMatchPreview> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap(),
     val userId: String? = null
 ) : BaseUIState<HomeUIState> {

@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.spruhs.match.application.Match
 import com.spruhs.match.application.PlayerStatus
 import com.spruhs.screens.common.PlayerMatchStatusIcon
 import com.spruhs.user.application.UserGroupInfo
@@ -43,6 +42,7 @@ import com.spruhs.user.presentation.HomeEffect
 import com.spruhs.user.presentation.HomeIntent
 import com.spruhs.user.presentation.HomeUIState
 import com.spruhs.user.presentation.HomeViewModel
+import com.spruhs.user.presentation.UpcomingMatchPreview
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -116,7 +116,6 @@ fun UpcomingMatchesContent(
                         UpcomingMatchesItem(
                             upcomingMatchPreview = match,
                             groups = homeUiState.groups,
-                            userId = homeUiState.userId ?: "",
                             onMatchClick = { onIntent(HomeIntent.SelectMatch(it)) }
                         )
                     }
@@ -128,10 +127,9 @@ fun UpcomingMatchesContent(
 
 @Composable
 fun UpcomingMatchesItem(
-    upcomingMatchPreview: Match,
+    upcomingMatchPreview: UpcomingMatchPreview,
     groups: Map<String, UserGroupInfo>,
     onMatchClick: (String) -> Unit,
-    userId: String
 ) {
     Card(
         colors =
@@ -176,7 +174,7 @@ fun UpcomingMatchesItem(
 
             Column(modifier = Modifier.weight(2f)) {
                 Text(
-                    text = upcomingMatchPreview.start.toString(),
+                    text = upcomingMatchPreview.start,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(text = groups[upcomingMatchPreview.groupId]?.name ?: "Unknown Group")
@@ -190,18 +188,10 @@ fun UpcomingMatchesItem(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
-                PlayerStatusIcon(calculatePlayerStatus(upcomingMatchPreview, userId))
+                PlayerStatusIcon(upcomingMatchPreview.playerStatus)
             }
         }
     }
-}
-
-private fun calculatePlayerStatus(match: Match, userId: String) = when {
-    match.cadre.find { it == userId } != null -> PlayerStatus.CADRE
-    match.deregistered.find { it == userId } != null -> PlayerStatus.DEREGISTERED
-    match.waitingBench.find { it == userId } != null -> PlayerStatus.WAITING_BENCH
-
-    else -> null
 }
 
 @Composable

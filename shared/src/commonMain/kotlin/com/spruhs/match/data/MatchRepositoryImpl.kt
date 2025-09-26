@@ -17,10 +17,6 @@ class MatchRepositoryImpl : MatchRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upcomingMatches(userId: String): Collection<Match> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getMatchById(matchId: String): Flow<Match> {
         TODO("Not yet implemented")
     }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -18,14 +17,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.spruhs.match.presentation.MatchEffect
 import com.spruhs.match.presentation.MatchIntent
 import com.spruhs.match.presentation.MatchUIState
 import com.spruhs.match.presentation.MatchViewModel
+import com.spruhs.screens.common.ContentUIState
 import com.spruhs.screens.common.RoleBasedVisibility
 import com.spruhs.screens.group.LastMatchItem
 import com.spruhs.screens.user.UpcomingMatchesItem
@@ -38,7 +40,16 @@ fun MatchScreen(
     onLastMatchClick: (String) -> Unit,
     matchViewModel: MatchViewModel = koinViewModel()
 ) {
-    val matchUIState by matchViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by matchViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        matchViewModel.effects.collect { effect ->
+            when (effect) {
+                is MatchEffect.LastMatchSelected -> onLastMatchClick(effect.matchId)
+                is MatchEffect.UpcomingMatchSelected -> onUpcomingMatchClick(effect.matchId)
+            }
+        }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -51,14 +62,14 @@ fun MatchScreen(
                     .padding(6.dp)
             ) {
                 MatchContent(
-                    matchUIState = matchUIState,
+                    uiState = uiState,
                     onIntent = matchViewModel::processIntent
                 )
             }
         },
         floatingActionButton = {
             RoleBasedVisibility(
-                matchUIState.selectedGroup?.role,
+                uiState.selectedGroup?.role,
                 "matchScreen:planMatchButton"
             ) {
                 FloatingActionButton(
@@ -77,7 +88,7 @@ fun MatchScreen(
 }
 
 @Composable
-fun MatchContent(matchUIState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
+fun MatchContent(uiState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -92,23 +103,17 @@ fun MatchContent(matchUIState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
             modifier = Modifier.padding(bottom = 8.dp),
             color = MaterialTheme.colorScheme.outlineVariant
         )
-        when {
-            matchUIState.isLoading -> {
-                CircularProgressIndicator()
-            }
 
-            matchUIState.upcomingMatches.isEmpty() -> {
+        ContentUIState(uiState) {
+            if (uiState.upcomingMatches.isEmpty()) {
                 Text(text = "No upcoming matches")
-            }
-
-            else -> {
+            } else {
                 LazyColumn {
-                    items(matchUIState.upcomingMatches) { match ->
+                    items(uiState.upcomingMatches) { match ->
                         UpcomingMatchesItem(
                             upcomingMatchPreview = match,
-                            groups = matchUIState.groups,
-                            onMatchClick = { onIntent(MatchIntent.SelectMatch(it)) },
-                            userId = matchUIState.userId ?: ""
+                            groups = uiState.groups,
+                            onMatchClick = { onIntent(MatchIntent.SelectUpcomingMatch(it)) },
                         )
                     }
                 }
@@ -127,20 +132,15 @@ fun MatchContent(matchUIState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
             color = MaterialTheme.colorScheme.outlineVariant
         )
 
-        when {
-            matchUIState.isLoading -> {
-                CircularProgressIndicator()
-            }
-            matchUIState.lastMatches.isEmpty() -> {
+        ContentUIState(uiState) {
+            if (uiState.lastMatches.isEmpty()) {
                 Text(text = "No last matches")
-            }
-            else -> {
+            } else {
                 LazyColumn {
-                    items(matchUIState.lastMatches) { match ->
+                    items(uiState.lastMatches) { match ->
                         LastMatchItem(
                             lastMatch = match,
-                            playerId = matchUIState.userId ?: "",
-                            onClick = { onIntent(MatchIntent.SelectMatch(it)) }
+                            onClick = { onIntent(MatchIntent.SelectLastMatch(it)) }
                         )
                     }
                 }

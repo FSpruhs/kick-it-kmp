@@ -8,7 +8,9 @@ import com.spruhs.group.application.PlayerDetails
 import com.spruhs.group.application.RemovePlayerUseCase
 import com.spruhs.group.application.UpdatePlayerUseCase
 import com.spruhs.match.application.Match
+import com.spruhs.match.application.PlayerMatchPreview
 import com.spruhs.match.application.PlayerMatchResult
+import com.spruhs.match.application.toLastPreview
 import com.spruhs.statistics.application.PlayerStats
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRole
@@ -35,7 +37,7 @@ class PlayerDetailsViewModel(
                         groupNames = result.groupNames,
                         playerStats = result.statistics,
                         lastMatches = result.lastMatches.map { match ->
-                            match.toPlayerMatchPreview()
+                            match.toLastPreview(playerId)
                         },
                         selectedGroup = result.selectedGroup
                     )
@@ -53,13 +55,6 @@ class PlayerDetailsViewModel(
             is PlayerDetailsIntent.SelectLastMatch -> handleSelectLastMatch(intent.matchId)
         }
     }
-
-    private fun Match.toPlayerMatchPreview() = PlayerMatchPreview(
-        id = id,
-        playerResult = this.result.find { it.userId == playerId }?.result ?: PlayerMatchResult.DRAW,
-        start = start.toString(),
-        playground = playground
-    )
 
     private fun handleUpdatePlayer() {
         if (
@@ -98,13 +93,6 @@ class PlayerDetailsViewModel(
         onSuccess = { effectsMutable.emit(PlayerDetailsEffect.PlayerRemoved) }
     )
 }
-
-data class PlayerMatchPreview(
-    val id: String,
-    val playerResult: PlayerMatchResult,
-    val start: String,
-    val playground: String?
-)
 
 data class PlayerDetailsUIState(
     override val isLoading: Boolean = false,
