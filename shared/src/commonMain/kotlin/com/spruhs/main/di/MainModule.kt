@@ -1,5 +1,6 @@
 package com.spruhs.main.di
 
+import com.spruhs.AppLogger
 import com.spruhs.auth.application.AuthTokenRepository
 import com.spruhs.main.TopBarViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
@@ -10,7 +11,7 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.request
+import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -47,18 +48,16 @@ val mainModule = module {
 
             defaultRequest {
                 contentType(ContentType.Application.Json)
+                val token: String? = authRepo.getTokenSync()?.accessToken
+                AppLogger.i("AuthClient", "defaultRequest called, token: ${token?.take(20)}...")
+                if (token != null) {
+                    header("Authorization", "Bearer $token")
+                }
             }
 
             install(Logging) {
                 level = LogLevel.ALL
                 logger = Logger.DEFAULT
-            }
-
-            request {
-                val token: String? = authRepo.getTokenSync()?.accessToken
-                if (token != null) {
-                    headers.append("Authorization", "Bearer $token")
-                }
             }
         }
     }

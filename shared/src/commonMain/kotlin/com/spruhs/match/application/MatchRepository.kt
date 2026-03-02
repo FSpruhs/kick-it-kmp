@@ -20,4 +20,6 @@ interface MatchRepository {
         teamA: List<String>,
         teamB: List<String>
     )
+
+    suspend fun upcomingMatches(userId: String, after: LocalDateTime): List<UpcomingMatchPreview>
 }

@@ -4,13 +4,17 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
+import com.spruhs.dateTimeNow
 import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.collections.emptyList
 
 class HomeViewModel(
     private val userRepository: UserRepository,
@@ -39,12 +43,12 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun fetchUpcomingMatches(userId: String) = runCatching {
-        matchRepository.upcomingMatches(userId)
+    private suspend fun fetchUpcomingMatches(userId: String): List<UpcomingMatchPreview> = runCatching {
+        matchRepository.upcomingMatches(userId, dateTimeNow())
     }.getOrElse {
         AppLogger.e("HomeViewModel", "Error fetching upcoming matches", it)
         emptyList()
-    }.toList()
+    }
 
     override fun processIntent(intent: HomeIntent) {
         when (intent) {

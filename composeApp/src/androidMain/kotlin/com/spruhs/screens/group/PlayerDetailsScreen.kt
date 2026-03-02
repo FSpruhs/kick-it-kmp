@@ -55,7 +55,7 @@ import com.spruhs.group.presentation.PlayerDetailsEffect
 import com.spruhs.group.presentation.PlayerDetailsIntent
 import com.spruhs.group.presentation.PlayerDetailsUIState
 import com.spruhs.group.presentation.PlayerDetailsViewModel
-import com.spruhs.group.presentation.PlayerMatchPreview
+import com.spruhs.match.application.PlayerMatchPreview
 import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.permission.PermissionManager
 import com.spruhs.screens.common.ConfirmAlertDialog

@@ -28,15 +28,15 @@ class UserApiImpl(
 }
 
 interface UserAuthService {
-    @GET("/api/v1/user/{userId}")
+    @GET("v1/user/{userId}")
     suspend fun getUser(@Path("userId") userId: String): UserMessage
 
-    @PUT("/api/v1/user/{userId}/nickName")
+    @PUT("v1/user/{userId}/nickName")
     suspend fun changeNickName(@Path("userId") userId: String, @Query("nickName") nickName: String)
 }
 
 interface UserNoAuthService {
-    @POST("/api/v1/user")
+    @POST("v1/user")
     suspend fun registerUser(@Body request: RegisterUserRequest): String
 }
 
