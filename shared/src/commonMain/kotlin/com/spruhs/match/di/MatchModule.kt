@@ -5,8 +5,8 @@ import com.spruhs.match.application.GetEnterResultDataUseCase
 import com.spruhs.match.application.GetMatchResultDetailsUseCase
 import com.spruhs.match.application.GetMatchesDataUseCases
 import com.spruhs.match.application.MatchRepository
-import com.spruhs.match.data.MatchRepositoryImpl
 import com.spruhs.match.data.MatchApiClient
+import com.spruhs.match.data.MatchRepositoryImpl
 import com.spruhs.match.data.createMatchApiClient
 import com.spruhs.match.presentation.EnterMatchResultViewModel
 import com.spruhs.match.presentation.MatchResultDetailViewModel

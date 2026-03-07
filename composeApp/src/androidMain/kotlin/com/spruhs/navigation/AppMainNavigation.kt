@@ -35,7 +35,9 @@ fun AppMainNavigation(
             setBackIcon(false)
             HomeScreen(
                 onMatchClick = { matchId ->
-                    navHostController.navigate("${MainScreens.UpcomingMatchDetailScreen.route}/$matchId")
+                    navHostController.navigate(
+                        "${MainScreens.UpcomingMatchDetailScreen.route}/$matchId"
+                    )
                 }
             )
         }

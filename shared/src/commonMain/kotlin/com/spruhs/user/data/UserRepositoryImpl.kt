@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 class UserRepositoryImpl(
     private val userAuthApiClient: UserAuthApiClient,
     private val userNoAuthApiClient: UserNoAuthApiClient
-    ) : UserRepository {
+) : UserRepository {
     private val _userState = MutableStateFlow<User?>(null)
     override val userState: StateFlow<User?> = _userState
 
@@ -26,16 +26,17 @@ class UserRepositoryImpl(
     override suspend fun getUserOrThrow(): User =
         userState.value ?: throw IllegalStateException("No user")
 
-    override suspend fun loadUser(id: String): User = userAuthApiClient.getUser(id).toUser().also { user ->
-        _userState.value = user
+    override suspend fun loadUser(id: String): User =
+        userAuthApiClient.getUser(id).toUser().also { user ->
+            _userState.value = user
 
-        user.groups.values
-            .sortedByDescending { it.lastMatch }
-            .firstOrNull()
-            ?.let {
-                setSelectedGroup(it)
-            }
-    }
+            user.groups.values
+                .sortedByDescending { it.lastMatch }
+                .firstOrNull()
+                ?.let {
+                    setSelectedGroup(it)
+                }
+        }
 
     override suspend fun register(email: String, nickName: String, password: String) =
         userNoAuthApiClient.registerUser(RegisterUserRequest(nickName, email, password))

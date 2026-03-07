@@ -39,4 +39,3 @@ private fun formatTime(dateTime: LocalDateTime): String {
 
     return "$hour:$minute"
 }
-

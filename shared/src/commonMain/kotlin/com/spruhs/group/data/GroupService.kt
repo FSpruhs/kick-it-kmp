@@ -16,8 +16,7 @@ import kotlinx.serialization.Serializable
 
 class GroupService(private val groupApi: GroupApi) {
 
-    suspend fun createGroup(name: String): String =
-        groupApi.createGroup(CreateGroupRequest(name))
+    suspend fun createGroup(name: String): String = groupApi.createGroup(CreateGroupRequest(name))
 
     suspend fun updateGroupName(groupId: String, name: String) {
         groupApi.updateGroupName(groupId, name)
@@ -44,8 +43,7 @@ class GroupService(private val groupApi: GroupApi) {
         groupApi.invitedUserResponse(InviteUserResponseRequest(groupId, userId, response))
     }
 
-    suspend fun getGroup(groupId: String): Group =
-        groupApi.getGroup(groupId).toGroup()
+    suspend fun getGroup(groupId: String): Group = groupApi.getGroup(groupId).toGroup()
 
     suspend fun getGroupPlayer(groupId: String, userId: String): PlayerDetails =
         groupApi.getGroupPlayer(groupId, userId).toPlayerDetails()
@@ -60,10 +58,7 @@ interface GroupApi {
     suspend fun createGroup(@Body request: CreateGroupRequest): String
 
     @PUT("v1/group/{groupId}/name")
-    suspend fun updateGroupName(
-        @Path("groupId") groupId: String,
-        @Query("name") name: String
-    )
+    suspend fun updateGroupName(@Path("groupId") groupId: String, @Query("name") name: String)
 
     @PUT("v1/group/{groupId}/players/{userId}")
     suspend fun updatePlayer(
@@ -74,16 +69,10 @@ interface GroupApi {
     )
 
     @DELETE("v1/group/{groupId}/players/{userId}")
-    suspend fun removePlayer(
-        @Path("groupId") groupId: String,
-        @Path("userId") userId: String
-    )
+    suspend fun removePlayer(@Path("groupId") groupId: String, @Path("userId") userId: String)
 
     @POST("v1/group/{groupId}/invited-users/{userId}")
-    suspend fun inviteUser(
-        @Path("groupId") groupId: String,
-        @Path("userId") userId: String
-    )
+    suspend fun inviteUser(@Path("groupId") groupId: String, @Path("userId") userId: String)
 
     @PUT("v1/group/invited-users")
     suspend fun invitedUserResponse(@Body request: InviteUserResponseRequest)
@@ -105,11 +94,7 @@ interface GroupApi {
 data class CreateGroupRequest(val name: String)
 
 @Serializable
-data class InviteUserResponseRequest(
-    val groupId: String,
-    val userId: String,
-    val response: Boolean
-)
+data class InviteUserResponseRequest(val groupId: String, val userId: String, val response: Boolean)
 
 @Serializable
 data class GroupMessage(
@@ -128,10 +113,7 @@ data class GroupPlayerMessage(
 )
 
 @Serializable
-data class GroupNameEntryMessage(
-    val userId: String,
-    val name: String
-)
+data class GroupNameEntryMessage(val userId: String, val name: String)
 
 private fun GroupMessage.toGroup() = Group(
     id = groupId,
@@ -151,4 +133,3 @@ private fun GroupNameEntryMessage.toGroupNameEntry() = GroupNameEntry(
     id = userId,
     name = name
 )
-

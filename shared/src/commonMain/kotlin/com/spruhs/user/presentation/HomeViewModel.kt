@@ -9,10 +9,10 @@ import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
+import kotlin.collections.emptyList
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.emptyList
 
 class HomeViewModel(
     private val userRepository: UserRepository,
@@ -41,12 +41,13 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun fetchUpcomingMatches(userId: String): List<UpcomingMatchPreview> = runCatching {
-        matchRepository.upcomingMatches(userId, dateTimeNow())
-    }.getOrElse {
-        AppLogger.e("HomeViewModel", "Error fetching upcoming matches", it)
-        emptyList()
-    }
+    private suspend fun fetchUpcomingMatches(userId: String): List<UpcomingMatchPreview> =
+        runCatching {
+            matchRepository.upcomingMatches(userId, dateTimeNow())
+        }.getOrElse {
+            AppLogger.e("HomeViewModel", "Error fetching upcoming matches", it)
+            emptyList()
+        }
 
     override fun processIntent(intent: HomeIntent) {
         when (intent) {

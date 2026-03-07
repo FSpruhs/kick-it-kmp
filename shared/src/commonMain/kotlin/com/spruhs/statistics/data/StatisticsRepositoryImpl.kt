@@ -7,9 +7,8 @@ import de.jensklingenberg.ktorfit.http.Path
 import kotlinx.serialization.Serializable
 
 class StatisticsRepositoryImpl(private val statisticsApi: StatisticsApi) : StatisticsRepository {
-    override suspend fun findByUserId(userId: String, groupId: String): PlayerStats {
-        return statisticsApi.findByUserId(userId, groupId).toPlayerStats()
-    }
+    override suspend fun findByUserId(userId: String, groupId: String): PlayerStats =
+        statisticsApi.findByUserId(userId, groupId).toPlayerStats()
 }
 
 interface StatisticsApi {
@@ -34,5 +33,5 @@ data class PlayerStatisticMessage(
     val totalMatches: Int,
     val wins: Int,
     val losses: Int,
-    val draws: Int,
+    val draws: Int
 )

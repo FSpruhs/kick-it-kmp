@@ -22,18 +22,18 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
         before: LocalDateTime?,
         userId: String?,
         limit: Int?
-    ): Flow<List<Match>> {
-        return flow { matchApiClient.getMatchesByGroup(
+    ): Flow<List<Match>> = flow {
+        matchApiClient.getMatchesByGroup(
             groupId = groupId,
             after = after,
             before = before,
             userId = userId,
             limit = limit
-        ) }
+        )
     }
 
-    override suspend fun getMatchById(matchId: String): Flow<Match> {
-        return flow { matchApiClient.getMatchById(matchId) }
+    override suspend fun getMatchById(matchId: String): Flow<Match> = flow {
+        matchApiClient.getMatchById(matchId)
     }
 
     override suspend fun enterMatchResult(
@@ -42,8 +42,12 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
         teamA: List<String>,
         teamB: List<String>
     ) {
-        val teamAResult = teamA.map { PlayerMatchResult(it, calculateResult("A", matchResult), "A") }
-        val teamBResult = teamA.map { PlayerMatchResult(it, calculateResult("B", matchResult), "B") }
+        val teamAResult = teamA.map {
+            PlayerMatchResult(it, calculateResult("A", matchResult), "A")
+        }
+        val teamBResult = teamA.map {
+            PlayerMatchResult(it, calculateResult("B", matchResult), "B")
+        }
         matchApiClient.enterMatchResult(matchId, EnterResultRequest(teamAResult + teamBResult))
     }
 
@@ -53,8 +57,11 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
         MatchResult.TEAM_B -> if (team == "B") "WIN" else "LOSS"
     }
 
-    override suspend fun upcomingMatches(userId: String, after: LocalDateTime): List<UpcomingMatchPreview> {
-        return matchApiClient.getMatchesByPlayer(userId, after).map { UpcomingMatchPreview(
+    override suspend fun upcomingMatches(
+        userId: String,
+        after: LocalDateTime
+    ): List<UpcomingMatchPreview> = matchApiClient.getMatchesByPlayer(userId, after).map {
+        UpcomingMatchPreview(
             id = it.id,
             groupId = it.groupId,
             cadre = it.cadrePlayers.map { player -> player.userId },
@@ -62,7 +69,7 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
             maxPlayers = it.maxPlayer,
             start = it.start,
             playerStatus = toPlayerStatus(it, userId)
-        ) }
+        )
     }
 
     private fun toPlayerStatus(response: MatchResponse, userId: String): PlayerStatus? {
@@ -117,27 +124,17 @@ data class MatchResponse(
     val cadrePlayers: Set<RegisteredPlayerInfoMessage>,
     val deregisteredPlayers: Set<RegisteredPlayerInfoMessage>,
     val waitingBenchPlayers: Set<RegisteredPlayerInfoMessage>,
-    val result: List<PlayerResultMessage>,
+    val result: List<PlayerResultMessage>
 )
 
 @Serializable
 data class RegisteredPlayerInfoMessage(val userId: String, val guestOf: String?)
 
 @Serializable
-data class PlayerResultMessage(
-    val userId: String,
-    val result: String,
-    val team: String
-)
+data class PlayerResultMessage(val userId: String, val result: String, val team: String)
 
 @Serializable
-data class EnterResultRequest(
-    val players: List<PlayerMatchResult>,
-)
+data class EnterResultRequest(val players: List<PlayerMatchResult>)
 
 @Serializable
-data class PlayerMatchResult(
-    val userId: String,
-    val result: String,
-    val team: String
-)
+data class PlayerMatchResult(val userId: String, val result: String, val team: String)
