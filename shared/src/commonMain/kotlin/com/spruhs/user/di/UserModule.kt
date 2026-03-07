@@ -1,14 +1,12 @@
 package com.spruhs.user.di
 
 import com.spruhs.user.application.LoadUserUseCase
-import com.spruhs.user.application.UserApi
 import com.spruhs.user.application.UserRepository
-import com.spruhs.user.data.UserApiImpl
-import com.spruhs.user.data.UserAuthService
-import com.spruhs.user.data.UserNoAuthService
+import com.spruhs.user.data.UserAuthApiClient
+import com.spruhs.user.data.UserNoAuthApiClient
 import com.spruhs.user.data.UserRepositoryImpl
-import com.spruhs.user.data.createUserAuthService
-import com.spruhs.user.data.createUserNoAuthService
+import com.spruhs.user.data.createUserAuthApiClient
+import com.spruhs.user.data.createUserNoAuthApiClient
 import com.spruhs.user.presentation.HomeViewModel
 import com.spruhs.user.presentation.ProfileViewModel
 import com.spruhs.user.presentation.SelectGroupViewModel
@@ -19,15 +17,14 @@ import org.koin.dsl.module
 
 val userModule = module {
     single { LoadUserUseCase(get()) }
-    single<UserRepository> { UserRepositoryImpl(get()) }
-    single<UserApi> { UserApiImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
 
-    single<UserAuthService> {
-        get<Ktorfit>(named("AuthKtorfit")).createUserAuthService()
+    single<UserAuthApiClient> {
+        get<Ktorfit>(named("AuthKtorfit")).createUserAuthApiClient()
     }
 
-    single<UserNoAuthService> {
-        get<Ktorfit>(named("NoAuthKtorfit")).createUserNoAuthService()
+    single<UserNoAuthApiClient> {
+        get<Ktorfit>(named("NoAuthKtorfit")).createUserNoAuthApiClient()
     }
 
     viewModelOf(::HomeViewModel)

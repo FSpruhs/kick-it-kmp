@@ -21,7 +21,7 @@ fun Match.toUpcomingPreview(playerId: String) = UpcomingMatchPreview(
     cadre = cadre,
     minPlayers = minPlayers,
     maxPlayers = maxPlayers,
-    start = start.toString(),
+    start = start,
     playerStatus = calculatePlayerStatus(this, playerId)
 )
 
@@ -46,7 +46,7 @@ data class UpcomingMatchPreview(
     val cadre: List<String>,
     val minPlayers: Int,
     val maxPlayers: Int,
-    val start: String,
+    val start: LocalDateTime,
     val playerStatus: PlayerStatus?
 )
 

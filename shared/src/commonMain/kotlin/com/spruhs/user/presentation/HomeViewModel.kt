@@ -9,9 +9,7 @@ import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.collections.emptyList

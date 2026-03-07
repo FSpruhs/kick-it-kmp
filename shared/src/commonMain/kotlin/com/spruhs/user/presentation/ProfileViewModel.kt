@@ -21,6 +21,7 @@ class ProfileViewModel(private val userRepository: UserRepository) :
                 is ProfileIntent.ChangeNewNickname -> uiStateMutable.update {
                     it.copy(newNickName = intent.newNickname)
                 }
+
                 is ProfileIntent.ChangeNickname -> {
                     if (uiState.value.newNickName != uiState.value.nickName) {
                         userRepository.changeNickname(uiState.value.newNickName)

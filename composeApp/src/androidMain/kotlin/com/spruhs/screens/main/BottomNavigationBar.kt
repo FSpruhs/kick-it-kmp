@@ -3,6 +3,7 @@ package com.spruhs.screens.main
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.SportsSoccer
@@ -31,7 +32,7 @@ fun BottomNavigationBar(
     ) {
         KickItNavigationItem(
             itemName = BottomNavigationItem.SelectGroup.name,
-            imageVector = Icons.Default.Home,
+            imageVector = Icons.Default.Groups,
             contentDescription = "Select Group Icon",
             onClick = onSelectGroupClick,
             selectedItem = selectedItem
@@ -47,7 +48,7 @@ fun BottomNavigationBar(
 
         KickItNavigationItem(
             itemName = BottomNavigationItem.Group.name,
-            imageVector = Icons.Default.Groups,
+            imageVector = Icons.Default.Group,
             contentDescription = "Groups Icon",
             onClick = onGroupClick,
             selectedItem = selectedItem

@@ -6,8 +6,8 @@ import com.spruhs.match.application.GetMatchResultDetailsUseCase
 import com.spruhs.match.application.GetMatchesDataUseCases
 import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.data.MatchRepositoryImpl
-import com.spruhs.match.data.MatchService
-import com.spruhs.match.data.createMatchService
+import com.spruhs.match.data.MatchApiClient
+import com.spruhs.match.data.createMatchApiClient
 import com.spruhs.match.presentation.EnterMatchResultViewModel
 import com.spruhs.match.presentation.MatchResultDetailViewModel
 import com.spruhs.match.presentation.MatchViewModel
@@ -24,7 +24,7 @@ val matchModule = module {
     single { GetMatchResultDetailsUseCase(get(), get(), get()) }
     single { GetMatchesDataUseCases(get(), get()) }
     single<MatchRepository> { MatchRepositoryImpl(get()) }
-    single<MatchService> { get<Ktorfit>(named("AuthKtorfit")).createMatchService() }
+    single<MatchApiClient> { get<Ktorfit>(named("AuthKtorfit")).createMatchApiClient() }
 
     viewModelOf(::EnterMatchResultViewModel)
     viewModelOf(::MatchResultDetailViewModel)

@@ -5,7 +5,9 @@ import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.application.MatchResult
 import com.spruhs.match.application.PlayerStatus
 import com.spruhs.match.application.UpcomingMatchPreview
+import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
-class MatchRepositoryImpl(private val matchService: MatchService) : MatchRepository {
+class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRepository {
     override suspend fun getMatchesByGroup(
         groupId: String,
         after: LocalDateTime?,
@@ -21,7 +23,7 @@ class MatchRepositoryImpl(private val matchService: MatchService) : MatchReposit
         userId: String?,
         limit: Int?
     ): Flow<List<Match>> {
-        return flow { matchService.getMatchesByGroup(
+        return flow { matchApiClient.getMatchesByGroup(
             groupId = groupId,
             after = after,
             before = before,
@@ -31,7 +33,7 @@ class MatchRepositoryImpl(private val matchService: MatchService) : MatchReposit
     }
 
     override suspend fun getMatchById(matchId: String): Flow<Match> {
-        return flow { matchService.getMatchById(matchId) }
+        return flow { matchApiClient.getMatchById(matchId) }
     }
 
     override suspend fun enterMatchResult(
@@ -40,23 +42,44 @@ class MatchRepositoryImpl(private val matchService: MatchService) : MatchReposit
         teamA: List<String>,
         teamB: List<String>
     ) {
-        TODO("Not yet implemented")
+        val teamAResult = teamA.map { PlayerMatchResult(it, calculateResult("A", matchResult), "A") }
+        val teamBResult = teamA.map { PlayerMatchResult(it, calculateResult("B", matchResult), "B") }
+        matchApiClient.enterMatchResult(matchId, EnterResultRequest(teamAResult + teamBResult))
+    }
+
+    private fun calculateResult(team: String, matchResult: MatchResult) = when (matchResult) {
+        MatchResult.DRAW -> "DRAW"
+        MatchResult.TEAM_A -> if (team == "A") "WIN" else "LOSS"
+        MatchResult.TEAM_B -> if (team == "B") "WIN" else "LOSS"
     }
 
     override suspend fun upcomingMatches(userId: String, after: LocalDateTime): List<UpcomingMatchPreview> {
-        return matchService.getMatchesByPlayer(userId, after).map { UpcomingMatchPreview(
+        return matchApiClient.getMatchesByPlayer(userId, after).map { UpcomingMatchPreview(
             id = it.id,
             groupId = it.groupId,
-            cadre = it.cadrePlayers.map { it.userId },
+            cadre = it.cadrePlayers.map { player -> player.userId },
             minPlayers = it.minPlayer,
             maxPlayers = it.maxPlayer,
-            start = it.start.toString(),
-            playerStatus = PlayerStatus.CADRE
+            start = it.start,
+            playerStatus = toPlayerStatus(it, userId)
         ) }
+    }
+
+    private fun toPlayerStatus(response: MatchResponse, userId: String): PlayerStatus? {
+        val cadre = response.cadrePlayers.map { it.userId }.find { it == userId }
+        if (cadre != null) return PlayerStatus.CADRE
+
+        val deregistered = response.deregisteredPlayers.map { it.userId }.find { it == userId }
+        if (deregistered != null) return PlayerStatus.DEREGISTERED
+
+        val waitingBench = response.waitingBenchPlayers.map { it.userId }.find { it == userId }
+        if (waitingBench != null) return PlayerStatus.WAITING_BENCH
+
+        return null
     }
 }
 
-interface MatchService {
+interface MatchApiClient {
     @GET("v1/match/{matchId}")
     suspend fun getMatchById(@Path("matchId")matchId: String): MatchResponse
 
@@ -74,6 +97,12 @@ interface MatchService {
         @Path("playerId") playerId: String,
         @Query("after") after: LocalDateTime?
     ): List<MatchResponse>
+
+    @POST("v1/match/{matchId}/result")
+    suspend fun enterMatchResult(
+        @Path("matchId") matchId: String,
+        @Body matchResult: EnterResultRequest
+    )
 }
 
 @Serializable
@@ -96,6 +125,18 @@ data class RegisteredPlayerInfoMessage(val userId: String, val guestOf: String?)
 
 @Serializable
 data class PlayerResultMessage(
+    val userId: String,
+    val result: String,
+    val team: String
+)
+
+@Serializable
+data class EnterResultRequest(
+    val players: List<PlayerMatchResult>,
+)
+
+@Serializable
+data class PlayerMatchResult(
     val userId: String,
     val result: String,
     val team: String

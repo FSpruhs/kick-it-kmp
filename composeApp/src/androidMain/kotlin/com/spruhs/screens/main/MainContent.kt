@@ -17,8 +17,8 @@ import com.spruhs.navigation.MainScreens
 @Composable
 fun MainContent(onLogout: () -> Unit) {
     var backIcon by remember { mutableStateOf(false) }
-    val items = listOf("home", "group", "match")
-    val selectedItem = remember { mutableStateOf(items[0]) }
+    val items = listOf("selectGroup", "home", "group", "match")
+    val selectedItem = remember { mutableStateOf(items[1]) }
     val navHostController = rememberNavController()
 
     Scaffold(

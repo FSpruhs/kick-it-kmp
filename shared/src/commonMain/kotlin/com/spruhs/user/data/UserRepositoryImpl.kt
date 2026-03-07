@@ -2,14 +2,18 @@ package com.spruhs.user.data
 
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.User
-import com.spruhs.user.application.UserApi
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
+import com.spruhs.user.application.UserRole
+import com.spruhs.user.application.UserStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
+class UserRepositoryImpl(
+    private val userAuthApiClient: UserAuthApiClient,
+    private val userNoAuthApiClient: UserNoAuthApiClient
+    ) : UserRepository {
     private val _userState = MutableStateFlow<User?>(null)
     override val userState: StateFlow<User?> = _userState
 
@@ -22,7 +26,7 @@ class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
     override suspend fun getUserOrThrow(): User =
         userState.value ?: throw IllegalStateException("No user")
 
-    override suspend fun loadUser(id: String): User = userApi.getUser(id).also { user ->
+    override suspend fun loadUser(id: String): User = userAuthApiClient.getUser(id).toUser().also { user ->
         _userState.value = user
 
         user.groups.values
@@ -34,10 +38,10 @@ class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
     }
 
     override suspend fun register(email: String, nickName: String, password: String) =
-        userApi.registerUser(nickName, email, password)
+        userNoAuthApiClient.registerUser(RegisterUserRequest(nickName, email, password))
 
     override suspend fun changeNickname(newNickname: String) {
-        userApi.changeNickName(userState.value?.userId ?: "", newNickname)
+        userAuthApiClient.changeNickName(userState.value?.userId ?: "", newNickname)
         _userState.update { it?.copy(nickName = newNickname) }
     }
 
@@ -71,6 +75,22 @@ class UserRepositoryImpl(private val userApi: UserApi) : UserRepository {
     }
 
     override fun logout() {
-        TODO("Not yet implemented")
+        _userState.value = null
+        _selectedGroup.value = null
     }
 }
+
+private fun UserMessage.toUser() = User(
+    userId = this.id,
+    nickName = this.nickName,
+    email = this.email,
+    groups = this.groups.associate { it.id to it.toUserGroupInfo() },
+    imageUrl = this.imageId
+)
+
+private fun GroupInfoMessage.toUserGroupInfo() = UserGroupInfo(
+    id = this.id,
+    name = this.name,
+    userStatus = UserStatus.valueOf(this.userStatus),
+    userRole = UserRole.valueOf(this.userRole)
+)

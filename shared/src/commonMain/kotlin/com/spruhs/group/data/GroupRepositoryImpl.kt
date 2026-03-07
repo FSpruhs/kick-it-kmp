@@ -7,29 +7,29 @@ import com.spruhs.group.application.PlayerDetails
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 
-class GroupRepositoryImpl : GroupRepository {
+class GroupRepositoryImpl(private val groupService: GroupService) : GroupRepository {
     override suspend fun getGroupNames(groupId: String): List<GroupNameEntry> {
-        TODO("Not yet implemented")
+        return groupService.getGroupNameList(groupId)
     }
 
     override suspend fun getGroup(groupId: String): Group {
-        TODO("Not yet implemented")
+        return groupService.getGroup(groupId)
     }
 
     override suspend fun getPlayer(groupId: String, userId: String): PlayerDetails {
-        TODO("Not yet implemented")
+        return groupService.getGroupPlayer(groupId, userId)
     }
 
     override suspend fun removePlayer(groupId: String, playerId: String) {
-        TODO("Not yet implemented")
+        groupService.removePlayer(groupId, playerId)
     }
 
     override suspend fun createGroup(groupName: String): String {
-        TODO("Not yet implemented")
+        return groupService.createGroup(groupName)
     }
 
     override suspend fun invitePlayer(groupId: String, email: String) {
-        TODO("Not yet implemented")
+        groupService.inviteUser(groupId, email)
     }
 
     override suspend fun updatePlayer(
@@ -38,6 +38,6 @@ class GroupRepositoryImpl : GroupRepository {
         status: UserStatus,
         role: UserRole
     ) {
-        TODO("Not yet implemented")
+        groupService.updatePlayer(groupId, playerId, status, role)
     }
 }
