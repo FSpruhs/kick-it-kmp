@@ -184,7 +184,11 @@ fun AppMainNavigation(
 
         composable(MainScreens.SelectGroupScreen.route) {
             setBackIcon(false)
-            SelectGroupScreen()
+            SelectGroupScreen(
+                onCreateGroupClick = {
+                    navHostController.navigate(MainScreens.CreateGroupScreen.route)
+                }
+            )
         }
     }
 }

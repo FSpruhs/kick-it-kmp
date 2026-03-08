@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,14 +39,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spruhs.user.application.UserGroupInfo
+import com.spruhs.user.presentation.SelectGroupEffect
 import com.spruhs.user.presentation.SelectGroupIntent
 import com.spruhs.user.presentation.SelectGroupUIState
 import com.spruhs.user.presentation.SelectGroupViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SelectGroupScreen(selectGroupViewModel: SelectGroupViewModel = koinViewModel()) {
+fun SelectGroupScreen(
+    onCreateGroupClick: () -> Unit,
+    selectGroupViewModel: SelectGroupViewModel = koinViewModel()
+) {
     val selectGroupUIState by selectGroupViewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        selectGroupViewModel.effects.collect { effect ->
+            when (effect) {
+                is SelectGroupEffect.GroupSelected -> {}
+                is SelectGroupEffect.OnCreateGroupClicked -> {
+                    onCreateGroupClick()
+                }
+            }
+        }
+    }
+
     GroupContent(
         modifier = Modifier.fillMaxSize(),
         selectGroupUIState = selectGroupUIState,
@@ -110,8 +127,6 @@ fun GroupListContent(
     selectGroupUIState: SelectGroupUIState,
     onIntent: (SelectGroupIntent) -> Unit
 ) {
-    val id = selectGroupUIState.id
-
     when {
         selectGroupUIState.isLoading -> {
             CircularProgressIndicator()
@@ -126,7 +141,7 @@ fun GroupListContent(
                 items(selectGroupUIState.groups) { group ->
                     GroupItem(
                         group,
-                        isSelected = group.id == id,
+                        isSelected = group.id == selectGroupUIState.id,
                         onClick = { onIntent(SelectGroupIntent.SelectGroup(it.id)) }
                     )
                 }
