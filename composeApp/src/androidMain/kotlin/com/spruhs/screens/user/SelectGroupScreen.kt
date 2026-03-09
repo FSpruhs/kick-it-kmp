@@ -69,10 +69,10 @@ fun SelectGroupScreen(
         content = { paddingValues ->
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(horizontal = 6.dp)
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 6.dp)
             ) {
                 GroupContent(
                     modifier = Modifier.weight(1f),

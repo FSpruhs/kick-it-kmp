@@ -7,11 +7,7 @@ class LoadUserUseCase(private val userRepository: UserRepository) {
         userRepository.loadUser(userId)
     }
 
-    suspend fun getUser(): User? {
-        return userRepository.userState.firstOrNull()
-    }
+    suspend fun getUser(): User? = userRepository.userState.firstOrNull()
 
-    suspend fun getSelectedGroup(): SelectedGroup? {
-        return userRepository.selectedGroup.firstOrNull()
-    }
+    suspend fun getSelectedGroup(): SelectedGroup? = userRepository.selectedGroup.firstOrNull()
 }

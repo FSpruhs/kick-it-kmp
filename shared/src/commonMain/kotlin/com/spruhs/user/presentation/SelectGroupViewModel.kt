@@ -13,8 +13,7 @@ import kotlinx.coroutines.launch
 class SelectGroupViewModel(
     private val loadUserUseCase: LoadUserUseCase,
     private val selectGroupUseCase: SelectGroupUseCase
-) :
-    BaseViewModel<SelectGroupIntent, SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
+) : BaseViewModel<SelectGroupIntent, SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
 
     init {
         loadState()

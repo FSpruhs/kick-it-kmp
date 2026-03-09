@@ -4,21 +4,17 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
-import com.spruhs.dateTimeNow
-import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.user.application.GetUpcomingMatchesUseCase
 import com.spruhs.user.application.LoadUserUseCase
 import com.spruhs.user.application.UserGroupInfo
-import com.spruhs.user.application.UserRepository
 import kotlin.collections.emptyList
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val loadUserUseCase: LoadUserUseCase,
-    private val getUpcomingMatchesUseCase: GetUpcomingMatchesUseCase,
+    private val getUpcomingMatchesUseCase: GetUpcomingMatchesUseCase
 ) : BaseViewModel<HomeIntent, HomeEffect, HomeUIState>(HomeUIState()) {
 
     init {

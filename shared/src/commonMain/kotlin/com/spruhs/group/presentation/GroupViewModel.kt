@@ -7,14 +7,12 @@ import com.spruhs.group.application.GetGroupDataUseCase
 import com.spruhs.group.application.LeaveGroupUseCase
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.user.application.SelectedGroup
-import com.spruhs.user.application.User
-import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class GroupViewModel(
     private val getGroupDataUseCase: GetGroupDataUseCase,
-    private val leaveGroupUseCase: LeaveGroupUseCase,
+    private val leaveGroupUseCase: LeaveGroupUseCase
 ) : BaseViewModel<GroupIntent, GroupEffect, GroupUiState>(GroupUiState()) {
 
     init {

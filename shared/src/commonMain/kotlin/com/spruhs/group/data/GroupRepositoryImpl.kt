@@ -11,7 +11,8 @@ class GroupRepositoryImpl(private val groupApiClient: GroupApiClient) : GroupRep
     override suspend fun getGroupNames(groupId: String): List<GroupNameEntry> =
         groupApiClient.getGroupNameList(groupId).map { it.toGroupNameEntry() }
 
-    override suspend fun getGroup(groupId: String): Group = groupApiClient.getGroup(groupId).toGroup()
+    override suspend fun getGroup(groupId: String): Group =
+        groupApiClient.getGroup(groupId).toGroup()
 
     override suspend fun getPlayer(groupId: String, userId: String): PlayerDetails =
         groupApiClient.getGroupPlayer(groupId, userId).toPlayerDetails()

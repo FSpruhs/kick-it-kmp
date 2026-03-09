@@ -111,16 +111,16 @@ fun GroupScreen(
 fun GroupPlayersContent(
     modifier: Modifier = Modifier,
     uiState: GroupUiState,
-    onIntent: (GroupIntent
-        ) -> Unit) {
-
+    onIntent: (GroupIntent) -> Unit
+) {
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier,
+    Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = "Players",
             color = MaterialTheme.colorScheme.primary,
@@ -132,30 +132,30 @@ fun GroupPlayersContent(
             color = MaterialTheme.colorScheme.outlineVariant
         )
 
-    ContentUIState(contentUIState = uiState) {
-        if (uiState.players.isEmpty()) {
-            Text(text = "No players found")
-        } else {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(uiState.players) { player ->
-                    PlayerItem(
-                        player,
-                        uiState.groupNames,
-                        onIntent
-                    )
-                }
+        ContentUIState(contentUIState = uiState) {
+            if (uiState.players.isEmpty()) {
+                Text(text = "No players found")
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(uiState.players) { player ->
+                        PlayerItem(
+                            player,
+                            uiState.groupNames,
+                            onIntent
+                        )
+                    }
 
-                item {
-                    CancelButton(
-                        menuExpanded = menuExpanded,
-                        setShowDialog = { showDialog = it },
-                        setMenuExpanded = { menuExpanded = it },
-                        text = "Leave Group"
-                    )
+                    item {
+                        CancelButton(
+                            menuExpanded = menuExpanded,
+                            setShowDialog = { showDialog = it },
+                            setMenuExpanded = { menuExpanded = it },
+                            text = "Leave Group"
+                        )
+                    }
                 }
             }
         }
-    }
     }
 
     if (showDialog) {

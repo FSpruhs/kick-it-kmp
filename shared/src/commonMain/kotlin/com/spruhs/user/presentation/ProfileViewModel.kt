@@ -5,15 +5,13 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.user.application.ChangeNicknameUseCase
 import com.spruhs.user.application.LogoutUseCase
-import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val logoutUseCase: LogoutUseCase,
     private val changeNicknameUseCase: ChangeNicknameUseCase
-    ) :
-    BaseViewModel<ProfileIntent, ProfileEffect, ProfileUIState>(ProfileUIState()) {
+) : BaseViewModel<ProfileIntent, ProfileEffect, ProfileUIState>(ProfileUIState()) {
 
     override fun processIntent(intent: ProfileIntent) {
         viewModelScope.launch {
