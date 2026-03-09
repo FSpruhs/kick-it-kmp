@@ -46,7 +46,11 @@ class UserRepositoryImpl(
         _userState.update { it?.copy(nickName = newNickname) }
     }
 
-    override fun setSelectedGroup(group: UserGroupInfo) {
+    override fun setSelectedGroup(group: UserGroupInfo?) {
+        if (group == null) {
+            _selectedGroup.value = null
+            return
+        }
         _selectedGroup.update { SelectedGroup(group.id, group.name, group.userRole) }
     }
 

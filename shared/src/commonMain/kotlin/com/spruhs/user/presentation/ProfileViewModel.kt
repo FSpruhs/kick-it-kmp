@@ -3,18 +3,23 @@ package com.spruhs.user.presentation
 import androidx.lifecycle.viewModelScope
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
+import com.spruhs.user.application.ChangeNicknameUseCase
+import com.spruhs.user.application.LogoutUseCase
 import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val userRepository: UserRepository) :
+class ProfileViewModel(
+    private val logoutUseCase: LogoutUseCase,
+    private val changeNicknameUseCase: ChangeNicknameUseCase
+    ) :
     BaseViewModel<ProfileIntent, ProfileEffect, ProfileUIState>(ProfileUIState()) {
 
     override fun processIntent(intent: ProfileIntent) {
         viewModelScope.launch {
             when (intent) {
                 is ProfileIntent.Logout -> {
-                    userRepository.logout()
+                    logoutUseCase.logout()
                     effectsMutable.emit(ProfileEffect.Logout)
                 }
 
@@ -24,7 +29,7 @@ class ProfileViewModel(private val userRepository: UserRepository) :
 
                 is ProfileIntent.ChangeNickname -> {
                     if (uiState.value.newNickName != uiState.value.nickName) {
-                        userRepository.changeNickname(uiState.value.newNickName)
+                        changeNicknameUseCase.change(uiState.value.newNickName)
                     }
                 }
             }

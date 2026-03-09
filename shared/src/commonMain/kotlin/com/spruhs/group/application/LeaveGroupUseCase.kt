@@ -10,5 +10,14 @@ class LeaveGroupUseCase(
         val user = userRepository.userState.value ?: throw IllegalStateException("No user")
         groupRepository.removePlayer(groupId, user.userId)
         userRepository.removeGroup(groupId)
+        userRepository.setSelectedGroup(getNewSelectedGroup())
     }
+
+    private fun getNewSelectedGroup() = userRepository
+        .userState
+        .value
+        ?.groups
+        ?.values
+        ?.sortedByDescending { it.lastMatch }
+        ?.firstOrNull()
 }

@@ -4,13 +4,16 @@ import androidx.lifecycle.viewModelScope
 import com.spruhs.AppLogger
 import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
+import com.spruhs.user.application.LoadUserUseCase
+import com.spruhs.user.application.SelectGroupUseCase
 import com.spruhs.user.application.UserGroupInfo
-import com.spruhs.user.application.UserRepository
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SelectGroupViewModel(private val userRepository: UserRepository) :
+class SelectGroupViewModel(
+    private val loadUserUseCase: LoadUserUseCase,
+    private val selectGroupUseCase: SelectGroupUseCase
+) :
     BaseViewModel<SelectGroupIntent, SelectGroupEffect, SelectGroupUIState>(SelectGroupUIState()) {
 
     init {
@@ -19,8 +22,8 @@ class SelectGroupViewModel(private val userRepository: UserRepository) :
 
     private fun loadState() {
         viewModelScope.launch {
-            val user = userRepository.userState.firstOrNull()
-            val selectedGroup = userRepository.selectedGroup.firstOrNull()
+            val user = loadUserUseCase.getUser()
+            val selectedGroup = loadUserUseCase.getSelectedGroup()
             if (user != null) {
                 uiStateMutable.update { state ->
                     state.copy(
@@ -40,18 +43,22 @@ class SelectGroupViewModel(private val userRepository: UserRepository) :
                 effectsMutable.emit(SelectGroupEffect.OnCreateGroupClicked)
             }
             is SelectGroupIntent.SelectGroup -> viewModelScope.launch {
-                val group = uiState.value.groups.firstOrNull { it.id == intent.id }
-                if (group != null) {
-                    userRepository.setSelectedGroup(group)
-                    uiStateMutable.update { it.copy(id = intent.id) }
-                    effectsMutable.emit(SelectGroupEffect.GroupSelected(intent.id))
-                } else {
-                    AppLogger.e(
-                        "SelectGroupViewModel",
-                        "Group with id ${intent.id} not found in state"
-                    )
-                }
+                handleSelectGroup(intent)
             }
+        }
+    }
+
+    private suspend fun handleSelectGroup(intent: SelectGroupIntent.SelectGroup) {
+        val group = uiState.value.groups.firstOrNull { it.id == intent.id }
+        if (group != null) {
+            selectGroupUseCase.selectGroup(group)
+            uiStateMutable.update { it.copy(id = intent.id) }
+            effectsMutable.emit(SelectGroupEffect.GroupSelected(intent.id))
+        } else {
+            AppLogger.e(
+                "SelectGroupViewModel",
+                "Group with id ${intent.id} not found in state"
+            )
         }
     }
 }

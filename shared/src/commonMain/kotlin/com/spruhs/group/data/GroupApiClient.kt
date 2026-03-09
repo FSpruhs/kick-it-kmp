@@ -1,10 +1,5 @@
 package com.spruhs.group.data
 
-import com.spruhs.group.application.Group
-import com.spruhs.group.application.GroupNameEntry
-import com.spruhs.group.application.PlayerDetails
-import com.spruhs.user.application.UserRole
-import com.spruhs.user.application.UserStatus
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
@@ -14,45 +9,7 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.serialization.Serializable
 
-class GroupService(private val groupApi: GroupApi) {
-
-    suspend fun createGroup(name: String): String = groupApi.createGroup(CreateGroupRequest(name))
-
-    suspend fun updateGroupName(groupId: String, name: String) {
-        groupApi.updateGroupName(groupId, name)
-    }
-
-    suspend fun updatePlayer(
-        groupId: String,
-        userId: String,
-        status: UserStatus? = null,
-        role: UserRole? = null
-    ) {
-        groupApi.updatePlayer(groupId, userId, status?.name, role?.name)
-    }
-
-    suspend fun removePlayer(groupId: String, userId: String) {
-        groupApi.removePlayer(groupId, userId)
-    }
-
-    suspend fun inviteUser(groupId: String, userId: String) {
-        groupApi.inviteUser(groupId, userId)
-    }
-
-    suspend fun respondToInvitation(groupId: String, userId: String, response: Boolean) {
-        groupApi.invitedUserResponse(InviteUserResponseRequest(groupId, userId, response))
-    }
-
-    suspend fun getGroup(groupId: String): Group = groupApi.getGroup(groupId).toGroup()
-
-    suspend fun getGroupPlayer(groupId: String, userId: String): PlayerDetails =
-        groupApi.getGroupPlayer(groupId, userId).toPlayerDetails()
-
-    suspend fun getGroupNameList(groupId: String): List<GroupNameEntry> =
-        groupApi.getGroupNameList(groupId).map { it.toGroupNameEntry() }
-}
-
-interface GroupApi {
+interface GroupApiClient {
 
     @POST("v1/group")
     suspend fun createGroup(@Body request: CreateGroupRequest): String
@@ -114,22 +71,3 @@ data class GroupPlayerMessage(
 
 @Serializable
 data class GroupNameEntryMessage(val userId: String, val name: String)
-
-private fun GroupMessage.toGroup() = Group(
-    id = groupId,
-    name = name,
-    players = players.map { it.toPlayerDetails() }
-)
-
-private fun GroupPlayerMessage.toPlayerDetails() = PlayerDetails(
-    id = userId,
-    status = UserStatus.valueOf(status),
-    role = UserRole.valueOf(role),
-    avatarUrl = avatarUrl,
-    email = email
-)
-
-private fun GroupNameEntryMessage.toGroupNameEntry() = GroupNameEntry(
-    id = userId,
-    name = name
-)

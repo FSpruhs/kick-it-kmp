@@ -7,6 +7,8 @@ import com.spruhs.BaseViewModel
 import com.spruhs.dateTimeNow
 import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.application.UpcomingMatchPreview
+import com.spruhs.user.application.GetUpcomingMatchesUseCase
+import com.spruhs.user.application.LoadUserUseCase
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
 import kotlin.collections.emptyList
@@ -15,8 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val userRepository: UserRepository,
-    private val matchRepository: MatchRepository
+    private val loadUserUseCase: LoadUserUseCase,
+    private val getUpcomingMatchesUseCase: GetUpcomingMatchesUseCase,
 ) : BaseViewModel<HomeIntent, HomeEffect, HomeUIState>(HomeUIState()) {
 
     init {
@@ -25,7 +27,7 @@ class HomeViewModel(
 
     private fun loadState() {
         viewModelScope.launch {
-            val user = userRepository.userState.firstOrNull()
+            val user = loadUserUseCase.getUser()
             if (user != null) {
                 uiStateMutable.update { state ->
                     state.copy(
@@ -43,7 +45,7 @@ class HomeViewModel(
 
     private suspend fun fetchUpcomingMatches(userId: String): List<UpcomingMatchPreview> =
         runCatching {
-            matchRepository.upcomingMatches(userId, dateTimeNow())
+            getUpcomingMatchesUseCase.get(userId)
         }.getOrElse {
             AppLogger.e("HomeViewModel", "Error fetching upcoming matches", it)
             emptyList()

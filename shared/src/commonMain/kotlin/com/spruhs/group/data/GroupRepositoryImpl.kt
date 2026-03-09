@@ -7,24 +7,24 @@ import com.spruhs.group.application.PlayerDetails
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
 
-class GroupRepositoryImpl(private val groupService: GroupService) : GroupRepository {
+class GroupRepositoryImpl(private val groupApiClient: GroupApiClient) : GroupRepository {
     override suspend fun getGroupNames(groupId: String): List<GroupNameEntry> =
-        groupService.getGroupNameList(groupId)
+        groupApiClient.getGroupNameList(groupId).map { it.toGroupNameEntry() }
 
-    override suspend fun getGroup(groupId: String): Group = groupService.getGroup(groupId)
+    override suspend fun getGroup(groupId: String): Group = groupApiClient.getGroup(groupId).toGroup()
 
     override suspend fun getPlayer(groupId: String, userId: String): PlayerDetails =
-        groupService.getGroupPlayer(groupId, userId)
+        groupApiClient.getGroupPlayer(groupId, userId).toPlayerDetails()
 
     override suspend fun removePlayer(groupId: String, playerId: String) {
-        groupService.removePlayer(groupId, playerId)
+        groupApiClient.removePlayer(groupId, playerId)
     }
 
     override suspend fun createGroup(groupName: String): String =
-        groupService.createGroup(groupName)
+        groupApiClient.createGroup(CreateGroupRequest(groupName))
 
     override suspend fun invitePlayer(groupId: String, email: String) {
-        groupService.inviteUser(groupId, email)
+        groupApiClient.inviteUser(groupId, email)
     }
 
     override suspend fun updatePlayer(
@@ -33,6 +33,25 @@ class GroupRepositoryImpl(private val groupService: GroupService) : GroupReposit
         status: UserStatus,
         role: UserRole
     ) {
-        groupService.updatePlayer(groupId, playerId, status, role)
+        groupApiClient.updatePlayer(groupId, playerId, status.name, role.name)
     }
 }
+
+private fun GroupMessage.toGroup() = Group(
+    id = groupId,
+    name = name,
+    players = players.map { it.toPlayerDetails() }
+)
+
+private fun GroupPlayerMessage.toPlayerDetails() = PlayerDetails(
+    id = userId,
+    status = UserStatus.valueOf(status),
+    role = UserRole.valueOf(role),
+    avatarUrl = avatarUrl,
+    email = email
+)
+
+private fun GroupNameEntryMessage.toGroupNameEntry() = GroupNameEntry(
+    id = userId,
+    name = name
+)

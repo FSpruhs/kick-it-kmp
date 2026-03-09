@@ -16,9 +16,7 @@ class CreateGroupViewModel(private val createGroupUseCase: CreateGroupUseCase) :
     }
 
     private fun handleCreateGroup() = performAction(
-        onSuccess = { result ->
-            effectsMutable.emit(CreateGroupEffect.GroupCreated)
-        },
+        onSuccess = { effectsMutable.emit(CreateGroupEffect.GroupCreated) },
         onError = { effectsMutable.emit(CreateGroupEffect.ShowError("Error creating group")) },
         action = { createGroupUseCase.create(uiState.value.groupName) }
     )

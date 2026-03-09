@@ -64,7 +64,10 @@ fun AppMainNavigation(
         composable(MainScreens.CreateGroupScreen.route) {
             setBackIcon(true)
             CreateGroupScreen(
-                onCreateGroupSuccess = { navHostController.navigate(MainScreens.HomeScreen.route) }
+                onCreateGroupSuccess = {
+                    navHostController.navigate(MainScreens.HomeScreen.route)
+                    updateBottomNavigation(BottomNavigationItem.Home)
+                }
             )
         }
 

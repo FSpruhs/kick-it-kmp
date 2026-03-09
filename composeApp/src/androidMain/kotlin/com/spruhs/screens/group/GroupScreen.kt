@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -107,9 +108,29 @@ fun GroupScreen(
 }
 
 @Composable
-fun GroupPlayersContent(uiState: GroupUiState, onIntent: (GroupIntent) -> Unit) {
+fun GroupPlayersContent(
+    modifier: Modifier = Modifier,
+    uiState: GroupUiState,
+    onIntent: (GroupIntent
+        ) -> Unit) {
+
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+
+    Column(modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Text(
+            text = "Players",
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(bottom = 8.dp),
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
 
     ContentUIState(contentUIState = uiState) {
         if (uiState.players.isEmpty()) {
@@ -134,6 +155,7 @@ fun GroupPlayersContent(uiState: GroupUiState, onIntent: (GroupIntent) -> Unit) 
                 }
             }
         }
+    }
     }
 
     if (showDialog) {

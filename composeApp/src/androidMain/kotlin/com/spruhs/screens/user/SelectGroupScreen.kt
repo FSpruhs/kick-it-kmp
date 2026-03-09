@@ -27,6 +27,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,10 +64,23 @@ fun SelectGroupScreen(
         }
     }
 
-    GroupContent(
-        modifier = Modifier.fillMaxSize(),
-        selectGroupUIState = selectGroupUIState,
-        onIntent = selectGroupViewModel::processIntent
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        content = { paddingValues ->
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(horizontal = 6.dp)
+            ) {
+                GroupContent(
+                    modifier = Modifier.weight(1f),
+                    selectGroupUIState = selectGroupUIState,
+                    onIntent = selectGroupViewModel::processIntent
+                )
+            }
+        }
     )
 }
 

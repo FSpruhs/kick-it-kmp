@@ -7,10 +7,9 @@ import com.spruhs.group.application.GroupRepository
 import com.spruhs.group.application.InvitePlayerUseCase
 import com.spruhs.group.application.LeaveGroupUseCase
 import com.spruhs.group.application.UpdatePlayerUseCase
-import com.spruhs.group.data.GroupApi
+import com.spruhs.group.data.GroupApiClient
 import com.spruhs.group.data.GroupRepositoryImpl
-import com.spruhs.group.data.GroupService
-import com.spruhs.group.data.createGroupApi
+import com.spruhs.group.data.createGroupApiClient
 import com.spruhs.group.presentation.CreateGroupViewModel
 import com.spruhs.group.presentation.GroupViewModel
 import com.spruhs.group.presentation.InvitePlayerViewModel
@@ -28,11 +27,10 @@ val groupModule = module {
     single { InvitePlayerUseCase(get(), get()) }
     single { UpdatePlayerUseCase(get(), get()) }
 
-    single<GroupApi> {
-        get<Ktorfit>(named("AuthKtorfit")).createGroupApi()
+    single<GroupApiClient> {
+        get<Ktorfit>(named("AuthKtorfit")).createGroupApiClient()
     }
 
-    single { GroupService(get()) }
     single<GroupRepository> { GroupRepositoryImpl(get()) }
 
     viewModelOf(::CreateGroupViewModel)
