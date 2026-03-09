@@ -7,6 +7,7 @@ import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 class GetMatchesDataUseCases(
     private val matchRepository: MatchRepository,
@@ -14,42 +15,27 @@ class GetMatchesDataUseCases(
 ) {
     suspend fun getData(): Result = coroutineScope {
         val selectedGroup = userRepository.getSelectedGroupOrThrow()
-
-        val upcomingMatchesDeferred = async { fetchUpcomingMatches(selectedGroup.id) }
-        val lastMatchesDeferred = async { fetchLastMatches(selectedGroup.id) }
         val user = userRepository.getUserOrThrow()
-
-        val upcomingMatches = upcomingMatchesDeferred.await()
-        val lastMatches = lastMatchesDeferred.await()
+        val matches = fetchMatches(selectedGroup.id)
 
         Result(
             selectedGroup = selectedGroup,
-            upcomingMatches = upcomingMatches.map { it.toUpcomingPreview(user.userId) },
-            lastMatches = lastMatches.map { it.toLastPreview(user.userId) },
+            matches = matches?.map { it.toPreview(user.userId) } ?: emptyList(),
             groups = user.groups
         )
     }
 
-    private suspend fun fetchUpcomingMatches(groupId: String) = matchRepository.getMatchesByGroup(
-        groupId,
-        dateTimeNow(),
-        null,
-        null,
-        null
-    ).first()
-
-    private suspend fun fetchLastMatches(groupId: String) = matchRepository.getMatchesByGroup(
+    private suspend fun fetchMatches(groupId: String) = matchRepository.getMatchesByGroup(
         groupId,
         null,
         dateTimeNow(),
         null,
         null
-    ).first()
+    ).firstOrNull()
 
     data class Result(
         val selectedGroup: SelectedGroup?,
-        val upcomingMatches: List<UpcomingMatchPreview>,
-        val lastMatches: List<PlayerMatchPreview>,
+        val matches: List<PlayerMatchPreview>,
         val groups: Map<String, UserGroupInfo>
     )
 }

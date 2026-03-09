@@ -2,9 +2,7 @@ package com.spruhs.screens.match
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,15 +27,13 @@ import com.spruhs.match.presentation.MatchUIState
 import com.spruhs.match.presentation.MatchViewModel
 import com.spruhs.screens.common.ContentUIState
 import com.spruhs.screens.common.RoleBasedVisibility
-import com.spruhs.screens.group.LastMatchItem
-import com.spruhs.screens.user.UpcomingMatchesItem
+import com.spruhs.screens.group.HeldMatchItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MatchScreen(
     onPlanMatchClick: () -> Unit,
-    onUpcomingMatchClick: (String) -> Unit,
-    onLastMatchClick: (String) -> Unit,
+    onMatchClick: (String) -> Unit,
     matchViewModel: MatchViewModel = koinViewModel()
 ) {
     val uiState by matchViewModel.uiState.collectAsStateWithLifecycle()
@@ -45,8 +41,7 @@ fun MatchScreen(
     LaunchedEffect(Unit) {
         matchViewModel.effects.collect { effect ->
             when (effect) {
-                is MatchEffect.LastMatchSelected -> onLastMatchClick(effect.matchId)
-                is MatchEffect.UpcomingMatchSelected -> onUpcomingMatchClick(effect.matchId)
+                is MatchEffect.MatchSelected -> onMatchClick(effect.matchId)
             }
         }
     }
@@ -95,7 +90,7 @@ fun MatchContent(uiState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Upcoming matches",
+            text = "Matches",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -105,42 +100,14 @@ fun MatchContent(uiState: MatchUIState, onIntent: (MatchIntent) -> Unit) {
         )
 
         ContentUIState(uiState) {
-            if (uiState.upcomingMatches.isEmpty()) {
-                Text(text = "No upcoming matches")
+            if (uiState.matches.isEmpty()) {
+                Text(text = "No matches")
             } else {
                 LazyColumn {
-                    items(uiState.upcomingMatches) { match ->
-                        UpcomingMatchesItem(
-                            upcomingMatchPreview = match,
-                            groups = uiState.groups,
-                            onMatchClick = { onIntent(MatchIntent.SelectUpcomingMatch(it)) }
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Last Matches",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(bottom = 8.dp),
-            color = MaterialTheme.colorScheme.outlineVariant
-        )
-
-        ContentUIState(uiState) {
-            if (uiState.lastMatches.isEmpty()) {
-                Text(text = "No last matches")
-            } else {
-                LazyColumn {
-                    items(uiState.lastMatches) { match ->
-                        LastMatchItem(
-                            lastMatch = match,
-                            onClick = { onIntent(MatchIntent.SelectLastMatch(it)) }
+                    items(uiState.matches) { match ->
+                        HeldMatchItem(
+                            match = match,
+                            onClick = { onIntent(MatchIntent.SelectMatch(it)) }
                         )
                     }
                 }

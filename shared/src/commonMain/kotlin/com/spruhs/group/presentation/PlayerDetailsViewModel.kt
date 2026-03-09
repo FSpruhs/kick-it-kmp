@@ -8,7 +8,7 @@ import com.spruhs.group.application.PlayerDetails
 import com.spruhs.group.application.RemovePlayerUseCase
 import com.spruhs.group.application.UpdatePlayerUseCase
 import com.spruhs.match.application.PlayerMatchPreview
-import com.spruhs.match.application.toLastPreview
+import com.spruhs.match.application.toPreview
 import com.spruhs.statistics.application.PlayerStats
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRole
@@ -35,7 +35,7 @@ class PlayerDetailsViewModel(
                         groupNames = result.groupNames,
                         playerStats = result.statistics,
                         lastMatches = result.lastMatches.map { match ->
-                            match.toLastPreview(playerId)
+                            match.toPreview(playerId)
                         },
                         selectedGroup = result.selectedGroup
                     )

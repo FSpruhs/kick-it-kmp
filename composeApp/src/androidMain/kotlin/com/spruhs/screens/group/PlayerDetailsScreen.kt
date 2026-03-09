@@ -371,7 +371,7 @@ fun LastMatchesList(
 ) {
     Column {
         lastMatches.forEach { match ->
-            LastMatchItem(match) {
+            HeldMatchItem(match) {
                 onIntent(PlayerDetailsIntent.SelectLastMatch(it))
             }
         }
@@ -379,7 +379,7 @@ fun LastMatchesList(
 }
 
 @Composable
-fun LastMatchItem(lastMatch: PlayerMatchPreview, onClick: (String) -> Unit) {
+fun HeldMatchItem(match: PlayerMatchPreview, onClick: (String) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier =
@@ -387,10 +387,10 @@ fun LastMatchItem(lastMatch: PlayerMatchPreview, onClick: (String) -> Unit) {
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                onClick(lastMatch.id)
+                onClick(match.id)
             },
         colors =
-        when (lastMatch.playerResult) {
+        when (match.playerResult) {
             PlayerMatchResult.WIN -> CardDefaults.cardColors(containerColor = CustomColor.Green)
             PlayerMatchResult.LOSS -> CardDefaults.cardColors(containerColor = CustomColor.Red)
             PlayerMatchResult.DRAW -> CardDefaults.cardColors(containerColor = CustomColor.Gray)
@@ -408,13 +408,13 @@ fun LastMatchItem(lastMatch: PlayerMatchPreview, onClick: (String) -> Unit) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = lastMatch.start,
+                    text = match.start,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
 
             Column(horizontalAlignment = Alignment.End) {
-                when (lastMatch.playerResult) {
+                when (match.playerResult) {
                     PlayerMatchResult.WIN ->
                         Icon(
                             imageVector = Icons.Outlined.Star,

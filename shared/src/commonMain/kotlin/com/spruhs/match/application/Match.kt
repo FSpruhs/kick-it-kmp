@@ -33,7 +33,7 @@ private fun calculatePlayerStatus(match: Match, userId: String) = when {
     else -> null
 }
 
-fun Match.toLastPreview(playerId: String) = PlayerMatchPreview(
+fun Match.toPreview(playerId: String) = PlayerMatchPreview(
     id = id,
     playerResult = this.result.find { it.userId == playerId }?.result ?: PlayerMatchResult.DRAW,
     start = start.toString(),

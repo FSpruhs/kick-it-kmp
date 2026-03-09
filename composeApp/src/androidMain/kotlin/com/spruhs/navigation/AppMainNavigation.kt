@@ -165,12 +165,7 @@ fun AppMainNavigation(
                 onPlanMatchClick = {
                     navHostController.navigate(MainScreens.PlanMatchScreen.route)
                 },
-                onUpcomingMatchClick = { matchId ->
-                    navHostController.navigate(
-                        "${MainScreens.UpcomingMatchDetailScreen.route}/$matchId"
-                    )
-                },
-                onLastMatchClick = { matchId ->
+                onMatchClick = { matchId ->
                     navHostController.navigate(
                         "${MainScreens.MatchResultDetailScreen.route}/$matchId"
                     )

@@ -5,7 +5,6 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.GetMatchesDataUseCases
 import com.spruhs.match.application.PlayerMatchPreview
-import com.spruhs.match.application.UpcomingMatchPreview
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserGroupInfo
 import kotlinx.coroutines.flow.update
@@ -23,8 +22,7 @@ class MatchViewModel(private val getMatchesDataUseCases: GetMatchesDataUseCases)
                 uiStateMutable.update {
                     it.copy(
                         selectedGroup = result.selectedGroup,
-                        upcomingMatches = result.upcomingMatches,
-                        lastMatches = result.lastMatches,
+                        matches = result.matches,
                         groups = result.groups
                     )
                 }
@@ -34,14 +32,9 @@ class MatchViewModel(private val getMatchesDataUseCases: GetMatchesDataUseCases)
 
     override fun processIntent(intent: MatchIntent) {
         when (intent) {
-            is MatchIntent.SelectLastMatch -> {
+            is MatchIntent.SelectMatch -> {
                 viewModelScope.launch {
-                    effectsMutable.emit(MatchEffect.LastMatchSelected(intent.matchId))
-                }
-            }
-            is MatchIntent.SelectUpcomingMatch -> {
-                viewModelScope.launch {
-                    effectsMutable.emit(MatchEffect.UpcomingMatchSelected(intent.matchId))
+                    effectsMutable.emit(MatchEffect.MatchSelected(intent.matchId))
                 }
             }
         }
@@ -52,8 +45,7 @@ data class MatchUIState(
     override val isLoading: Boolean = false,
     override val error: String? = null,
     val selectedGroup: SelectedGroup? = null,
-    val upcomingMatches: List<UpcomingMatchPreview> = emptyList(),
-    val lastMatches: List<PlayerMatchPreview> = emptyList(),
+    val matches: List<PlayerMatchPreview> = emptyList(),
     val groups: Map<String, UserGroupInfo> = emptyMap()
 ) : BaseUIState<MatchUIState> {
     override fun copyWith(isLoading: Boolean, error: String?): MatchUIState =
@@ -61,11 +53,9 @@ data class MatchUIState(
 }
 
 sealed class MatchEffect {
-    data class UpcomingMatchSelected(val matchId: String) : MatchEffect()
-    data class LastMatchSelected(val matchId: String) : MatchEffect()
+    data class MatchSelected(val matchId: String) : MatchEffect()
 }
 
 sealed class MatchIntent {
-    data class SelectUpcomingMatch(val matchId: String) : MatchIntent()
-    data class SelectLastMatch(val matchId: String) : MatchIntent()
+    data class SelectMatch(val matchId: String) : MatchIntent()
 }
