@@ -4,9 +4,7 @@ import com.spruhs.dateTimeNow
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.application.UserRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 
 class GetMatchesDataUseCases(
