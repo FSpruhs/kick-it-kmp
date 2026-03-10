@@ -4,7 +4,6 @@ import com.spruhs.group.application.GroupRepository
 import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
 
 class GetEnterResultDataUseCase(
     private val groupRepository: GroupRepository,

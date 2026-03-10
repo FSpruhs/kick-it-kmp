@@ -9,7 +9,6 @@ import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
 
 class GetPlayerDetailsUseCase(
     private val userRepository: UserRepository,

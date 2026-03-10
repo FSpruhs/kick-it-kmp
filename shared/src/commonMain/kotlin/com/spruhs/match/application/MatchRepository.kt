@@ -1,6 +1,5 @@
 package com.spruhs.match.application
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
 interface MatchRepository {

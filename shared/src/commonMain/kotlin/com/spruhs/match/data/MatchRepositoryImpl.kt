@@ -12,8 +12,6 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -25,12 +23,12 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
         userId: String?,
         limit: Int?
     ): List<Match> = matchApiClient.getMatchesByGroup(
-            groupId = groupId,
-            after = after,
-            before = before,
-            userId = userId,
-            limit = limit
-        ).map { it.toMatch() }
+        groupId = groupId,
+        after = after,
+        before = before,
+        userId = userId,
+        limit = limit
+    ).map { it.toMatch() }
 
     override suspend fun getMatchById(matchId: String): Match =
         matchApiClient.getMatchById(matchId).toMatch()
@@ -85,19 +83,18 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
     }
 }
 
-private fun MatchResponse.toMatch() =
-    Match(
-        id = this.id,
-        groupId = this.groupId,
-        start = this.start,
-        playground = this.playground,
-        maxPlayers = this.maxPlayer,
-        minPlayers = this.minPlayer,
-        cadre = this.cadrePlayers.map { it.userId },
-        waitingBench = this.waitingBenchPlayers.map { it.userId },
-        deregistered = this.deregisteredPlayers.map { it.userId },
-        result = this.result.map { it.toPlayerResult() }
-    )
+private fun MatchResponse.toMatch() = Match(
+    id = this.id,
+    groupId = this.groupId,
+    start = this.start,
+    playground = this.playground,
+    maxPlayers = this.maxPlayer,
+    minPlayers = this.minPlayer,
+    cadre = this.cadrePlayers.map { it.userId },
+    waitingBench = this.waitingBenchPlayers.map { it.userId },
+    deregistered = this.deregisteredPlayers.map { it.userId },
+    result = this.result.map { it.toPlayerResult() }
+)
 
 private fun PlayerResultMessage.toPlayerResult() = PlayerResult(
     userId = this.userId,
