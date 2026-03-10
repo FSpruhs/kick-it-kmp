@@ -10,9 +10,9 @@ interface MatchRepository {
         before: LocalDateTime? = null,
         userId: String? = null,
         limit: Int? = null
-    ): Flow<List<Match>>
+    ): List<Match>
 
-    suspend fun getMatchById(matchId: String): Flow<Match>
+    suspend fun getMatchById(matchId: String): Match
 
     suspend fun enterMatchResult(
         matchId: String,

@@ -35,9 +35,10 @@ private fun calculatePlayerStatus(match: Match, userId: String) = when {
 
 fun Match.toPreview(playerId: String) = PlayerMatchPreview(
     id = id,
-    playerResult = this.result.find { it.userId == playerId }?.result ?: PlayerMatchResult.DRAW,
-    start = start.toString(),
-    playground = playground
+    playerResult = this.result.find { it.userId == playerId }?.result,
+    start = start,
+    playground = playground,
+    isResultEntered = this.result.isNotEmpty()
 )
 
 data class UpcomingMatchPreview(
@@ -52,9 +53,10 @@ data class UpcomingMatchPreview(
 
 data class PlayerMatchPreview(
     val id: String,
-    val playerResult: PlayerMatchResult,
-    val start: String,
-    val playground: String?
+    val playerResult: PlayerMatchResult?,
+    val start: LocalDateTime,
+    val playground: String?,
+    val isResultEntered: Boolean
 )
 
 data class PlayerResult(val userId: String, val result: PlayerMatchResult, val team: PlayerTeam)

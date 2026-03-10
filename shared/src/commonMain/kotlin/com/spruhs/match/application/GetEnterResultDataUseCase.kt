@@ -44,7 +44,7 @@ class GetEnterResultDataUseCase(
     private suspend fun fetchData(matchId: String): Pair<Match, Map<String, String>> =
         coroutineScope {
             val selectedGroupDeferred = async { userRepository.getSelectedGroupOrThrow() }
-            val matchDeferred = async { matchRepository.getMatchById(matchId).first() }
+            val matchDeferred = async { matchRepository.getMatchById(matchId) }
 
             val selectedGroup = selectedGroupDeferred.await()
             val groupPlayers = groupRepository.getGroupNames(selectedGroup.id).associate {

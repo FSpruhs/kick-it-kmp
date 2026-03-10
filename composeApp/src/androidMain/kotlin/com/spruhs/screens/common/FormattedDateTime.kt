@@ -23,6 +23,21 @@ fun FormattedDateTimeInline(
     )
 }
 
+@Composable
+fun FormattedDateInline(
+    dateTime: LocalDateTime,
+    modifier: Modifier = Modifier,
+    style: TextStyle = LocalTextStyle.current,
+    color: Color = Color.Unspecified
+) {
+    Text(
+        text = formatDate(dateTime),
+        modifier = modifier,
+        style = style,
+        color = color
+    )
+}
+
 private fun formatDate(dateTime: LocalDateTime): String {
     val dayOfWeek = dateTime.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }
         .take(2)

@@ -31,7 +31,7 @@ class GetPlayerDetailsUseCase(
                     dateTimeNow(),
                     playerId,
                     3
-                ).first()
+                )
             }
 
             Result(

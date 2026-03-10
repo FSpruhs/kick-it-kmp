@@ -18,7 +18,7 @@ class GetMatchesDataUseCases(
 
         Result(
             selectedGroup = selectedGroup,
-            matches = matches?.map { it.toPreview(user.userId) } ?: emptyList(),
+            matches = matches.map { it.toPreview(user.userId) }.sortedByDescending { it.start },
             groups = user.groups
         )
     }
@@ -29,7 +29,7 @@ class GetMatchesDataUseCases(
         dateTimeNow(),
         null,
         null
-    ).firstOrNull()
+    )
 
     data class Result(
         val selectedGroup: SelectedGroup?,

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Handshake
+import androidx.compose.material.icons.outlined.HourglassTop
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -60,6 +61,7 @@ import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.permission.PermissionManager
 import com.spruhs.screens.common.ConfirmAlertDialog
 import com.spruhs.screens.common.ContentUIState
+import com.spruhs.screens.common.FormattedDateInline
 import com.spruhs.screens.common.SubmitButton
 import com.spruhs.screens.common.UserImage
 import com.spruhs.statistics.application.PlayerStats
@@ -394,6 +396,7 @@ fun HeldMatchItem(match: PlayerMatchPreview, onClick: (String) -> Unit) {
             PlayerMatchResult.WIN -> CardDefaults.cardColors(containerColor = CustomColor.Green)
             PlayerMatchResult.LOSS -> CardDefaults.cardColors(containerColor = CustomColor.Red)
             PlayerMatchResult.DRAW -> CardDefaults.cardColors(containerColor = CustomColor.Gray)
+            null -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         }
     ) {
         Row(
@@ -407,31 +410,40 @@ fun HeldMatchItem(match: PlayerMatchPreview, onClick: (String) -> Unit) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = match.start,
-                    style = MaterialTheme.typography.bodyLarge
+                FormattedDateInline(
+                    dateTime = match.start,
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
 
             Column(horizontalAlignment = Alignment.End) {
-                when (match.playerResult) {
-                    PlayerMatchResult.WIN ->
-                        Icon(
-                            imageVector = Icons.Outlined.Star,
-                            contentDescription = "Won"
-                        )
+                if (match.isResultEntered) {
+                    when (match.playerResult) {
+                        PlayerMatchResult.WIN ->
+                            Icon(
+                                imageVector = Icons.Outlined.Star,
+                                contentDescription = "Won"
+                            )
 
-                    PlayerMatchResult.LOSS ->
-                        Icon(
-                            imageVector = Icons.Outlined.Cancel,
-                            contentDescription = "Lost"
-                        )
+                        PlayerMatchResult.LOSS ->
+                            Icon(
+                                imageVector = Icons.Outlined.Cancel,
+                                contentDescription = "Lost"
+                            )
 
-                    PlayerMatchResult.DRAW ->
-                        Icon(
-                            imageVector = Icons.Outlined.Handshake,
-                            contentDescription = "Draw"
-                        )
+                        PlayerMatchResult.DRAW ->
+                            Icon(
+                                imageVector = Icons.Outlined.Handshake,
+                                contentDescription = "Draw"
+                            )
+
+                        null -> {}
+                    }
+                } else {
+                    Icon(
+                        imageVector = Icons.Outlined.HourglassTop,
+                        contentDescription = "Result not entered"
+                    )
                 }
             }
         }

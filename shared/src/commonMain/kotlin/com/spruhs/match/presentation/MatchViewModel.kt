@@ -5,6 +5,7 @@ import com.spruhs.BaseUIState
 import com.spruhs.BaseViewModel
 import com.spruhs.match.application.GetMatchesDataUseCases
 import com.spruhs.match.application.PlayerMatchPreview
+import com.spruhs.match.presentation.MatchEffect.*
 import com.spruhs.user.application.SelectedGroup
 import com.spruhs.user.application.UserGroupInfo
 import kotlinx.coroutines.flow.update
@@ -34,7 +35,13 @@ class MatchViewModel(private val getMatchesDataUseCases: GetMatchesDataUseCases)
         when (intent) {
             is MatchIntent.SelectMatch -> {
                 viewModelScope.launch {
-                    effectsMutable.emit(MatchEffect.MatchSelected(intent.matchId))
+                    effectsMutable.emit(MatchSelected(intent.matchId))
+                }
+            }
+
+            is MatchIntent.PlanMatch -> {
+                viewModelScope.launch {
+                    effectsMutable.emit(PlanMatchClicked)
                 }
             }
         }
@@ -54,8 +61,10 @@ data class MatchUIState(
 
 sealed class MatchEffect {
     data class MatchSelected(val matchId: String) : MatchEffect()
+    object PlanMatchClicked : MatchEffect()
 }
 
 sealed class MatchIntent {
     data class SelectMatch(val matchId: String) : MatchIntent()
+    object PlanMatch : MatchIntent()
 }

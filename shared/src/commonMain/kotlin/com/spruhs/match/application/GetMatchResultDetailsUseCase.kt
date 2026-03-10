@@ -6,7 +6,6 @@ import com.spruhs.user.application.UserRepository
 import kotlin.collections.firstOrNull
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
 
 class GetMatchResultDetailsUseCase(
     private val matchRepository: MatchRepository,
@@ -14,7 +13,7 @@ class GetMatchResultDetailsUseCase(
     private val groupRepository: GroupRepository
 ) {
     suspend fun getData(matchId: String): Result = coroutineScope {
-        val matchDeferred = async { matchRepository.getMatchById(matchId).first() }
+        val matchDeferred = async { matchRepository.getMatchById(matchId) }
         val selectedGroup = userRepository.getSelectedGroupOrThrow()
         val groupNameListDeferred = async { groupRepository.getGroupNames(selectedGroup.id) }
         val match = matchDeferred.await()

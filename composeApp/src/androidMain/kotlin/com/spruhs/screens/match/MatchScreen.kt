@@ -42,6 +42,7 @@ fun MatchScreen(
         matchViewModel.effects.collect { effect ->
             when (effect) {
                 is MatchEffect.MatchSelected -> onMatchClick(effect.matchId)
+                is MatchEffect.PlanMatchClicked -> onPlanMatchClick()
             }
         }
     }
@@ -69,7 +70,7 @@ fun MatchScreen(
             ) {
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    onClick = { onPlanMatchClick() }
+                    onClick = { matchViewModel.processIntent(MatchIntent.PlanMatch) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
