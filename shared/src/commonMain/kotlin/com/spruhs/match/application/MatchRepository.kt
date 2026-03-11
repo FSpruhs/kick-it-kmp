@@ -21,4 +21,6 @@ interface MatchRepository {
     )
 
     suspend fun upcomingMatches(userId: String, after: LocalDateTime): List<UpcomingMatchPreview>
+
+    suspend fun planMatch(command: PlanMatchCommand)
 }

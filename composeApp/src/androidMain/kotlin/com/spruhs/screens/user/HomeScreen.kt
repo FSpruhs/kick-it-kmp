@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spruhs.match.application.PlayerStatus
 import com.spruhs.match.application.UpcomingMatchPreview
-import com.spruhs.screens.common.FormattedDateTimeInline
+import com.spruhs.screens.common.FormattedDateTime
 import com.spruhs.screens.common.PlayerMatchStatusIcon
 import com.spruhs.user.application.UserGroupInfo
 import com.spruhs.user.presentation.HomeEffect
@@ -174,7 +174,7 @@ fun UpcomingMatchesItem(
             }
 
             Column(modifier = Modifier.weight(2f)) {
-                FormattedDateTimeInline(
+                FormattedDateTime(
                     dateTime = upcomingMatchPreview.start,
                     style = MaterialTheme.typography.titleMedium
                 )

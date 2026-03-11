@@ -30,6 +30,7 @@ class HomeViewModel(
                         userId = user.userId,
                         groups = user.groups,
                         upcomingMatches = fetchUpcomingMatches(user.userId)
+                            .sortedByDescending { it.start }
                     )
                 }
             } else {

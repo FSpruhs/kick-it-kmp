@@ -61,7 +61,7 @@ import com.spruhs.match.application.PlayerMatchResult
 import com.spruhs.permission.PermissionManager
 import com.spruhs.screens.common.ConfirmAlertDialog
 import com.spruhs.screens.common.ContentUIState
-import com.spruhs.screens.common.FormattedDateInline
+import com.spruhs.screens.common.FormattedDate
 import com.spruhs.screens.common.SubmitButton
 import com.spruhs.screens.common.UserImage
 import com.spruhs.statistics.application.PlayerStats
@@ -410,7 +410,7 @@ fun HeldMatchItem(match: PlayerMatchPreview, onClick: (String) -> Unit) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                FormattedDateInline(
+                FormattedDate(
                     dateTime = match.start,
                     style = MaterialTheme.typography.titleMedium
                 )

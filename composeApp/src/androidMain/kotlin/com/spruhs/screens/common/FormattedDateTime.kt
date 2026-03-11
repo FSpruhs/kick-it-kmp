@@ -9,14 +9,14 @@ import androidx.compose.ui.text.TextStyle
 import kotlinx.datetime.LocalDateTime
 
 @Composable
-fun FormattedDateTimeInline(
+fun FormattedDateTime(
     dateTime: LocalDateTime,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalTextStyle.current,
     color: Color = Color.Unspecified
 ) {
     Text(
-        text = "${formatDate(dateTime)} • ${formatTime(dateTime)}",
+        text = dateTime.formatDateTime(),
         modifier = modifier,
         style = style,
         color = color
@@ -24,33 +24,37 @@ fun FormattedDateTimeInline(
 }
 
 @Composable
-fun FormattedDateInline(
+fun FormattedDate(
     dateTime: LocalDateTime,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalTextStyle.current,
     color: Color = Color.Unspecified
 ) {
     Text(
-        text = formatDate(dateTime),
+        text = dateTime.formatDate(),
         modifier = modifier,
         style = style,
         color = color
     )
 }
 
-private fun formatDate(dateTime: LocalDateTime): String {
-    val dayOfWeek = dateTime.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }
+fun LocalDateTime.formatDate(): String {
+    val dayOfWeek = this.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }
         .take(2)
-    val day = dateTime.date.day.toString().padStart(2, '0')
-    val month = dateTime.date.month.ordinal.plus(1).toString().padStart(2, '0')
-    val year = dateTime.year
+    val day = this.date.day.toString().padStart(2, '0')
+    val month = this.date.month.ordinal.plus(1).toString().padStart(2, '0')
+    val year = this.year
 
     return "$dayOfWeek, $day.$month.$year"
 }
 
-private fun formatTime(dateTime: LocalDateTime): String {
-    val hour = dateTime.hour.toString().padStart(2, '0')
-    val minute = dateTime.minute.toString().padStart(2, '0')
+fun LocalDateTime.formatTime(): String {
+    val hour = this.hour.toString().padStart(2, '0')
+    val minute = this.minute.toString().padStart(2, '0')
 
     return "$hour:$minute"
+}
+
+fun LocalDateTime.formatDateTime(): String {
+    return "${formatDate()} • ${formatTime()}"
 }

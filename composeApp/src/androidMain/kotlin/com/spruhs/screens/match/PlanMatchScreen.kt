@@ -26,11 +26,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.spruhs.dateTimeNow
 import com.spruhs.match.presentation.PlanMatchEffect
 import com.spruhs.match.presentation.PlanMatchIntent
 import com.spruhs.match.presentation.PlanMatchUIState
 import com.spruhs.match.presentation.PlanMatchViewModel
+import com.spruhs.screens.common.FormattedDateTime
 import com.spruhs.screens.common.SubmitButton
+import com.spruhs.screens.common.formatDateTime
 import java.util.Calendar
 import kotlinx.datetime.LocalDateTime
 import org.koin.androidx.compose.koinViewModel
@@ -141,24 +144,20 @@ fun PlanMatchForm(
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(text = planMatchUiState.start?.toString() ?: "Select Date & Time")
+                Text(text = planMatchUiState.start?.formatDateTime() ?: "Select Date & Time")
             }
 
             OutlinedTextField(
                 value = planMatchUiState.location,
-                onValueChange = {
-                    if (it.length <= 50) {
-                        onIntent(PlanMatchIntent.SelectLocation(it))
-                    }
-                },
+                onValueChange = { onIntent(PlanMatchIntent.SelectLocation(it)) },
                 label = { Text("(optional) Location (max. 50 Chars)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             PlayerCountInputs(
                 planMatchUiState = planMatchUiState,
-                onMinPlayersChange = { PlanMatchIntent.SelectMinPlayers(it) },
-                onMaxPlayersChange = { PlanMatchIntent.SelectMinPlayers(it) }
+                onMinPlayersChange = { onIntent(PlanMatchIntent.SelectMinPlayers(it)) },
+                onMaxPlayersChange = { onIntent(PlanMatchIntent.SelectMaxPlayers(it)) }
             )
         }
         SubmitButton(
@@ -175,29 +174,23 @@ fun PlanMatchForm(
 @Composable
 fun PlayerCountInputs(
     planMatchUiState: PlanMatchUIState,
-    onMinPlayersChange: (Int) -> Unit,
-    onMaxPlayersChange: (Int) -> Unit
+    onMinPlayersChange: (String) -> Unit,
+    onMaxPlayersChange: (String) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         OutlinedTextField(
-            value = planMatchUiState.minPlayers.toString(),
-            onValueChange = {
-                val intValue = it.toIntOrNull() ?: 0
-                onMinPlayersChange(intValue)
-            },
+            value = planMatchUiState.minPlayers,
+            onValueChange = { onMinPlayersChange(it) },
             label = { Text("min. Player") },
             modifier = Modifier.weight(1f),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         OutlinedTextField(
-            value = planMatchUiState.maxPlayers.toString(),
-            onValueChange = {
-                val intValue = it.toIntOrNull() ?: 0
-                onMaxPlayersChange(intValue)
-            },
+            value = planMatchUiState.maxPlayers,
+            onValueChange = { onMaxPlayersChange(it) },
             label = { Text("max. Player") },
             modifier = Modifier.weight(1f),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -206,7 +199,17 @@ fun PlayerCountInputs(
 }
 
 private fun isSubmitButtonEnabled(planMatchUiState: PlanMatchUIState) =
-    planMatchUiState.start != null && planMatchUiState.minPlayers <= planMatchUiState.maxPlayers
+    validateStart(planMatchUiState) && validatePlayerCount(planMatchUiState)
+
+private fun validatePlayerCount(uiState: PlanMatchUIState): Boolean {
+    val min = uiState.minPlayers.toIntOrNull() ?: return false
+    val max = uiState.maxPlayers.toIntOrNull() ?: return false
+    return min >= 0 && max >= 0 && min <= max
+}
+
+private fun validateStart(uiState: PlanMatchUIState) = uiState.start
+        ?.let {it > dateTimeNow() }
+        ?: false
 
 fun showDateTimePicker(context: Context, onDateTimeSelected: (LocalDateTime) -> Unit) {
     val now = Calendar.getInstance()

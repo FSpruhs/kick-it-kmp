@@ -3,6 +3,7 @@ package com.spruhs.match.data
 import com.spruhs.match.application.Match
 import com.spruhs.match.application.MatchRepository
 import com.spruhs.match.application.MatchResult
+import com.spruhs.match.application.PlanMatchCommand
 import com.spruhs.match.application.PlayerResult
 import com.spruhs.match.application.PlayerStatus
 import com.spruhs.match.application.PlayerTeam
@@ -12,6 +13,8 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -69,6 +72,11 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
         )
     }
 
+    override suspend fun planMatch(command: PlanMatchCommand) {
+         matchApiClient.planMatch(command.toRequest())
+            .let { if (!it.status.isSuccess()) throw IllegalStateException("Failed to plan match: ${it.status}") }
+    }
+
     private fun toPlayerStatus(response: MatchResponse, userId: String): PlayerStatus? {
         val cadre = response.cadrePlayers.map { it.userId }.find { it == userId }
         if (cadre != null) return PlayerStatus.CADRE
@@ -82,6 +90,14 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
         return null
     }
 }
+
+private fun PlanMatchCommand.toRequest() = PlanMatchRequest(
+    groupId = this.groupId,
+    start = this.start,
+    playground = this.location,
+    maxPlayer = this.maxPlayers,
+    minPlayer = this.minPlayers
+)
 
 private fun MatchResponse.toMatch() = Match(
     id = this.id,
@@ -135,7 +151,19 @@ interface MatchApiClient {
         @Path("matchId") matchId: String,
         @Body matchResult: EnterResultRequest
     )
+
+    @POST("v1/match")
+    suspend fun planMatch(@Body request: PlanMatchRequest): HttpResponse
 }
+
+@Serializable
+data class PlanMatchRequest(
+    val groupId: String,
+    val start: LocalDateTime,
+    val playground: String?,
+    val maxPlayer: Int,
+    val minPlayer: Int
+)
 
 @Serializable
 data class MatchResponse(

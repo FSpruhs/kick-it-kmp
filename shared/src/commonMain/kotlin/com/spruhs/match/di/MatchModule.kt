@@ -5,6 +5,7 @@ import com.spruhs.match.application.GetEnterResultDataUseCase
 import com.spruhs.match.application.GetMatchResultDetailsUseCase
 import com.spruhs.match.application.GetMatchesDataUseCases
 import com.spruhs.match.application.MatchRepository
+import com.spruhs.match.application.PlanMatchUseCase
 import com.spruhs.match.data.MatchApiClient
 import com.spruhs.match.data.MatchRepositoryImpl
 import com.spruhs.match.data.createMatchApiClient
@@ -23,6 +24,7 @@ val matchModule = module {
     single { EnterResultUseCase(get()) }
     single { GetMatchResultDetailsUseCase(get(), get(), get()) }
     single { GetMatchesDataUseCases(get(), get()) }
+    single { PlanMatchUseCase(get(), get()) }
     single<MatchRepository> { MatchRepositoryImpl(get()) }
     single<MatchApiClient> { get<Ktorfit>(named("AuthKtorfit")).createMatchApiClient() }
 
