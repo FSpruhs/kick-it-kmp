@@ -11,7 +11,9 @@ class PlanMatchViewModel(private val planMatchUseCase: PlanMatchUseCase) :
     override fun processIntent(intent: PlanMatchIntent) {
         when (intent) {
             is PlanMatchIntent.PlanMatch -> handlePlanMatch()
-            is PlanMatchIntent.SelectDateTime -> uiStateMutable.update { it.copy(start = intent.dateTime) }
+            is PlanMatchIntent.SelectDateTime -> uiStateMutable.update {
+                it.copy(start = intent.dateTime)
+            }
             is PlanMatchIntent.SelectLocation -> handleSelectedLocation(intent)
             is PlanMatchIntent.SelectMaxPlayers -> handleSelectedMaxPlayers(intent)
             is PlanMatchIntent.SelectMinPlayers -> handleSelectedMinPlayers(intent)
@@ -51,13 +53,21 @@ class PlanMatchViewModel(private val planMatchUseCase: PlanMatchUseCase) :
 
     private fun handlePlanMatch() {
         performAction(
-            onSuccess = {effectsMutable.emit(PlanMatchEffect.MatchPlanned)},
-            action = { planMatchUseCase.plan(
-                start = uiState.value.start ?: throw IllegalArgumentException("Start date/time must be selected"),
-                location = uiState.value.location,
-                minPlayers = uiState.value.minPlayers.toIntOrNull() ?: throw IllegalArgumentException("Invalid minPlayers value"),
-                maxPlayers = uiState.value.maxPlayers.toIntOrNull() ?: throw IllegalArgumentException("Invalid maxPlayers value")
-            )},
+            onSuccess = { effectsMutable.emit(PlanMatchEffect.MatchPlanned) },
+            action = {
+                planMatchUseCase.plan(
+                    start =
+                    uiState.value.start
+                        ?: throw IllegalArgumentException("Start date/time must be selected"),
+                    location = uiState.value.location,
+                    minPlayers =
+                    uiState.value.minPlayers.toIntOrNull()
+                        ?: throw IllegalArgumentException("Invalid minPlayers value"),
+                    maxPlayers =
+                    uiState.value.maxPlayers.toIntOrNull()
+                        ?: throw IllegalArgumentException("Invalid maxPlayers value")
+                )
+            }
         )
     }
 }
@@ -68,7 +78,7 @@ data class PlanMatchUIState(
     val start: LocalDateTime? = null,
     val location: String = "",
     val minPlayers: String = "4",
-    val maxPlayers: String = "8",
+    val maxPlayers: String = "8"
 ) : BaseUIState<PlanMatchUIState> {
     override fun copyWith(isLoading: Boolean, error: String?): PlanMatchUIState =
         copy(isLoading = isLoading, error = error)

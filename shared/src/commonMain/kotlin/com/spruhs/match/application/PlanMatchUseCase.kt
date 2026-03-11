@@ -9,23 +9,22 @@ class PlanMatchUseCase(
     private val userRepository: UserRepository
 ) {
 
-    suspend fun plan(
-        start: LocalDateTime,
-        location: String,
-        minPlayers: Int,
-        maxPlayers: Int
-    ) {
+    suspend fun plan(start: LocalDateTime, location: String, minPlayers: Int, maxPlayers: Int) {
         if (start <= dateTimeNow()) {
             throw IllegalArgumentException("Start time must be in the future")
         }
 
-        matchRepository.planMatch(PlanMatchCommand(
-            groupId = userRepository.selectedGroup.value?.id ?: throw IllegalStateException("No group selected"),
-            start = start,
-            location = location.ifEmpty { null },
-            minPlayers = minPlayers,
-            maxPlayers = maxPlayers
-        ))
+        matchRepository.planMatch(
+            PlanMatchCommand(
+                groupId =
+                userRepository.selectedGroup.value?.id
+                    ?: throw IllegalStateException("No group selected"),
+                start = start,
+                location = location.ifEmpty { null },
+                minPlayers = minPlayers,
+                maxPlayers = maxPlayers
+            )
+        )
     }
 }
 

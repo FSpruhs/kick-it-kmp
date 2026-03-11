@@ -31,7 +31,6 @@ import com.spruhs.match.presentation.PlanMatchEffect
 import com.spruhs.match.presentation.PlanMatchIntent
 import com.spruhs.match.presentation.PlanMatchUIState
 import com.spruhs.match.presentation.PlanMatchViewModel
-import com.spruhs.screens.common.FormattedDateTime
 import com.spruhs.screens.common.SubmitButton
 import com.spruhs.screens.common.formatDateTime
 import java.util.Calendar
@@ -208,8 +207,8 @@ private fun validatePlayerCount(uiState: PlanMatchUIState): Boolean {
 }
 
 private fun validateStart(uiState: PlanMatchUIState) = uiState.start
-        ?.let {it > dateTimeNow() }
-        ?: false
+    ?.let { it > dateTimeNow() }
+    ?: false
 
 fun showDateTimePicker(context: Context, onDateTimeSelected: (LocalDateTime) -> Unit) {
     val now = Calendar.getInstance()

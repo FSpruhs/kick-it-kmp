@@ -55,6 +55,4 @@ fun LocalDateTime.formatTime(): String {
     return "$hour:$minute"
 }
 
-fun LocalDateTime.formatDateTime(): String {
-    return "${formatDate()} • ${formatTime()}"
-}
+fun LocalDateTime.formatDateTime(): String = "${formatDate()} • ${formatTime()}"

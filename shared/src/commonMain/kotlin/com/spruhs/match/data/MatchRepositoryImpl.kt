@@ -73,8 +73,12 @@ class MatchRepositoryImpl(private val matchApiClient: MatchApiClient) : MatchRep
     }
 
     override suspend fun planMatch(command: PlanMatchCommand) {
-         matchApiClient.planMatch(command.toRequest())
-            .let { if (!it.status.isSuccess()) throw IllegalStateException("Failed to plan match: ${it.status}") }
+        matchApiClient.planMatch(command.toRequest())
+            .let {
+                if (!it.status.isSuccess()) {
+                    throw IllegalStateException("Failed to plan match: ${it.status}")
+                }
+            }
     }
 
     private fun toPlayerStatus(response: MatchResponse, userId: String): PlayerStatus? {
