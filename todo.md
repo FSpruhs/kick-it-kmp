@@ -4,9 +4,6 @@
 # GroupScreen
 - sort Player
 
-# SelectGroupScreen
-- add group float button
-
 # InvitePlayerScreen
 - can not invite player who is already in the group
 

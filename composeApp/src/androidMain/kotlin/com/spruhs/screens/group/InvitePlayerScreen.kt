@@ -99,7 +99,7 @@ fun InvitePlayerContent(
                 .padding(bottom = 42.dp)
                 .fillMaxWidth(0.5f),
             isLoading = uiState.isLoading,
-            enabled = uiState.email.isNotEmpty() && !uiState.isLoading
+            enabled = uiState.isEmailValid && !uiState.isLoading
         ) { onIntent(InvitePlayerIntent.InvitePlayer) }
     }
 }
