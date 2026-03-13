@@ -7,6 +7,7 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.statement.HttpResponse
 import kotlinx.serialization.Serializable
 
 interface GroupApiClient {
@@ -15,7 +16,7 @@ interface GroupApiClient {
     suspend fun createGroup(@Body request: CreateGroupRequest): String
 
     @PUT("v1/group/{groupId}/name")
-    suspend fun updateGroupName(@Path("groupId") groupId: String, @Query("name") name: String)
+    suspend fun updateGroupName(@Path("groupId") groupId: String, @Query("name") name: String): HttpResponse
 
     @PUT("v1/group/{groupId}/players/{userId}")
     suspend fun updatePlayer(
@@ -23,16 +24,16 @@ interface GroupApiClient {
         @Path("userId") userId: String,
         @Query("status") status: String?,
         @Query("role") role: String?
-    )
+    ): HttpResponse
 
     @DELETE("v1/group/{groupId}/players/{userId}")
-    suspend fun removePlayer(@Path("groupId") groupId: String, @Path("userId") userId: String)
+    suspend fun removePlayer(@Path("groupId") groupId: String, @Path("userId") userId: String): HttpResponse
 
     @POST("v1/group/{groupId}/invited-users/{userId}")
-    suspend fun inviteUser(@Path("groupId") groupId: String, @Path("userId") userId: String)
+    suspend fun inviteUser(@Path("groupId") groupId: String, @Path("userId") userId: String): HttpResponse
 
     @PUT("v1/group/invited-users")
-    suspend fun invitedUserResponse(@Body request: InviteUserResponseRequest)
+    suspend fun invitedUserResponse(@Body request: InviteUserResponseRequest): HttpResponse
 
     @GET("v1/group/{groupId}")
     suspend fun getGroup(@Path("groupId") groupId: String): GroupMessage

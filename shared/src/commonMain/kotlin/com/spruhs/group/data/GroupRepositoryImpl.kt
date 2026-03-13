@@ -6,6 +6,7 @@ import com.spruhs.group.application.GroupRepository
 import com.spruhs.group.application.PlayerDetails
 import com.spruhs.user.application.UserRole
 import com.spruhs.user.application.UserStatus
+import io.ktor.http.isSuccess
 
 class GroupRepositoryImpl(private val groupApiClient: GroupApiClient) : GroupRepository {
     override suspend fun getGroupNames(groupId: String): List<GroupNameEntry> =
@@ -18,14 +19,20 @@ class GroupRepositoryImpl(private val groupApiClient: GroupApiClient) : GroupRep
         groupApiClient.getGroupPlayer(groupId, userId).toPlayerDetails()
 
     override suspend fun removePlayer(groupId: String, playerId: String) {
-        groupApiClient.removePlayer(groupId, playerId)
+        val result = groupApiClient.removePlayer(groupId, playerId)
+        if (!result.status.isSuccess()) {
+            throw IllegalStateException("Failed to remove player: ${result.status}")
+        }
     }
 
     override suspend fun createGroup(groupName: String): String =
         groupApiClient.createGroup(CreateGroupRequest(groupName))
 
     override suspend fun invitePlayer(groupId: String, email: String) {
-        groupApiClient.inviteUser(groupId, email)
+        val result = groupApiClient.inviteUser(groupId, email)
+        if (!result.status.isSuccess()) {
+            throw IllegalStateException("Failed to invite player: ${result.status}")
+        }
     }
 
     override suspend fun updatePlayer(
@@ -34,7 +41,10 @@ class GroupRepositoryImpl(private val groupApiClient: GroupApiClient) : GroupRep
         status: UserStatus,
         role: UserRole
     ) {
-        groupApiClient.updatePlayer(groupId, playerId, status.name, role.name)
+        val result = groupApiClient.updatePlayer(groupId, playerId, status.name, role.name)
+        if (!result.status.isSuccess()) {
+            throw IllegalStateException("Failed to update player: ${result.status}")
+        }
     }
 }
 

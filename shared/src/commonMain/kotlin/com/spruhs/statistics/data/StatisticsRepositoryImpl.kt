@@ -12,7 +12,7 @@ class StatisticsRepositoryImpl(private val statisticsApi: StatisticsApi) : Stati
 }
 
 interface StatisticsApi {
-    @GET("v1/statistics/{groupId}/player/{userId}")
+    @GET("v1/statistic/group/{groupId}/player/{userId}")
     suspend fun findByUserId(
         @Path("userId") userId: String,
         @Path("groupId") groupId: String

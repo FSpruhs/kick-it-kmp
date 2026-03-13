@@ -56,8 +56,8 @@ class PlayerDetailsViewModel(
 
     private fun handleUpdatePlayer() {
         if (
-            uiState.value.playerDetails?.status == uiState.value.selectedStatus &&
-            uiState.value.playerDetails?.role == uiState.value.selectedRole
+            uiState.value.playerDetails?.status != uiState.value.selectedStatus ||
+            uiState.value.playerDetails?.role != uiState.value.selectedRole
         ) {
             performAction(
                 onSuccess = { effectsMutable.emit(PlayerDetailsEffect.PlayerUpdated) },

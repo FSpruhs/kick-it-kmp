@@ -6,6 +6,7 @@ import com.spruhs.group.application.GetPlayerDetailsUseCase
 import com.spruhs.group.application.GroupRepository
 import com.spruhs.group.application.InvitePlayerUseCase
 import com.spruhs.group.application.LeaveGroupUseCase
+import com.spruhs.group.application.RemovePlayerUseCase
 import com.spruhs.group.application.UpdatePlayerUseCase
 import com.spruhs.group.data.GroupApiClient
 import com.spruhs.group.data.GroupRepositoryImpl
@@ -26,6 +27,7 @@ val groupModule = module {
     single { GetPlayerDetailsUseCase(get(), get(), get(), get()) }
     single { InvitePlayerUseCase(get(), get()) }
     single { UpdatePlayerUseCase(get(), get()) }
+    single { RemovePlayerUseCase(get(), get()) }
 
     single<GroupApiClient> {
         get<Ktorfit>(named("AuthKtorfit")).createGroupApiClient()
